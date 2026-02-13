@@ -1,6 +1,6 @@
 # webx
 
-Go web framework built on Chi, Templ, Tailwind CSS, Datastar, and TemplUI.
+Go web framework built on Chi, Templ, Tailwind CSS, DaisyUI, and Datastar.
 
 ## Prerequisites
 
@@ -26,7 +26,7 @@ Without these files, the project will not compile.
 ## Getting started
 
 ```bash
-# Install dependencies
+# Install dependencies (downloads DaisyUI + tidies modules)
 go tool task install:all
 
 # Place your Datastar Pro files

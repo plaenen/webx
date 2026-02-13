@@ -1,7 +1,0 @@
-{
-  "componentsDir": "ui",
-  "utilsDir": "utils",
-  "moduleName": "github.com/plaenen/webx",
-  "jsDir": "static/js",
-  "jsPublicPath": "/static/js"
-}

@@ -1,0 +1,106 @@
+package drawer
+
+import (
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// DrawerSignals holds the reactive state for a drawer.
+type DrawerSignals struct {
+	Open bool `json:"open"`
+}
+
+// Props configures the drawer container.
+type Props struct {
+	ID    string
+	Class string
+}
+
+// SideProps configures the sidebar panel.
+type SideProps struct {
+	ID    string
+	Class string
+}
+
+// ContentProps configures the main content area.
+type ContentProps struct {
+	Class string
+}
+
+// Drawer renders a DaisyUI drawer controlled by Datastar signals.
+// On large screens the sidebar is always visible (lg:drawer-open).
+// On small screens it toggles via signals.
+templ Drawer(props Props) {
+	{{
+		id := props.ID
+		if id == "" {
+			id = utils.RandomID()
+		}
+		signals := utils.Signals(id, DrawerSignals{Open: false})
+	}}
+	<div
+		data-signals={ signals.DataSignals }
+		class={ utils.TwMerge("drawer lg:drawer-open", props.Class) }
+	>
+		// DaisyUI uses :checked on .drawer-toggle for mobile sidebar visibility,
+		// and lg:drawer-open for desktop. data-attr:checked syncs the checkbox
+		// with the Datastar signal so both mechanisms work correctly.
+		<input
+			type="checkbox"
+			class="drawer-toggle"
+			aria-hidden="true"
+			tabindex="-1"
+			{ ds.Attr("checked", signals.Signal("open"))... }
+		/>
+		{ children... }
+	</div>
+}
+
+// Content renders the main content area of the drawer.
+templ Content(props ...ContentProps) {
+	{{ var p ContentProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div class={ utils.TwMerge("drawer-content", p.Class) }>
+		{ children... }
+	</div>
+}
+
+// Side renders the sidebar panel.
+templ Side(props SideProps) {
+	{{
+		id := props.ID
+		if id == "" {
+			id = utils.RandomID()
+		}
+		signals := utils.Signals(id, DrawerSignals{})
+	}}
+	<div class="drawer-side z-40">
+		<div
+			class="drawer-overlay"
+			{ ds.OnClick(signals.Set("open", "false"))... }
+		></div>
+		<aside class={ utils.TwMerge("menu bg-base-200 text-base-content min-h-full w-72 p-4", props.Class) }>
+			{ children... }
+		</aside>
+	</div>
+}
+
+// ToggleButton renders a hamburger button that toggles the drawer.
+// Only visible on small screens (hidden on lg: when drawer is always open).
+templ ToggleButton(drawerID string) {
+	{{
+		signals := utils.Signals(drawerID, DrawerSignals{})
+	}}
+	<button
+		type="button"
+		class="btn btn-ghost lg:hidden"
+		{ ds.OnClick(signals.Toggle("open"))... }
+		aria-label="Toggle menu"
+	>
+		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+		</svg>
+	</button>
+}

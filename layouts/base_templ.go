@@ -10,7 +10,6 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"github.com/plaenen/webx"
-	"github.com/plaenen/webx/components/toasts"
 )
 
 type BaseProps struct {
@@ -49,7 +48,7 @@ func Base(props BaseProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(props.Description)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/base.templ`, Line: 24, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/base.templ`, Line: 23, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -62,7 +61,7 @@ func Base(props BaseProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(csrfToken)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/base.templ`, Line: 25, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/base.templ`, Line: 24, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -75,7 +74,7 @@ func Base(props BaseProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/base.templ`, Line: 26, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/base.templ`, Line: 25, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -91,15 +90,11 @@ func Base(props BaseProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<script defer=\"\" src=\"/assets/js/avatar.min.js\"></script><script defer=\"\" src=\"/assets/js/calendar.min.js\"></script><script defer=\"\" src=\"/assets/js/carousel.min.js\"></script><script defer=\"\" src=\"/assets/js/collapsible.min.js\"></script><script defer=\"\" src=\"/assets/js/chart.min.js\"></script><script defer=\"\" src=\"/assets/js/checkbox.min.js\"></script><script defer=\"\" src=\"/assets/js/code.min.js\"></script><script defer=\"\" src=\"/assets/js/copybutton.min.js\"></script><script defer=\"\" src=\"/assets/js/datepicker.min.js\"></script><script defer=\"\" src=\"/assets/js/dropdown.min.js\"></script><script defer=\"\" src=\"/assets/js/input.min.js\"></script><script defer=\"\" src=\"/assets/js/inputotp.min.js\"></script><script defer=\"\" src=\"/assets/js/label.min.js\"></script><script defer=\"\" src=\"/assets/js/dialog.min.js\"></script><script defer=\"\" src=\"/assets/js/popover.min.js\"></script><script defer=\"\" src=\"/assets/js/progress.min.js\"></script><script defer=\"\" src=\"/assets/js/rating.min.js\"></script><script defer=\"\" src=\"/assets/js/selectbox.min.js\"></script><script defer=\"\" src=\"/assets/js/sidebar.min.js\"></script><script defer=\"\" src=\"/assets/js/slider.min.js\"></script><script defer=\"\" src=\"/assets/js/tabs.min.js\"></script><script defer=\"\" src=\"/assets/js/tagsinput.min.js\"></script><script defer=\"\" src=\"/assets/js/textarea.min.js\"></script><script defer=\"\" src=\"/assets/js/timepicker.min.js\"></script><script defer=\"\" src=\"/assets/js/toast.min.js\"></script></head><body class=\"min-h-screen bg-background text-foreground antialiased font-sans\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</head><body class=\"min-h-screen bg-base-100 text-base-content antialiased font-sans\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = templ_7745c5c3_Var1.Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = toasts.Container().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

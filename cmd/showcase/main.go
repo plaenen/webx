@@ -44,7 +44,11 @@ func main() {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
+	// Pages
 	r.Get("/", templ.Handler(pages.Home()).ServeHTTP)
+	r.Get("/components/button", templ.Handler(pages.Buttons()).ServeHTTP)
+	r.Get("/components/card", templ.Handler(pages.Cards()).ServeHTTP)
+	r.Get("/components/drawer", templ.Handler(pages.Drawers()).ServeHTTP)
 
 	ln, err := net.Listen("tcp", ":3000")
 	if err != nil {

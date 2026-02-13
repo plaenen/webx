@@ -1,0 +1,71 @@
+package menu
+
+import "github.com/plaenen/webx/utils"
+
+// Props configures a DaisyUI menu.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// ItemProps configures a single menu item.
+type ItemProps struct {
+	Href   string
+	Active bool
+	Class  string
+}
+
+// TitleProps configures a menu section title.
+type TitleProps struct {
+	Class string
+}
+
+// Menu renders a DaisyUI vertical menu.
+templ Menu(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<ul
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("menu", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</ul>
+}
+
+// Item renders a menu item with an optional link.
+templ Item(props ItemProps) {
+	<li>
+		if props.Href != "" {
+			<a
+				href={ templ.SafeURL(props.Href) }
+				class={ utils.TwMerge(
+					utils.If(props.Active, "active"),
+					props.Class,
+				) }
+			>
+				{ children... }
+			</a>
+		} else {
+			<span class={ props.Class }>
+				{ children... }
+			</span>
+		}
+	</li>
+}
+
+// Title renders a menu section title.
+templ Title(props ...TitleProps) {
+	{{ var p TitleProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<li class={ utils.TwMerge("menu-title", p.Class) }>
+		{ children... }
+	</li>
+}

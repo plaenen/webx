@@ -1,14 +1,50 @@
 package pages
 
-import "github.com/plaenen/webx/layouts"
+import (
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/button"
+	"github.com/plaenen/webx/ui/card"
+)
 
 templ Home() {
-	@layouts.Base(layouts.BaseProps{
-		Title:       "Showcase",
-		Description: "Hello World showcase",
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "WebX Showcase",
+		Description: "Go web framework with DaisyUI and Datastar",
+		CurrentPath: "/",
 	}) {
-		<main class="flex items-center justify-center min-h-screen">
-			<h1 class="text-4xl font-bold">Hello World</h1>
-		</main>
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Welcome to WebX</h1>
+				<p class="text-base-content/70 mt-2">Go + Templ + Tailwind + DaisyUI + Datastar</p>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				@card.Card() {
+					@card.Body() {
+						@card.Title() {
+							DaisyUI Components
+						}
+						<p>CSS-only component styling via DaisyUI's Tailwind plugin. No component JS needed.</p>
+						@card.Actions() {
+							@button.Button(button.Props{Variant: button.VariantPrimary}) {
+								<a href="/components/button">Explore</a>
+							}
+						}
+					}
+				}
+				@card.Card() {
+					@card.Body() {
+						@card.Title() {
+							Datastar Interactivity
+						}
+						<p>All frontend state and interactions handled by Datastar signals and SSE.</p>
+						@card.Actions() {
+							@button.Button(button.Props{Variant: button.VariantSecondary}) {
+								<a href="/components/drawer">See Drawer</a>
+							}
+						}
+					}
+				}
+			</div>
+		</div>
 	}
 }

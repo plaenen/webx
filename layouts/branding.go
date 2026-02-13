@@ -1,13 +1,5 @@
 package layouts
 
-import (
-	"github.com/a-h/templ"
-	"github.com/plaenen/webx/ui/icon"
-)
-
-// IconType defines the function signature for an icon component.
-type IconType func(...icon.Props) templ.Component
-
 // AppBranding configures application branding used across layouts.
 // This is shared between Dashboard, Auth pages, and other layouts.
 type AppBranding struct {
@@ -20,7 +12,7 @@ type AppBranding struct {
 	Href string
 }
 
-// DefaultIcon returns the icon to use, defaulting to Zap if not set.
+// DefaultLogoUrl returns the logo URL to use, defaulting to "/assets/logo.png" if not set.
 func (b AppBranding) DefaultLogoUrl() string {
 	if b.LogoFullUrl == "" {
 		return "/assets/logo.png"

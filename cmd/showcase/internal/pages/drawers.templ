@@ -1,0 +1,102 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/button"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/drawer"
+	"github.com/plaenen/webx/ui/menu"
+	"github.com/plaenen/webx/utils"
+)
+
+templ Drawers() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Drawer - WebX Showcase",
+		Description: "DaisyUI drawer with Datastar signals",
+		CurrentPath: "/components/drawer",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Drawer</h1>
+				<p class="text-base-content/70 mt-2">
+					DaisyUI drawer component controlled by Datastar signals.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						How it works
+					}
+					<div class="space-y-3 text-sm">
+						<p>The drawer combines DaisyUI CSS classes for styling with Datastar signals for state management.</p>
+						<ul class="list-disc list-inside space-y-1">
+							<li>SignalManager namespaces signals per drawer instance</li>
+							<li>data-class toggles drawer-open based on signal state</li>
+							<li>lg:drawer-open keeps sidebar visible on desktop</li>
+							<li>Overlay click sets the signal to false to close</li>
+						</ul>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Standalone Drawer Demo
+					}
+					<p class="mb-4">This is a self-contained drawer inside the page content.</p>
+					@inlineDrawerDemo()
+				}
+			}
+		</div>
+	}
+}
+
+templ inlineDrawerDemo() {
+	{{
+		signals := utils.Signals("demo_drawer", drawer.DrawerSignals{Open: false})
+	}}
+	<div
+		data-signals={ signals.DataSignals }
+		class="border border-base-300 rounded-lg overflow-hidden h-64 relative"
+	>
+		<div class="p-4">
+			@button.Button(button.Props{
+				Variant: button.VariantPrimary,
+				Size:    button.SizeSm,
+				OnClick: signals.Toggle("open"),
+			}) {
+				Toggle Drawer
+			}
+			<span class="ml-3 text-sm text-base-content/60">
+				State:
+				<code class="badge badge-sm" data-text={ signals.Conditional("open", "'open'", "'closed'") }>closed</code>
+			</span>
+		</div>
+		<div
+			class="absolute inset-y-0 left-0 w-52 bg-base-200 border-r border-base-300 p-4 transition-transform duration-200 z-10"
+			data-class={ utils.NewDataClass().Add("-translate-x-full", "!"+signals.Signal("open")).Add("translate-x-0", signals.Signal("open")).Build() }
+		>
+			@menu.Menu(menu.Props{Class: "p-0"}) {
+				@menu.Title() {
+					Demo Menu
+				}
+				@menu.Item(menu.ItemProps{Href: "#"}) {
+					Dashboard
+				}
+				@menu.Item(menu.ItemProps{Href: "#"}) {
+					Settings
+				}
+				@menu.Item(menu.ItemProps{Href: "#"}) {
+					Profile
+				}
+			}
+		</div>
+		<div
+			class="absolute inset-0 bg-black/30 transition-opacity duration-200"
+			data-show={ signals.Signal("open") }
+			{ ds.OnClick(signals.Set("open", "false"))... }
+			style="display: none;"
+		></div>
+	</div>
+}

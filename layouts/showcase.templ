@@ -1,0 +1,62 @@
+package layouts
+
+import (
+	"github.com/plaenen/webx/ui/drawer"
+	"github.com/plaenen/webx/ui/menu"
+	"github.com/plaenen/webx/ui/navbar"
+)
+
+type ShowcaseProps struct {
+	Title       string
+	Description string
+	CurrentPath string
+}
+
+templ Showcase(props ShowcaseProps) {
+	@Base(BaseProps{
+		Title:       props.Title,
+		Description: props.Description,
+	}) {
+		@drawer.Drawer(drawer.Props{ID: "app-drawer"}) {
+			@drawer.Content() {
+				@navbar.Navbar() {
+					@navbar.Start() {
+						@drawer.ToggleButton("app-drawer")
+						<a href="/" class="btn btn-ghost text-xl">WebX</a>
+					}
+					@navbar.End() {
+						<a href="https://github.com/plaenen/webx" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">
+							GitHub
+						</a>
+					}
+				}
+				<main class="p-6 max-w-5xl mx-auto w-full">
+					{ children... }
+				</main>
+			}
+			@drawer.Side(drawer.SideProps{ID: "app-drawer"}) {
+				<div class="font-bold text-lg p-2 mb-2">WebX Showcase</div>
+				@menu.Menu() {
+					@menu.Title() {
+						Getting Started
+					}
+					@menu.Item(menu.ItemProps{Href: "/", Active: props.CurrentPath == "/"}) {
+						Home
+					}
+					@menu.Title() {
+						Components
+					}
+					@menu.Item(menu.ItemProps{Href: "/components/button", Active: props.CurrentPath == "/components/button"}) {
+						Button
+					}
+					@menu.Item(menu.ItemProps{Href: "/components/card", Active: props.CurrentPath == "/components/card"}) {
+						Card
+					}
+					@menu.Item(menu.ItemProps{Href: "/components/drawer", Active: props.CurrentPath == "/components/drawer"}) {
+						Drawer
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,73 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/button"
+	"github.com/plaenen/webx/ui/card"
+)
+
+templ Cards() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Card — WebX Showcase",
+		Description: "DaisyUI card component",
+		CurrentPath: "/components/card",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Card</h1>
+				<p class="text-base-content/70 mt-2">DaisyUI card with body, title, and actions.</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				@card.Card() {
+					@card.Body() {
+						@card.Title() {
+							Simple Card
+						}
+						<p>A basic card with a title and content.</p>
+					}
+				}
+
+				@card.Card(card.Props{Class: "bg-primary text-primary-content"}) {
+					@card.Body() {
+						@card.Title() {
+							Colored Card
+						}
+						<p>Cards can be styled with any Tailwind/DaisyUI classes.</p>
+					}
+				}
+
+				@card.Card() {
+					@card.Body() {
+						@card.Title() {
+							Card with Actions
+						}
+						<p>Actions align to the end of the card body.</p>
+						@card.Actions() {
+							@button.Button(button.Props{Variant: button.VariantGhost}) {
+								Cancel
+							}
+							@button.Button(button.Props{Variant: button.VariantPrimary}) {
+								Confirm
+							}
+						}
+					}
+				}
+
+				@card.Card(card.Props{Class: "bg-neutral text-neutral-content"}) {
+					@card.Body() {
+						@card.Title() {
+							Neutral Card
+						}
+						<p>Using DaisyUI semantic color classes.</p>
+						@card.Actions() {
+							@button.Button(button.Props{Class: "btn-neutral-content"}) {
+								Action
+							}
+						}
+					}
+				}
+			</div>
+		</div>
+	}
+}

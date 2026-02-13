@@ -2,7 +2,6 @@ package layouts
 
 import (
 	"github.com/plaenen/webx"
-	"github.com/plaenen/webx/components/toasts"
 )
 
 type BaseProps struct {
@@ -29,35 +28,9 @@ templ Base(props BaseProps) {
 			if showInspector {
 				<script type="module" src="/assets/js/datastar/datastar-inspector.js"></script>
 			}
-			<script defer="" src="/assets/js/avatar.min.js"></script>
-			<script defer="" src="/assets/js/calendar.min.js"></script>
-			<script defer="" src="/assets/js/carousel.min.js"></script>
-			<script defer="" src="/assets/js/collapsible.min.js"></script>
-			<script defer="" src="/assets/js/chart.min.js"></script>
-			<script defer="" src="/assets/js/checkbox.min.js"></script>
-			<script defer="" src="/assets/js/code.min.js"></script>
-			<script defer="" src="/assets/js/copybutton.min.js"></script>
-			<script defer="" src="/assets/js/datepicker.min.js"></script>
-			<script defer="" src="/assets/js/dropdown.min.js"></script>
-			<script defer="" src="/assets/js/input.min.js"></script>
-			<script defer="" src="/assets/js/inputotp.min.js"></script>
-			<script defer="" src="/assets/js/label.min.js"></script>
-			<script defer="" src="/assets/js/dialog.min.js"></script>
-			<script defer="" src="/assets/js/popover.min.js"></script>
-			<script defer="" src="/assets/js/progress.min.js"></script>
-			<script defer="" src="/assets/js/rating.min.js"></script>
-			<script defer="" src="/assets/js/selectbox.min.js"></script>
-			<script defer="" src="/assets/js/sidebar.min.js"></script>
-			<script defer="" src="/assets/js/slider.min.js"></script>
-			<script defer="" src="/assets/js/tabs.min.js"></script>
-			<script defer="" src="/assets/js/tagsinput.min.js"></script>
-			<script defer="" src="/assets/js/textarea.min.js"></script>
-			<script defer="" src="/assets/js/timepicker.min.js"></script>
-			<script defer="" src="/assets/js/toast.min.js"></script>
 		</head>
-		<body class="min-h-screen bg-background text-foreground antialiased font-sans">
+		<body class="min-h-screen bg-base-100 text-base-content antialiased font-sans">
 			{ children... }
-			@toasts.Container()
 			if showInspector {
 				<datastar-inspector></datastar-inspector>
 			}

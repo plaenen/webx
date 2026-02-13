@@ -1,0 +1,96 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/button"
+)
+
+templ Buttons() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Button — WebX Showcase",
+		Description: "DaisyUI button component",
+		CurrentPath: "/components/button",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Button</h1>
+				<p class="text-base-content/70 mt-2">DaisyUI button with variant and size props.</p>
+			</div>
+
+			<div class="space-y-4">
+				<h2 class="text-xl font-semibold">Variants</h2>
+				<div class="flex flex-wrap gap-3">
+					@button.Button() {
+						Default
+					}
+					@button.Button(button.Props{Variant: button.VariantPrimary}) {
+						Primary
+					}
+					@button.Button(button.Props{Variant: button.VariantSecondary}) {
+						Secondary
+					}
+					@button.Button(button.Props{Variant: button.VariantAccent}) {
+						Accent
+					}
+					@button.Button(button.Props{Variant: button.VariantNeutral}) {
+						Neutral
+					}
+					@button.Button(button.Props{Variant: button.VariantGhost}) {
+						Ghost
+					}
+					@button.Button(button.Props{Variant: button.VariantLink}) {
+						Link
+					}
+				</div>
+			</div>
+
+			<div class="space-y-4">
+				<h2 class="text-xl font-semibold">Status Variants</h2>
+				<div class="flex flex-wrap gap-3">
+					@button.Button(button.Props{Variant: button.VariantInfo}) {
+						Info
+					}
+					@button.Button(button.Props{Variant: button.VariantSuccess}) {
+						Success
+					}
+					@button.Button(button.Props{Variant: button.VariantWarning}) {
+						Warning
+					}
+					@button.Button(button.Props{Variant: button.VariantError}) {
+						Error
+					}
+				</div>
+			</div>
+
+			<div class="space-y-4">
+				<h2 class="text-xl font-semibold">Sizes</h2>
+				<div class="flex flex-wrap items-center gap-3">
+					@button.Button(button.Props{Variant: button.VariantPrimary, Size: button.SizeLg}) {
+						Large
+					}
+					@button.Button(button.Props{Variant: button.VariantPrimary, Size: button.SizeMd}) {
+						Medium
+					}
+					@button.Button(button.Props{Variant: button.VariantPrimary, Size: button.SizeSm}) {
+						Small
+					}
+					@button.Button(button.Props{Variant: button.VariantPrimary, Size: button.SizeXs}) {
+						Tiny
+					}
+				</div>
+			</div>
+
+			<div class="space-y-4">
+				<h2 class="text-xl font-semibold">Outline + Disabled</h2>
+				<div class="flex flex-wrap gap-3">
+					@button.Button(button.Props{Variant: button.VariantOutline}) {
+						Outline
+					}
+					@button.Button(button.Props{Variant: button.VariantPrimary, Disabled: true}) {
+						Disabled
+					}
+				</div>
+			</div>
+		</div>
+	}
+}

@@ -1,0 +1,40 @@
+package navbar
+
+import "github.com/plaenen/webx/utils"
+
+// Props configures the navbar.
+type Props struct {
+	Class string
+}
+
+// Navbar renders a DaisyUI navbar.
+templ Navbar(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div class={ utils.TwMerge("navbar bg-base-100 border-b border-base-300", p.Class) }>
+		{ children... }
+	</div>
+}
+
+// Start renders the left section of the navbar.
+templ Start() {
+	<div class="navbar-start">
+		{ children... }
+	</div>
+}
+
+// Center renders the center section of the navbar.
+templ Center() {
+	<div class="navbar-center">
+		{ children... }
+	</div>
+}
+
+// End renders the right section of the navbar.
+templ End() {
+	<div class="navbar-end">
+		{ children... }
+	</div>
+}
