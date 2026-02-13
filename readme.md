@@ -4,9 +4,7 @@ Beautiful, accessible UI components built with Go, Templ, Tailwind CSS, DaisyUI,
 
 ## Philosophy
 
-webx is inspired by [daisyui](https://daisyui.com). Like daisyui, this is **not** a component library you install as a dependency. It's a collection of reusable components that you copy into your project and own.
-
-**Why copy/paste instead of packaging?**
+webx is inspired by [daisyui](https://daisyui.com). Like daisyui, this is a component library you install as a dependency. Fork it and own it.
 
 - **You own the code.** Need to change something? Just edit it.
 - **No versioning conflicts** or breaking changes to worry about.
