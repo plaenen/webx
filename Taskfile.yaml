@@ -1,14 +1,50 @@
 version: "3"
 
+vars:
+  STATIC_DIR: "static/css"
+
 tasks:
+  install:all:
+    desc: Install all dependencies
+    cmds:
+      - go mod tidy
+      - go tool templui init
+      - go tool templui add "*"
+
+  # TemplUI tasks
   templui:add:
     desc: Add all templui components
     cmds:
       - go tool templui add "*"
 
-  install:all:
-    desc: Install all dependencies
+  templui:add-force:
+    desc: Add all templui components
     cmds:
-      - go mod tidy
-      - go tool templui -force init
-      - go tool templui -force add "*"
+      - go tool templui --force add "*"
+
+  # The `build:` tasks below are used together for production builds of a project
+  build:templ:
+    cmds:
+      - go tool templ generate
+    sources:
+      - "**/*.templ"
+    generates:
+      - "**/*_templ.go"
+
+  build:web:styles:
+    cmds:
+      - go tool gotailwind -i {{.STATIC_DIR}}/input.css -o {{.STATIC_DIR}}/output.css
+    sources:
+      - "./web/resources/**/*.{html,ts,templ,go,css}"
+    generates:
+      - "{{.STATIC_DIR}}/index.css"
+
+  build:
+    cmds:
+      - go build -tags=prod -o bin/showcase ./cmd/showcase
+    deps:
+      - build:templ
+      - build:web:styles
+
+  
+

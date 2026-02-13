@@ -159,5 +159,5 @@ func IDFromContext(ctx context.Context) string {
 }
 
 templ Script() {
-	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/assets/js/tabs.min.js") }></script>
+	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/static/js/tabs.min.js") }></script>
 }

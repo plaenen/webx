@@ -2,3 +2,6 @@ byol/
 .claude/
 .env
 .DS_Store
+bin/
+.task/
+/showcase

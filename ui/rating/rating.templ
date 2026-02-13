@@ -189,5 +189,5 @@ func (p *Props) setDefaults() {
 }
 
 templ Script() {
-	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/assets/js/rating.min.js") }></script>
+	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/static/js/rating.min.js") }></script>
 }

@@ -211,6 +211,8 @@ github.com/getkin/kin-openapi v0.133.0 h1:pJdmNohVIJ97r4AUFtEXRXwESr8b0bD721u/Tz
 github.com/getkin/kin-openapi v0.133.0/go.mod h1:boAciF6cXk5FhPqe/NQeBTeenbjqU4LhWBf09ILVvWE=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
+github.com/go-chi/chi/v5 v5.2.5 h1:Eg4myHZBjyvJmAFjFvWgrqDTXFyOzjj7YIm3L3mu6Ug=
+github.com/go-chi/chi/v5 v5.2.5/go.mod h1:X7Gx4mteadT3eDOMTsXzmI4/rwUpOwBHLpAfupzFJP0=
 github.com/go-delve/delve v1.26.0 h1:YZT1kXD76mxba4/wr+tyUa/tSmy7qzoDsmxutT42PIs=
 github.com/go-delve/delve v1.26.0/go.mod h1:8BgFFOXTi1y1M+d/4ax1LdFw0mlqezQiTZQpbpwgBxo=
 github.com/go-delve/liner v1.2.3-0.20231231155935-4726ab1d7f62 h1:IGtvsNyIuRjl04XAOFGACozgUD7A82UffYxZt4DWbvA=

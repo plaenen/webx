@@ -1,0 +1,62 @@
+package toasts
+
+import (
+	"fmt"
+	"github.com/plaenen/webx/utils"
+)
+
+templ Container(props ...ContainerProps) {
+	{{
+		p := ContainerProps{
+			ID:         "toast-container",
+			Position:   PositionBottomRight,
+			MaxVisible: 5,
+		}
+		if len(props) > 0 {
+			if props[0].ID != "" {
+				p.ID = props[0].ID
+			}
+			if props[0].Position != "" {
+				p.Position = props[0].Position
+			}
+			if props[0].MaxVisible > 0 {
+				p.MaxVisible = props[0].MaxVisible
+			}
+			if props[0].Class != "" {
+				p.Class = props[0].Class
+			}
+		}
+
+		positionClasses := map[Position]string{
+			PositionTopRight:     "top-4 right-4",
+			PositionTopLeft:      "top-4 left-4",
+			PositionTopCenter:    "top-4 left-1/2 -translate-x-1/2",
+			PositionBottomRight:  "bottom-4 right-4",
+			PositionBottomLeft:   "bottom-4 left-4",
+			PositionBottomCenter: "bottom-4 left-1/2 -translate-x-1/2",
+		}
+		posClass := positionClasses[p.Position]
+
+		flexDir := "flex-col-reverse"
+		if p.Position == PositionTopRight || p.Position == PositionTopLeft || p.Position == PositionTopCenter {
+			flexDir = "flex-col"
+		}
+
+		signals := fmt.Sprintf(`{_toastCount: 0}`)
+	}}
+	<div
+		id={ p.ID }
+		data-signals={ signals }
+		class={ utils.TwMerge(
+			"fixed z-50 flex gap-2 pointer-events-none",
+			"w-full max-w-md px-4 md:px-0",
+			"max-h-[calc(100vh-2rem)] overflow-y-auto scrollbar-thin",
+			posClass,
+			flexDir,
+			p.Class,
+		) }
+		data-position={ string(p.Position) }
+		data-max-visible={ fmt.Sprint(p.MaxVisible) }
+	>
+	</div>
+}

@@ -1,0 +1,233 @@
+package toasts
+
+import (
+	"fmt"
+	"github.com/plaenen/webx"
+	"github.com/plaenen/webx/ui/button"
+	"github.com/plaenen/webx/ui/icon"
+	"github.com/plaenen/webx/utils"
+)
+
+// Toast renders an individual toast notification.
+templ Toast(props ToastProps) {
+	{{
+		if props.ID == "" {
+			props.ID = "toast-" + utils.RandomID()
+		}
+		if props.Variant == "" {
+			props.Variant = VariantDefault
+		}
+		if props.Duration == 0 && !props.RequiresAck {
+			props.Duration = 5000
+		}
+		if props.AckURL == "" {
+			props.AckURL = "/api/toast/ack"
+		}
+
+		variantStyles := map[Variant]string{
+			VariantDefault: "border-border",
+			VariantSuccess: "border-green-500/50 bg-green-100 dark:bg-green-900/40",
+			VariantError:   "border-red-500/50 bg-red-100 dark:bg-red-900/40",
+			VariantWarning: "border-amber-500/50 bg-amber-100 dark:bg-amber-900/40",
+			VariantInfo:    "border-blue-500/50 bg-blue-100 dark:bg-blue-900/40",
+		}
+		variantStyle := variantStyles[props.Variant]
+
+		progressColors := map[Variant]string{
+			VariantDefault: "bg-muted-foreground",
+			VariantSuccess: "bg-green-500",
+			VariantError:   "bg-red-500",
+			VariantWarning: "bg-amber-500",
+			VariantInfo:    "bg-blue-500",
+		}
+		progressColor := progressColors[props.Variant]
+
+		dismissAction := fmt.Sprintf("document.getElementById('%s')?.remove()", props.ID)
+		if props.RequiresAck {
+			ackURL := fmt.Sprintf("%s?id=%s", props.AckURL, props.ID)
+			dismissAction = fmt.Sprintf("%s; document.getElementById('%s')?.remove()", webx.Post(ackURL), props.ID)
+		}
+	}}
+	<div
+		id={ props.ID }
+		class={ utils.TwMerge(
+			"pointer-events-auto w-full",
+			"animate-in fade-in-0 slide-in-from-bottom-4 duration-300",
+			"bg-popover text-popover-foreground",
+			"rounded-lg border shadow-lg",
+			"relative overflow-hidden",
+			variantStyle,
+		) }
+		data-toast-id={ props.ID }
+		data-toast-variant={ string(props.Variant) }
+		if props.Duration > 0 {
+			data-init={ fmt.Sprintf("setTimeout(() => { %s }, %d)", dismissAction, props.Duration) }
+		}
+	>
+		if props.ShowIndicator && props.Duration > 0 {
+			<div class="absolute top-0 left-0 right-0 h-1 overflow-hidden">
+				<div
+					class={ utils.TwMerge("h-full w-full origin-left", progressColor) }
+					style={ fmt.Sprintf("animation: toast-progress %dms linear forwards", props.Duration) }
+				></div>
+			</div>
+		}
+		<div class="p-4 flex items-start gap-3">
+			if props.ShowIcon {
+				<div class="flex-shrink-0 mt-0.5 pointer-events-none select-none">
+					switch props.Variant {
+						case VariantSuccess:
+							@icon.CircleCheck(icon.Props{Size: 20, Class: "text-green-600 dark:text-green-400"})
+						case VariantError:
+							@icon.CircleX(icon.Props{Size: 20, Class: "text-red-600 dark:text-red-400"})
+						case VariantWarning:
+							@icon.TriangleAlert(icon.Props{Size: 20, Class: "text-amber-600 dark:text-amber-400"})
+						case VariantInfo:
+							@icon.Info(icon.Props{Size: 20, Class: "text-blue-600 dark:text-blue-400"})
+						default:
+							@icon.Bell(icon.Props{Size: 20, Class: "text-muted-foreground"})
+					}
+				</div>
+			}
+			<div class="flex-1 min-w-0">
+				if props.Title != "" {
+					<p class="text-sm font-semibold">{ props.Title }</p>
+				}
+				if props.Description != "" {
+					<p class="text-sm text-muted-foreground mt-1">{ props.Description }</p>
+				}
+				if len(props.Actions) > 0 {
+					<div class="flex gap-2 mt-3">
+						for _, action := range props.Actions {
+							@toastActionButton(action, props.ID, props.RequiresAck, props.AckURL)
+						}
+					</div>
+				}
+			</div>
+			if props.Dismissible {
+				@button.Button(button.Props{
+					Size:    button.SizeIcon,
+					Variant: button.VariantGhost,
+					Class:   "h-6 w-6 flex-shrink-0 -mr-1 -mt-1",
+					Attributes: templ.Attributes{
+						"aria-label":    "Dismiss",
+						"data-on:click": dismissAction,
+					},
+				}) {
+					@icon.X(icon.Props{Size: 14})
+				}
+			}
+		</div>
+	</div>
+}
+
+templ toastActionButton(action Action, toastID string, requiresAck bool, ackURL string) {
+	{{
+		clickAction := webx.Post(action.URL)
+		if requiresAck {
+			fullAckURL := fmt.Sprintf("%s?id=%s", ackURL, toastID)
+			clickAction = fmt.Sprintf("%s; %s", webx.Post(fullAckURL), webx.Post(action.URL))
+		}
+		clickAction += fmt.Sprintf("; document.getElementById('%s')?.remove()", toastID)
+
+		variant := button.VariantOutline
+		if action.Variant == "destructive" {
+			variant = button.VariantDestructive
+		} else if action.Variant == "default" {
+			variant = button.VariantDefault
+		}
+	}}
+	@button.Button(button.Props{
+		Size:    button.SizeSm,
+		Variant: variant,
+		Attributes: templ.Attributes{
+			"data-on:click": clickAction,
+		},
+	}) {
+		{ action.Label }
+	}
+}
+
+templ ProgressStyle() {
+	<style>
+		@keyframes toast-progress {
+			from { transform: scaleX(1); }
+			to { transform: scaleX(0); }
+		}
+	</style>
+}
+
+templ SuccessToast(title, description string) {
+	@Toast(ToastProps{
+		Title:         title,
+		Description:   description,
+		Variant:       VariantSuccess,
+		Duration:      5000,
+		Dismissible:   true,
+		ShowIcon:      true,
+		ShowIndicator: true,
+	})
+}
+
+templ ErrorToast(title, description string) {
+	@Toast(ToastProps{
+		Title:       title,
+		Description: description,
+		Variant:     VariantError,
+		Duration:    0,
+		Dismissible: true,
+		ShowIcon:    true,
+	})
+}
+
+templ WarningToast(title, description string) {
+	@Toast(ToastProps{
+		Title:         title,
+		Description:   description,
+		Variant:       VariantWarning,
+		Duration:      8000,
+		Dismissible:   true,
+		ShowIcon:      true,
+		ShowIndicator: true,
+	})
+}
+
+templ InfoToast(title, description string) {
+	@Toast(ToastProps{
+		Title:         title,
+		Description:   description,
+		Variant:       VariantInfo,
+		Duration:      5000,
+		Dismissible:   true,
+		ShowIcon:      true,
+		ShowIndicator: true,
+	})
+}
+
+templ AckToast(id, title, description string, variant Variant) {
+	@Toast(ToastProps{
+		ID:          id,
+		Title:       title,
+		Description: description,
+		Variant:     variant,
+		Duration:    0,
+		Dismissible: true,
+		ShowIcon:    true,
+		RequiresAck: true,
+	})
+}
+
+templ UndoToast(title, description, undoURL string) {
+	@Toast(ToastProps{
+		Title:         title,
+		Description:   description,
+		Variant:       VariantInfo,
+		Duration:      8000,
+		Dismissible:   true,
+		ShowIcon:      true,
+		ShowIndicator: true,
+		Actions: []Action{
+			{Label: "Undo", URL: undoURL, Variant: "outline"},
+		},
+	})
+}

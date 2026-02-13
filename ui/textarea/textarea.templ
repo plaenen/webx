@@ -81,5 +81,5 @@ templ Textarea(props ...Props) {
 }
 
 templ Script() {
-	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/assets/js/textarea.min.js") }></script>
+	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/static/js/textarea.min.js") }></script>
 }

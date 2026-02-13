@@ -93,5 +93,5 @@ templ Fallback(props ...FallbackProps) {
 }
 
 templ Script() {
-	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/assets/js/avatar.min.js") }></script>
+	<script defer nonce={ templ.GetNonce(ctx) } src={ utils.ScriptURL("/static/js/avatar.min.js") }></script>
 }

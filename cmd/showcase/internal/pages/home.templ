@@ -1,0 +1,14 @@
+package pages
+
+import "github.com/plaenen/webx/layouts"
+
+templ Home() {
+	@layouts.Base(layouts.BaseProps{
+		Title:       "Showcase",
+		Description: "Hello World showcase",
+	}) {
+		<main class="flex items-center justify-center min-h-screen">
+			<h1 class="text-4xl font-bold">Hello World</h1>
+		</main>
+	}
+}
