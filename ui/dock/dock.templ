@@ -1,0 +1,77 @@
+package dock
+
+import "github.com/plaenen/webx/utils"
+
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "dock-xs"
+	SizeSm      Size = "dock-sm"
+	SizeMd      Size = "dock-md"
+	SizeLg      Size = "dock-lg"
+	SizeXl      Size = "dock-xl"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Size       Size
+}
+
+// Dock renders a dock navigation container.
+templ Dock(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("dock", string(p.Size), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+type ItemProps struct {
+	Class      string
+	Attributes templ.Attributes
+	Active     bool
+}
+
+// Item renders a dock button item.
+templ Item(props ...ItemProps) {
+	{{ var p ItemProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<button
+		class={ utils.TwMerge(utils.If(p.Active, "dock-active"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</button>
+}
+
+type LabelProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Label renders a dock-label text span.
+templ Label(props ...LabelProps) {
+	{{ var p LabelProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		class={ utils.TwMerge("dock-label", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</span>
+}

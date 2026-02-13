@@ -1,0 +1,77 @@
+package status
+
+import "github.com/plaenen/webx/utils"
+
+// Variant controls the status color.
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantNeutral   Variant = "status-neutral"
+	VariantPrimary   Variant = "status-primary"
+	VariantSecondary Variant = "status-secondary"
+	VariantAccent    Variant = "status-accent"
+	VariantInfo      Variant = "status-info"
+	VariantSuccess   Variant = "status-success"
+	VariantWarning   Variant = "status-warning"
+	VariantError     Variant = "status-error"
+)
+
+// Size controls the status indicator size.
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "status-xs"
+	SizeSm      Size = "status-sm"
+	SizeMd      Size = "status-md"
+	SizeLg      Size = "status-lg"
+	SizeXl      Size = "status-xl"
+)
+
+// Animation controls the status animation.
+type Animation string
+
+const (
+	AnimationNone   Animation = ""
+	AnimationPing   Animation = "animate-ping"
+	AnimationBounce Animation = "animate-bounce"
+)
+
+// Props configures a status indicator.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    Variant
+	Size       Size
+	Animation  Animation
+}
+
+templ Status(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	if p.Animation == AnimationPing {
+		<div
+			if p.ID != "" {
+				id={ p.ID }
+			}
+			class="inline-grid *:[grid-area:1/1]"
+			{ p.Attributes... }
+		>
+			<div class={ utils.TwMerge("status", string(p.Variant), string(p.Size), "animate-ping", p.Class) }></div>
+			<div class={ utils.TwMerge("status", string(p.Variant), string(p.Size), p.Class) }></div>
+		</div>
+	} else {
+		<div
+			if p.ID != "" {
+				id={ p.ID }
+			}
+			class={ utils.TwMerge("status", string(p.Variant), string(p.Size), string(p.Animation), p.Class) }
+			aria-label="status"
+			{ p.Attributes... }
+		></div>
+	}
+}

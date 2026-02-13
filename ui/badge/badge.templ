@@ -1,0 +1,67 @@
+package badge
+
+import "github.com/plaenen/webx/utils"
+
+// Variant controls the badge color.
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantNeutral   Variant = "badge-neutral"
+	VariantPrimary   Variant = "badge-primary"
+	VariantSecondary Variant = "badge-secondary"
+	VariantAccent    Variant = "badge-accent"
+	VariantInfo      Variant = "badge-info"
+	VariantSuccess   Variant = "badge-success"
+	VariantWarning   Variant = "badge-warning"
+	VariantError     Variant = "badge-error"
+)
+
+// Style controls the badge visual style.
+type Style string
+
+const (
+	StyleDefault Style = ""
+	StyleOutline Style = "badge-outline"
+	StyleDash    Style = "badge-dash"
+	StyleSoft    Style = "badge-soft"
+	StyleGhost   Style = "badge-ghost"
+)
+
+// Size controls the badge size.
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "badge-xs"
+	SizeSm      Size = "badge-sm"
+	SizeMd      Size = "badge-md"
+	SizeLg      Size = "badge-lg"
+	SizeXl      Size = "badge-xl"
+)
+
+// Props configures a badge.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    Variant
+	Style      Style
+	Size       Size
+}
+
+templ Badge(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("badge", string(p.Variant), string(p.Style), string(p.Size), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</span>
+}

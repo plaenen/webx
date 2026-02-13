@@ -1,0 +1,60 @@
+package alert
+
+import "github.com/plaenen/webx/utils"
+
+// Variant controls the alert color.
+type Variant string
+
+const (
+	VariantDefault Variant = ""
+	VariantInfo    Variant = "alert-info"
+	VariantSuccess Variant = "alert-success"
+	VariantWarning Variant = "alert-warning"
+	VariantError   Variant = "alert-error"
+)
+
+// Style controls the alert visual style.
+type Style string
+
+const (
+	StyleDefault Style = ""
+	StyleOutline Style = "alert-outline"
+	StyleDash    Style = "alert-dash"
+	StyleSoft    Style = "alert-soft"
+)
+
+// Layout controls the alert direction.
+type Layout string
+
+const (
+	LayoutDefault    Layout = ""
+	LayoutVertical   Layout = "alert-vertical"
+	LayoutHorizontal Layout = "alert-horizontal"
+)
+
+// Props configures an alert.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    Variant
+	Style      Style
+	Layout     Layout
+}
+
+templ Alert(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		role="alert"
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("alert", string(p.Variant), string(p.Style), string(p.Layout), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

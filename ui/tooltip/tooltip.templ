@@ -1,0 +1,77 @@
+package tooltip
+
+import "github.com/plaenen/webx/utils"
+
+type Position string
+
+const (
+	PositionDefault Position = ""
+	PositionTop     Position = "tooltip-top"
+	PositionBottom  Position = "tooltip-bottom"
+	PositionLeft    Position = "tooltip-left"
+	PositionRight   Position = "tooltip-right"
+)
+
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantNeutral   Variant = "tooltip-neutral"
+	VariantPrimary   Variant = "tooltip-primary"
+	VariantSecondary Variant = "tooltip-secondary"
+	VariantAccent    Variant = "tooltip-accent"
+	VariantInfo      Variant = "tooltip-info"
+	VariantSuccess   Variant = "tooltip-success"
+	VariantWarning   Variant = "tooltip-warning"
+	VariantError     Variant = "tooltip-error"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Position   Position
+	Variant    Variant
+	Tip        string
+	Open       bool
+}
+
+// Tooltip renders a tooltip container.
+// Set Tip for simple text content via data-tip, or nest a Content component for rich HTML.
+templ Tooltip(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("tooltip", string(p.Position), string(p.Variant), utils.If(p.Open, "tooltip-open"), p.Class) }
+		if p.Tip != "" {
+			data-tip={ p.Tip }
+		}
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+type ContentProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Content renders a tooltip-content wrapper for custom HTML inside a tooltip.
+templ Content(props ...ContentProps) {
+	{{ var p ContentProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		class={ utils.TwMerge("tooltip-content", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

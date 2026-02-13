@@ -1,0 +1,119 @@
+package rating
+
+import "github.com/plaenen/webx/utils"
+
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "rating-xs"
+	SizeSm      Size = "rating-sm"
+	SizeMd      Size = "rating-md"
+	SizeLg      Size = "rating-lg"
+	SizeXl      Size = "rating-xl"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Size       Size
+	Half       bool
+}
+
+// Rating renders a <div class="rating"> container for radio star inputs.
+templ Rating(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("rating", string(p.Size), utils.If(p.Half, "rating-half"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+type Mask string
+
+const (
+	MaskStar  Mask = "mask-star"
+	MaskStar2 Mask = "mask-star-2"
+	MaskHeart Mask = "mask-heart"
+)
+
+type StarProps struct {
+	Class      string
+	Attributes templ.Attributes
+	Name       string
+	Mask       Mask
+	Label      string
+	Checked    bool
+	Disabled   bool
+	Hidden     bool
+}
+
+// Star renders an <input type="radio"> styled as a rating star.
+templ Star(props StarProps) {
+	<input
+		type="radio"
+		if props.Name != "" {
+			name={ props.Name }
+		}
+		class={ utils.TwMerge("mask", string(props.Mask), utils.If(props.Hidden, "rating-hidden"), props.Class) }
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		if props.Checked {
+			checked
+		}
+		if props.Disabled {
+			disabled
+		}
+		{ props.Attributes... }
+	/>
+}
+
+// HalfStar renders a pair of inputs for half-star rating (left half + right half).
+type HalfStarProps struct {
+	Class   string
+	Name    string
+	Mask    Mask
+	Label1  string
+	Label2  string
+	Checked int // 1 for first half, 2 for second half, 0 for neither
+}
+
+// HalfStar renders two <input type="radio"> for the left and right halves of a star.
+templ HalfStar(props HalfStarProps) {
+	<input
+		type="radio"
+		if props.Name != "" {
+			name={ props.Name }
+		}
+		class={ utils.TwMerge("mask", string(props.Mask), "mask-half-1", props.Class) }
+		if props.Label1 != "" {
+			aria-label={ props.Label1 }
+		}
+		if props.Checked == 1 {
+			checked
+		}
+	/>
+	<input
+		type="radio"
+		if props.Name != "" {
+			name={ props.Name }
+		}
+		class={ utils.TwMerge("mask", string(props.Mask), "mask-half-2", props.Class) }
+		if props.Label2 != "" {
+			aria-label={ props.Label2 }
+		}
+		if props.Checked == 2 {
+			checked
+		}
+	/>
+}

@@ -1,0 +1,27 @@
+package textrotate
+
+import "github.com/plaenen/webx/utils"
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// TextRotate renders a text-rotate container that cycles through child text items.
+// Nest a single <span> containing multiple <span> children for each rotating text.
+templ TextRotate(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("text-rotate", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</span>
+}

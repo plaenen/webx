@@ -1,0 +1,42 @@
+package table
+
+import "github.com/plaenen/webx/utils"
+
+// Size controls the table row density.
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "table-xs"
+	SizeSm      Size = "table-sm"
+	SizeMd      Size = "table-md"
+	SizeLg      Size = "table-lg"
+	SizeXl      Size = "table-xl"
+)
+
+// Props configures the table.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Size       Size
+	Zebra      bool
+	PinRows    bool
+	PinCols    bool
+}
+
+templ Table(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<table
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("table", string(p.Size), utils.If(p.Zebra, "table-zebra"), utils.If(p.PinRows, "table-pin-rows"), utils.If(p.PinCols, "table-pin-cols"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</table>
+}

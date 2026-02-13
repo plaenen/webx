@@ -4,37 +4,78 @@ import "github.com/plaenen/webx/utils"
 
 // Props configures the navbar.
 type Props struct {
-	Class string
+	ID         string
+	Class      string
+	Attributes templ.Attributes
 }
 
-// Navbar renders a DaisyUI navbar.
 templ Navbar(props ...Props) {
 	{{ var p Props }}
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
-	<div class={ utils.TwMerge("navbar bg-base-100 border-b border-base-300", p.Class) }>
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("navbar bg-base-100 border-b border-base-300", p.Class) }
+		{ p.Attributes... }
+	>
 		{ children... }
 	</div>
 }
 
-// Start renders the left section of the navbar.
-templ Start() {
-	<div class="navbar-start">
+// SectionProps configures a navbar section (start, center, end).
+type SectionProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Start(props ...SectionProps) {
+	{{ var p SectionProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("navbar-start", p.Class) }
+		{ p.Attributes... }
+	>
 		{ children... }
 	</div>
 }
 
-// Center renders the center section of the navbar.
-templ Center() {
-	<div class="navbar-center">
+templ Center(props ...SectionProps) {
+	{{ var p SectionProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("navbar-center", p.Class) }
+		{ p.Attributes... }
+	>
 		{ children... }
 	</div>
 }
 
-// End renders the right section of the navbar.
-templ End() {
-	<div class="navbar-end">
+templ End(props ...SectionProps) {
+	{{ var p SectionProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("navbar-end", p.Class) }
+		{ p.Attributes... }
+	>
 		{ children... }
 	</div>
 }

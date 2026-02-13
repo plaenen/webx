@@ -1,0 +1,40 @@
+package skeleton
+
+import "github.com/plaenen/webx/utils"
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Text       bool
+}
+
+// Skeleton renders a placeholder element with a loading animation.
+// Set Text to true for skeleton-text (animates text color instead of background).
+templ Skeleton(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	if p.Text {
+		<span
+			if p.ID != "" {
+				id={ p.ID }
+			}
+			class={ utils.TwMerge("skeleton skeleton-text", p.Class) }
+			{ p.Attributes... }
+		>
+			{ children... }
+		</span>
+	} else {
+		<div
+			if p.ID != "" {
+				id={ p.ID }
+			}
+			class={ utils.TwMerge("skeleton", p.Class) }
+			{ p.Attributes... }
+		>
+			{ children... }
+		</div>
+	}
+}

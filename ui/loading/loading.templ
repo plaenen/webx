@@ -1,0 +1,49 @@
+package loading
+
+import "github.com/plaenen/webx/utils"
+
+type Type string
+
+const (
+	TypeDefault  Type = ""
+	TypeSpinner  Type = "loading-spinner"
+	TypeDots     Type = "loading-dots"
+	TypeRing     Type = "loading-ring"
+	TypeBall     Type = "loading-ball"
+	TypeBars     Type = "loading-bars"
+	TypeInfinity Type = "loading-infinity"
+)
+
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "loading-xs"
+	SizeSm      Size = "loading-sm"
+	SizeMd      Size = "loading-md"
+	SizeLg      Size = "loading-lg"
+	SizeXl      Size = "loading-xl"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Type       Type
+	Size       Size
+}
+
+// Loading renders a loading indicator.
+templ Loading(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("loading", string(p.Type), string(p.Size), p.Class) }
+		{ p.Attributes... }
+	></span>
+}

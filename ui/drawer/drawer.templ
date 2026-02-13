@@ -10,21 +10,32 @@ type DrawerSignals struct {
 	Open bool `json:"open"`
 }
 
+type Position string
+
+const (
+	PositionDefault Position = ""
+	PositionEnd     Position = "drawer-end"
+)
+
 // Props configures the drawer container.
 type Props struct {
-	ID    string
-	Class string
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Position   Position
 }
 
 // SideProps configures the sidebar panel.
 type SideProps struct {
-	ID    string
-	Class string
+	ID         string
+	Class      string
+	Attributes templ.Attributes
 }
 
 // ContentProps configures the main content area.
 type ContentProps struct {
-	Class string
+	Class      string
+	Attributes templ.Attributes
 }
 
 // Drawer renders a DaisyUI drawer controlled by Datastar signals.
@@ -40,7 +51,8 @@ templ Drawer(props Props) {
 	}}
 	<div
 		data-signals={ signals.DataSignals }
-		class={ utils.TwMerge("drawer lg:drawer-open", props.Class) }
+		class={ utils.TwMerge("drawer lg:drawer-open", string(props.Position), props.Class) }
+		{ props.Attributes... }
 	>
 		// DaisyUI uses :checked on .drawer-toggle for mobile sidebar visibility,
 		// and lg:drawer-open for desktop. data-attr:checked syncs the checkbox
@@ -62,7 +74,10 @@ templ Content(props ...ContentProps) {
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
-	<div class={ utils.TwMerge("drawer-content", p.Class) }>
+	<div
+		class={ utils.TwMerge("drawer-content", p.Class) }
+		{ p.Attributes... }
+	>
 		{ children... }
 	</div>
 }
@@ -76,7 +91,7 @@ templ Side(props SideProps) {
 		}
 		signals := utils.Signals(id, DrawerSignals{})
 	}}
-	<div class="drawer-side z-40">
+	<div class="drawer-side z-40" { props.Attributes... }>
 		<div
 			class="drawer-overlay"
 			{ ds.OnClick(signals.Set("open", "false"))... }

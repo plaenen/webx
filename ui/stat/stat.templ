@@ -1,0 +1,174 @@
+package stat
+
+import "github.com/plaenen/webx/utils"
+
+// Direction controls horizontal vs vertical layout of stats.
+type Direction string
+
+const (
+	DirectionDefault    Direction = ""
+	DirectionHorizontal Direction = "stats-horizontal"
+	DirectionVertical   Direction = "stats-vertical"
+)
+
+// Props configures the stats container.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Direction  Direction
+}
+
+templ Stats(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stats shadow", string(p.Direction), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// StatProps configures an individual stat block.
+type StatProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Stat(props ...StatProps) {
+	{{ var p StatProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stat", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// TitleProps configures the stat title.
+type TitleProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Title(props ...TitleProps) {
+	{{ var p TitleProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stat-title", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// ValueProps configures the stat value.
+type ValueProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Value(props ...ValueProps) {
+	{{ var p ValueProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stat-value", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// DescProps configures the stat description.
+type DescProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Desc(props ...DescProps) {
+	{{ var p DescProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stat-desc", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// FigureProps configures the stat figure (icon/image container).
+type FigureProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Figure(props ...FigureProps) {
+	{{ var p FigureProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stat-figure", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// ActionsProps configures the stat actions container.
+type ActionsProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Actions(props ...ActionsProps) {
+	{{ var p ActionsProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("stat-actions", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

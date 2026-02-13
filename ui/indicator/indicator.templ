@@ -1,0 +1,68 @@
+package indicator
+
+import "github.com/plaenen/webx/utils"
+
+// HorizontalAlign controls horizontal placement of the indicator item.
+type HorizontalAlign string
+
+const (
+	HorizontalAlignEnd    HorizontalAlign = ""
+	HorizontalAlignStart  HorizontalAlign = "indicator-start"
+	HorizontalAlignCenter HorizontalAlign = "indicator-center"
+)
+
+// VerticalAlign controls vertical placement of the indicator item.
+type VerticalAlign string
+
+const (
+	VerticalAlignTop    VerticalAlign = ""
+	VerticalAlignMiddle VerticalAlign = "indicator-middle"
+	VerticalAlignBottom VerticalAlign = "indicator-bottom"
+)
+
+// Props configures the indicator container.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Indicator renders a DaisyUI indicator wrapper.
+// Place an Item and the target element as children.
+templ Indicator(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("indicator", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// ItemProps configures the indicator item (the badge/status positioned on a corner).
+type ItemProps struct {
+	Class           string
+	Attributes      templ.Attributes
+	HorizontalAlign HorizontalAlign
+	VerticalAlign   VerticalAlign
+}
+
+// Item renders a DaisyUI indicator-item element positioned on a corner of its sibling.
+templ Item(props ...ItemProps) {
+	{{ var p ItemProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		class={ utils.TwMerge("indicator-item", string(p.HorizontalAlign), string(p.VerticalAlign), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</span>
+}

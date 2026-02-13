@@ -1,0 +1,37 @@
+package kbd
+
+import "github.com/plaenen/webx/utils"
+
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "kbd-xs"
+	SizeSm      Size = "kbd-sm"
+	SizeMd      Size = "kbd-md"
+	SizeLg      Size = "kbd-lg"
+	SizeXl      Size = "kbd-xl"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Size       Size
+}
+
+templ Kbd(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<kbd
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("kbd", string(p.Size), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</kbd>
+}

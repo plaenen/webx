@@ -1,0 +1,62 @@
+package progress
+
+import (
+	"strconv"
+
+	"github.com/plaenen/webx/utils"
+)
+
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantPrimary   Variant = "progress-primary"
+	VariantSecondary Variant = "progress-secondary"
+	VariantAccent    Variant = "progress-accent"
+	VariantNeutral   Variant = "progress-neutral"
+	VariantInfo      Variant = "progress-info"
+	VariantSuccess   Variant = "progress-success"
+	VariantWarning   Variant = "progress-warning"
+	VariantError     Variant = "progress-error"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    Variant
+	Value      int
+	Max        int
+}
+
+func itoa(i int) string {
+	return strconv.Itoa(i)
+}
+
+// Progress renders a progress bar.
+// When Max is 0, the bar renders as indeterminate (no value/max attributes).
+templ Progress(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	if p.Max > 0 {
+		<progress
+			if p.ID != "" {
+				id={ p.ID }
+			}
+			class={ utils.TwMerge("progress", string(p.Variant), p.Class) }
+			value={ itoa(p.Value) }
+			max={ itoa(p.Max) }
+			{ p.Attributes... }
+		></progress>
+	} else {
+		<progress
+			if p.ID != "" {
+				id={ p.ID }
+			}
+			class={ utils.TwMerge("progress", string(p.Variant), p.Class) }
+			{ p.Attributes... }
+		></progress>
+	}
+}

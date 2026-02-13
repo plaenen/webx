@@ -1,0 +1,91 @@
+package accordion
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// AccordionSignals holds the reactive state for an accordion group.
+type AccordionSignals struct {
+	Active string `json:"active"`
+}
+
+// Modifier controls the collapse icon style.
+type Modifier string
+
+const (
+	ModifierDefault Modifier = ""
+	ModifierArrow   Modifier = "collapse-arrow"
+	ModifierPlus    Modifier = "collapse-plus"
+)
+
+// Props configures the accordion group container.
+type Props struct {
+	ID           string
+	Class        string
+	DefaultValue string // Value of the initially open item
+}
+
+// ItemProps configures a single accordion item.
+type ItemProps struct {
+	AccordionID string // must match the parent Accordion's ID
+	Value       string // unique identifier for this item
+	Title       string
+	Class       string
+	Modifier    Modifier
+	Attributes  templ.Attributes
+}
+
+// Accordion renders a group container that manages which item is open.
+// Only one item can be open at a time. Pass DefaultValue to start with
+// an item open.
+templ Accordion(props Props) {
+	{{
+		id := props.ID
+		if id == "" {
+			id = utils.RandomID()
+		}
+		signals := utils.Signals(id, AccordionSignals{Active: props.DefaultValue})
+	}}
+	<div
+		data-signals={ signals.DataSignals }
+		class={ utils.TwMerge("w-full", props.Class) }
+	>
+		{ children... }
+	</div>
+}
+
+// Item renders a single collapsible accordion item. The AccordionID must
+// match the parent Accordion's ID so signals are shared.
+templ Item(props ItemProps) {
+	{{
+		signals := utils.Signals(props.AccordionID, AccordionSignals{})
+		isActive := signals.Equals("active", props.Value)
+		isNotActive := signals.NotEquals("active", props.Value)
+		toggleExpr := fmt.Sprintf("%s ? (%s) : (%s)",
+			isActive,
+			signals.Set("active", "''"),
+			signals.SetString("active", props.Value))
+		dataClass := utils.NewDataClass().
+			Add("collapse-open", isActive).
+			Add("collapse-close", isNotActive).
+			Build()
+	}}
+	<div
+		class={ utils.TwMerge("collapse", string(props.Modifier), "bg-base-100 border border-base-300", props.Class) }
+		data-class={ dataClass }
+		{ props.Attributes... }
+	>
+		<div
+			class="collapse-title font-semibold cursor-pointer"
+			{ ds.OnClick(toggleExpr)... }
+		>
+			{ props.Title }
+		</div>
+		<div class="collapse-content">
+			{ children... }
+		</div>
+	</div>
+}

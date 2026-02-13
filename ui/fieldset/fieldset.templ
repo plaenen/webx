@@ -1,0 +1,64 @@
+package fieldset
+
+import "github.com/plaenen/webx/utils"
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Fieldset renders a <fieldset> container for grouping form elements.
+templ Fieldset(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<fieldset
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("fieldset", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</fieldset>
+}
+
+type LegendProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Legend renders a <legend> with the fieldset-legend class.
+templ Legend(props ...LegendProps) {
+	{{ var p LegendProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<legend
+		class={ utils.TwMerge("fieldset-legend", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</legend>
+}
+
+type LabelProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Label renders a <p> with the label class for input descriptions.
+templ Label(props ...LabelProps) {
+	{{ var p LabelProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<p
+		class={ utils.TwMerge("label", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</p>
+}

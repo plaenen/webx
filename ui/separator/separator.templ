@@ -1,0 +1,63 @@
+package separator
+
+import "github.com/plaenen/webx/utils"
+
+// Variant controls the separator color.
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantNeutral   Variant = "divider-neutral"
+	VariantPrimary   Variant = "divider-primary"
+	VariantSecondary Variant = "divider-secondary"
+	VariantAccent    Variant = "divider-accent"
+	VariantInfo      Variant = "divider-info"
+	VariantSuccess   Variant = "divider-success"
+	VariantWarning   Variant = "divider-warning"
+	VariantError     Variant = "divider-error"
+)
+
+// Direction controls the separator orientation.
+type Direction string
+
+const (
+	DirectionVertical   Direction = ""
+	DirectionHorizontal Direction = "divider-horizontal"
+)
+
+// Position controls where the text label is placed.
+type Position string
+
+const (
+	PositionDefault Position = ""
+	PositionStart   Position = "divider-start"
+	PositionEnd     Position = "divider-end"
+)
+
+// Props configures a separator.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    Variant
+	Direction  Direction
+	Position   Position
+}
+
+// Separator renders a DaisyUI divider. Optional children are displayed as
+// the separator label text (e.g. "OR").
+templ Separator(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("divider", string(p.Variant), string(p.Direction), string(p.Position), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

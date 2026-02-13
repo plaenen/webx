@@ -1,0 +1,51 @@
+package label
+
+import "github.com/plaenen/webx/utils"
+
+// Props for the Label span used inside input/select wrappers.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Label renders a <span class="label"> for use inside input or select wrappers.
+templ Label(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("label", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</span>
+}
+
+// FloatingProps for the floating label container.
+type FloatingProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Floating renders a <label class="floating-label"> container.
+templ Floating(props ...FloatingProps) {
+	{{ var p FloatingProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<label
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("floating-label", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</label>
+}

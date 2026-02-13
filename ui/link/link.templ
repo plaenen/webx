@@ -1,0 +1,45 @@
+package link
+
+import "github.com/plaenen/webx/utils"
+
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantNeutral   Variant = "link-neutral"
+	VariantPrimary   Variant = "link-primary"
+	VariantSecondary Variant = "link-secondary"
+	VariantAccent    Variant = "link-accent"
+	VariantSuccess   Variant = "link-success"
+	VariantInfo      Variant = "link-info"
+	VariantWarning   Variant = "link-warning"
+	VariantError     Variant = "link-error"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    Variant
+	Hover      bool
+	Href       string
+}
+
+templ Link(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<a
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		if p.Href != "" {
+			href={ templ.SafeURL(p.Href) }
+		}
+		class={ utils.TwMerge("link", string(p.Variant), utils.If(p.Hover, "link-hover"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</a>
+}

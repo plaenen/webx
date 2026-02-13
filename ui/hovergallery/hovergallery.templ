@@ -1,0 +1,28 @@
+package hovergallery
+
+import "github.com/plaenen/webx/utils"
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// HoverGallery renders a hover-gallery container.
+// Place <img> elements as children; the first is visible by default
+// and others appear on horizontal hover.
+templ HoverGallery(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<figure
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("hover-gallery", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</figure>
+}

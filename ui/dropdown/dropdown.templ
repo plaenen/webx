@@ -1,0 +1,102 @@
+package dropdown
+
+import (
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// DropdownSignals holds the reactive state for a dropdown.
+type DropdownSignals struct {
+	Open bool `json:"open"`
+}
+
+// Position controls the dropdown content direction.
+type Position string
+
+const (
+	PositionDefault Position = ""
+	PositionTop     Position = "dropdown-top"
+	PositionBottom  Position = "dropdown-bottom"
+	PositionLeft    Position = "dropdown-left"
+	PositionRight   Position = "dropdown-right"
+)
+
+// Align controls the dropdown content horizontal alignment.
+type Align string
+
+const (
+	AlignDefault Align = ""
+	AlignCenter  Align = "dropdown-center"
+	AlignEnd     Align = "dropdown-end"
+)
+
+// Props configures a dropdown.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Position   Position
+	Align      Align
+	Hover      bool
+}
+
+templ Dropdown(props Props) {
+	{{
+		id := props.ID
+		if id == "" {
+			id = utils.RandomID()
+		}
+		signals := utils.Signals(id, DropdownSignals{Open: false})
+	}}
+	<details
+		id={ id }
+		data-signals={ signals.DataSignals }
+		class={ utils.TwMerge("dropdown", string(props.Position), string(props.Align), utils.If(props.Hover, "dropdown-hover"), props.Class) }
+		{ ds.Attr("open", signals.Signal("open"))... }
+		{ ds.On("click__outside", signals.Set("open", "false"))... }
+		{ props.Attributes... }
+	>
+		{ children... }
+	</details>
+}
+
+// TriggerProps configures the dropdown trigger button.
+type TriggerProps struct {
+	DropdownID string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Trigger(props TriggerProps) {
+	{{
+		signals := utils.Signals(props.DropdownID, DropdownSignals{})
+	}}
+	<summary
+		class={ utils.TwMerge("btn", props.Class) }
+		{ ds.On("click__prevent", signals.Toggle("open"))... }
+		{ props.Attributes... }
+	>
+		{ children... }
+	</summary>
+}
+
+// ContentProps configures the dropdown content panel.
+type ContentProps struct {
+	DropdownID string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Content(props ContentProps) {
+	{{
+		signals := utils.Signals(props.DropdownID, DropdownSignals{})
+	}}
+	<ul
+		tabindex="-1"
+		class={ utils.TwMerge("dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm", props.Class) }
+		{ ds.OnClick(signals.Set("open", "false"))... }
+		{ props.Attributes... }
+	>
+		{ children... }
+	</ul>
+}

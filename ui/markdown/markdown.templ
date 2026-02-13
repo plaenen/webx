@@ -1,0 +1,146 @@
+package markdown
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// Props configures the Markdown display component.
+type Props struct {
+	// Content is the markdown text to render.
+	Content string
+	// ID is the optional element ID.
+	ID string
+	// Class is additional CSS classes.
+	Class string
+	// Attributes is additional HTML attributes.
+	Attributes templ.Attributes
+}
+
+// Markdown renders markdown content as HTML.
+// It uses GitHub Flavored Markdown with typography extensions.
+templ Markdown(props Props) {
+	<div
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		class={ utils.TwMerge("prose max-w-none", props.Class) }
+		{ props.Attributes... }
+	>
+		@templ.Raw(MustRender(props.Content))
+	</div>
+}
+
+// inputSignals holds the reactive state for a markdown input.
+type inputSignals struct {
+	Value string `json:"value"`
+	Mode  string `json:"mode"`
+}
+
+// InputProps configures a markdown input with Write/Preview tabs.
+type InputProps struct {
+	// ID uniquely identifies this component instance. Required.
+	ID string
+	// Class adds additional CSS classes to the container.
+	Class string
+	// Attributes adds arbitrary HTML attributes to the container.
+	Attributes templ.Attributes
+	// Name is the form field name attribute.
+	Name string
+	// Placeholder is the textarea placeholder text.
+	Placeholder string
+	// Value is the initial textarea value.
+	Value string
+	// PreviewURL is the endpoint path for server-side preview rendering.
+	// The component appends "?id=<ID>" automatically.
+	PreviewURL string
+	// Rows is the textarea rows. Defaults to 8.
+	Rows int
+}
+
+func (p *InputProps) defaults() {
+	if p.ID == "" {
+		p.ID = utils.RandomID()
+	}
+	if p.Rows == 0 {
+		p.Rows = 8
+	}
+	if p.Placeholder == "" {
+		p.Placeholder = "Write markdown here..."
+	}
+}
+
+// MarkdownInput renders a textarea with Write/Preview tabs.
+// Clicking Preview sends the markdown to the server via POST SSE,
+// which renders it and patches the preview div.
+templ MarkdownInput(props InputProps) {
+	{{ props.defaults() }}
+	{{
+		signals := utils.Signals(props.ID, inputSignals{
+			Value: props.Value,
+			Mode:  "edit",
+		})
+
+		previewURL := fmt.Sprintf("%s?id=%s", props.PreviewURL, props.ID)
+
+		onInput := signals.Set("value", "evt.target.value")
+
+		writeClick := signals.SetString("mode", "edit")
+		previewClick := fmt.Sprintf(
+			"%s; %s",
+			signals.SetString("mode", "preview"),
+			ds.Post(previewURL),
+		)
+	}}
+	<div
+		id={ props.ID + "-container" }
+		class={ utils.TwMerge("border border-base-300 rounded-lg overflow-hidden", props.Class) }
+		data-signals={ signals.DataSignals }
+		{ props.Attributes... }
+	>
+		<!-- Tab bar -->
+		<div role="tablist" class="tabs tabs-border bg-base-200/50">
+			<button
+				type="button"
+				role="tab"
+				class="tab"
+				{ ds.OnClick(writeClick)... }
+				{ ds.ClassToggle("tab-active", signals.Equals("mode", "edit"))... }
+			>
+				Write
+			</button>
+			<button
+				type="button"
+				role="tab"
+				class="tab"
+				{ ds.OnClick(previewClick)... }
+				{ ds.ClassToggle("tab-active", signals.Equals("mode", "preview"))... }
+			>
+				Preview
+			</button>
+		</div>
+		<!-- Editor -->
+		<div { ds.Show(signals.Equals("mode", "edit"))... }>
+			<textarea
+				id={ props.ID }
+				if props.Name != "" {
+					name={ props.Name }
+				}
+				class="w-full p-3 resize-none bg-base-100 focus:outline-none font-mono text-sm"
+				rows={ fmt.Sprint(props.Rows) }
+				placeholder={ props.Placeholder }
+				{ ds.On("input", onInput)... }
+			>{ props.Value }</textarea>
+		</div>
+		<!-- Preview -->
+		<div
+			id={ props.ID + "-preview" }
+			class="p-3 min-h-[200px] prose max-w-none"
+			{ ds.Show(signals.Equals("mode", "preview"))... }
+		>
+			<p class="text-base-content/50 italic">Nothing to preview</p>
+		</div>
+	</div>
+}

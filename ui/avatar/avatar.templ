@@ -1,0 +1,106 @@
+package avatar
+
+import "github.com/plaenen/webx/utils"
+
+// Status shows an online/offline indicator.
+type Status string
+
+const (
+	StatusDefault Status = ""
+	StatusOnline  Status = "avatar-online"
+	StatusOffline Status = "avatar-offline"
+)
+
+// Size controls the avatar width.
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "w-8"
+	SizeSm      Size = "w-12"
+	SizeMd      Size = "w-16"
+	SizeLg      Size = "w-20"
+	SizeXl      Size = "w-24"
+	Size2xl     Size = "w-32"
+)
+
+// Shape controls the avatar border shape.
+type Shape string
+
+const (
+	ShapeDefault   Shape = ""
+	ShapeRounded   Shape = "rounded"
+	ShapeRoundedXl Shape = "rounded-xl"
+	ShapeCircle    Shape = "rounded-full"
+	ShapeSquircle  Shape = "mask mask-squircle"
+	ShapeHeart     Shape = "mask mask-heart"
+	ShapeHexagon   Shape = "mask mask-hexagon-2"
+)
+
+// Props configures an avatar.
+type Props struct {
+	ID          string
+	Class       string
+	Attributes  templ.Attributes
+	Status      Status
+	Size        Size
+	Shape       Shape
+	Placeholder bool
+	Src         string
+	Alt         string
+}
+
+templ Avatar(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	{{
+		size := string(p.Size)
+		if size == "" {
+			size = "w-24"
+		}
+		shape := string(p.Shape)
+		if shape == "" {
+			shape = "rounded-full"
+		}
+	}}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("avatar", string(p.Status), utils.If(p.Placeholder, "avatar-placeholder"), p.Class) }
+		{ p.Attributes... }
+	>
+		<div class={ utils.TwMerge(size, shape, utils.If(p.Placeholder, "bg-neutral text-neutral-content")) }>
+			if p.Src != "" {
+				<img src={ p.Src } alt={ p.Alt }/>
+			} else {
+				{ children... }
+			}
+		</div>
+	</div>
+}
+
+// GroupProps configures an avatar group.
+type GroupProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Group(props ...GroupProps) {
+	{{ var p GroupProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("avatar-group", "-space-x-6", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

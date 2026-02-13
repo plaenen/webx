@@ -1,0 +1,69 @@
+package fab
+
+import "github.com/plaenen/webx/utils"
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Flower     bool
+}
+
+// Fab renders the floating action button container.
+// Uses a focusable div (tabindex=0, role=button) because Safari has a CSS
+// bug that prevents button elements from being focused properly.
+templ Fab(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("fab", utils.If(p.Flower, "fab-flower"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+type CloseProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Close renders a wrapper for the close button that replaces the main
+// button when the FAB is open.
+templ Close(props ...CloseProps) {
+	{{ var p CloseProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		class={ utils.TwMerge("fab-close", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+type MainActionProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// MainAction renders a wrapper for the main action button that replaces
+// the main button when the FAB is open.
+templ MainAction(props ...MainActionProps) {
+	{{ var p MainActionProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		class={ utils.TwMerge("fab-main-action", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

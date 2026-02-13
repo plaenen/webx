@@ -1,0 +1,111 @@
+package fileupload
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/ui/icon"
+	"github.com/plaenen/webx/utils"
+)
+
+// Props configures a FileUpload component.
+type Props struct {
+	// ID uniquely identifies this component instance. Required.
+	ID string
+	// Class adds additional CSS classes to the container.
+	Class string
+	// Attributes adds arbitrary HTML attributes.
+	Attributes templ.Attributes
+	// Multiple allows selecting multiple files.
+	Multiple bool
+	// Accept restricts file types (e.g. "image/*", ".pdf,.doc").
+	Accept string
+	// UploadURL is the POST endpoint for file uploads.
+	UploadURL string
+	// RemoveURL is the POST endpoint for file removal.
+	RemoveURL string
+}
+
+func (p *Props) defaults() {
+	if p.ID == "" {
+		p.ID = utils.RandomID()
+	}
+}
+
+// FileUpload renders a file upload component with a DaisyUI file input
+// wrapped in a form. Uploaded files appear in a list below the input,
+// rendered server-side via SSE.
+templ FileUpload(props Props) {
+	{{ props.defaults() }}
+	{{
+		uploadURL := fmt.Sprintf("%s?id=%s&removeUrl=%s", props.UploadURL, props.ID, props.RemoveURL)
+		onChange := ds.Post(uploadURL, ds.WithContentType("form"))
+	}}
+	<div
+		id={ props.ID + "-container" }
+		class={ utils.TwMerge("space-y-3", props.Class) }
+		{ props.Attributes... }
+	>
+		<form enctype="multipart/form-data">
+			<input
+				type="file"
+				name="files"
+				id={ props.ID + "-input" }
+				class="file-input file-input-bordered w-full"
+				if props.Multiple {
+					multiple
+				}
+				if props.Accept != "" {
+					accept={ props.Accept }
+				}
+				{ ds.On("change", onChange)... }
+			/>
+		</form>
+		<div id={ props.ID + "-errors" }></div>
+		<div id={ props.ID + "-list" }></div>
+	</div>
+}
+
+// fileListItems renders the list of uploaded files. This is used by the
+// SSE handlers to patch the file list into the DOM.
+templ fileListItems(componentID string, files []FileMeta, removeURL string) {
+	if len(files) > 0 {
+		<ul class="space-y-2">
+			for _, f := range files {
+				<li class="flex items-center gap-3 rounded-lg bg-base-200 px-3 py-2">
+					<span class="text-base-content/60">
+						@icon.File(icon.Props{Size: 16})
+					</span>
+					<span class="flex-1 truncate text-sm font-medium">{ f.Name }</span>
+					<span class="badge badge-ghost badge-sm">{ formatBytes(f.Size) }</span>
+					<button
+						type="button"
+						class="btn btn-ghost btn-xs text-error"
+						{ ds.OnClick(ds.Post(fmt.Sprintf("%s?id=%s&fileId=%s&removeUrl=%s", removeURL, componentID, f.ID, removeURL)))... }
+					>
+						@icon.X(icon.Props{Size: 16})
+					</button>
+				</li>
+			}
+		</ul>
+	}
+}
+
+// formatBytes formats a byte count into a human-readable string.
+func formatBytes(b int64) string {
+	const (
+		kb = 1024
+		mb = kb * 1024
+		gb = mb * 1024
+	)
+	switch {
+	case b >= gb:
+		return fmt.Sprintf("%.1f GB", float64(b)/float64(gb))
+	case b >= mb:
+		return fmt.Sprintf("%.1f MB", float64(b)/float64(mb))
+	case b >= kb:
+		return fmt.Sprintf("%.1f KB", float64(b)/float64(kb))
+	default:
+		return fmt.Sprintf("%d B", b)
+	}
+}

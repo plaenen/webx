@@ -1,0 +1,53 @@
+package mockupcode
+
+import "github.com/plaenen/webx/utils"
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// MockupCode renders a <div class="mockup-code"> container for styled code display.
+templ MockupCode(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("mockup-code", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+type LineProps struct {
+	Class      string
+	Attributes templ.Attributes
+	Prefix     string
+}
+
+// Line renders a <pre><code>...</code></pre> pair inside a mockup-code block.
+templ Line(props ...LineProps) {
+	{{ var p LineProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<pre
+		if p.Prefix != "" {
+			data-prefix={ p.Prefix }
+		}
+		if p.Class != "" {
+			class={ p.Class }
+		}
+		{ p.Attributes... }
+	>
+		<code>
+			{ children... }
+		</code>
+	</pre>
+}

@@ -1,0 +1,55 @@
+package footer
+
+import "github.com/plaenen/webx/utils"
+
+type Direction string
+
+const (
+	DirectionDefault    Direction = ""
+	DirectionHorizontal Direction = "footer-horizontal"
+	DirectionVertical   Direction = "footer-vertical"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Direction  Direction
+	Center     bool
+}
+
+// Footer renders a <footer class="footer"> container.
+templ Footer(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<footer
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("footer", string(p.Direction), utils.If(p.Center, "footer-center"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</footer>
+}
+
+type TitleProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Title renders an <h6 class="footer-title">.
+templ Title(props ...TitleProps) {
+	{{ var p TitleProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<h6
+		class={ utils.TwMerge("footer-title", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</h6>
+}

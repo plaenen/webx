@@ -1,0 +1,164 @@
+package modal
+
+import (
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// ModalSignals holds the reactive state for a modal.
+type ModalSignals struct {
+	Open bool `json:"open"`
+}
+
+type Position string
+
+const (
+	PositionDefault Position = ""
+	PositionTop     Position = "modal-top"
+	PositionMiddle  Position = "modal-middle"
+	PositionBottom  Position = "modal-bottom"
+)
+
+// Props configures the modal container.
+// ID is required so that child components (Box, Backdrop, OpenButton, CloseButton)
+// can reference the same signal.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Position   Position
+}
+
+// BoxProps configures the modal content box.
+type BoxProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// ActionProps configures the modal action area.
+type ActionProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Modal renders a DaisyUI modal controlled by Datastar signals.
+// Uses a hidden checkbox (.modal-toggle) with data-attr:checked to sync state.
+templ Modal(props Props) {
+	{{
+		id := props.ID
+		if id == "" {
+			id = utils.RandomID()
+		}
+		signals := utils.Signals(id, ModalSignals{Open: false})
+	}}
+	<div data-signals={ signals.DataSignals }>
+		<input
+			type="checkbox"
+			class="modal-toggle"
+			aria-hidden="true"
+			tabindex="-1"
+			{ ds.Attr("checked", signals.Signal("open"))... }
+		/>
+		<div
+			class={ utils.TwMerge("modal", string(props.Position), props.Class) }
+			role="dialog"
+			{ props.Attributes... }
+		>
+			{ children... }
+		</div>
+	</div>
+}
+
+// Box renders the modal-box content wrapper.
+templ Box(props ...BoxProps) {
+	{{ var p BoxProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("modal-box", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// Action renders the modal-action area for buttons.
+templ Action(props ...ActionProps) {
+	{{ var p ActionProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		class={ utils.TwMerge("modal-action", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// Backdrop renders a click-outside overlay that closes the modal.
+// Must be placed as a sibling of modal-box inside the modal div.
+templ Backdrop(modalID string) {
+	{{
+		signals := utils.Signals(modalID, ModalSignals{})
+	}}
+	<div
+		class="modal-backdrop"
+		{ ds.OnClick(signals.Set("open", "false"))... }
+	>
+		<span>close</span>
+	</div>
+}
+
+// OpenButton renders a button that opens the modal.
+templ OpenButton(modalID string, props ...OpenButtonProps) {
+	{{ var p OpenButtonProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	{{
+		signals := utils.Signals(modalID, ModalSignals{})
+	}}
+	<button
+		type="button"
+		class={ utils.TwMerge("btn", p.Class) }
+		{ ds.OnClick(signals.Set("open", "true"))... }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</button>
+}
+
+type OpenButtonProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// CloseButton renders a close button inside the modal.
+templ CloseButton(modalID string, props ...CloseButtonProps) {
+	{{ var p CloseButtonProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	{{
+		signals := utils.Signals(modalID, ModalSignals{})
+	}}
+	<button
+		type="button"
+		class={ utils.TwMerge("btn", p.Class) }
+		{ ds.OnClick(signals.Set("open", "false"))... }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</button>
+}
+
+type CloseButtonProps struct {
+	Class      string
+	Attributes templ.Attributes
+}

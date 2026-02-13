@@ -1,0 +1,73 @@
+package filter
+
+import "github.com/plaenen/webx/utils"
+
+// Props for the Filter container (form-based).
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Filter renders a <form class="filter"> container for radio filter buttons.
+templ Filter(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<form
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("filter", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</form>
+}
+
+// ResetProps for the reset button inside a filter.
+type ResetProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Reset renders an <input type="reset"> that clears the filter selection.
+templ Reset(props ...ResetProps) {
+	{{ var p ResetProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<input
+		type="reset"
+		class={ utils.TwMerge("btn btn-square", p.Class) }
+		{ p.Attributes... }
+	/>
+}
+
+// RadioProps for a radio option inside a filter.
+type RadioProps struct {
+	Class      string
+	Attributes templ.Attributes
+	Name       string
+	Label      string
+	Checked    bool
+}
+
+// Radio renders an <input type="radio"> styled as a filter button.
+templ Radio(props RadioProps) {
+	<input
+		type="radio"
+		if props.Name != "" {
+			name={ props.Name }
+		}
+		class={ utils.TwMerge("btn", props.Class) }
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		if props.Checked {
+			checked
+		}
+		{ props.Attributes... }
+	/>
+}

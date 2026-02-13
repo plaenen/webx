@@ -1,0 +1,206 @@
+package moneyinput
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// decimalSignals holds the reactive state for a decimal input.
+type decimalSignals struct {
+	Value  string `json:"value"`
+	Amount string `json:"amount"`
+	Error  string `json:"error"`
+}
+
+// DecimalProps configures a decimal input field.
+type DecimalProps struct {
+	// ID uniquely identifies this component instance. Required.
+	ID string
+	// Class adds additional CSS classes to the input element.
+	Class string
+	// Attributes adds arbitrary HTML attributes to the input element.
+	Attributes templ.Attributes
+	// Name is the form field name attribute.
+	Name string
+	// Placeholder is the input placeholder text.
+	Placeholder string
+	// Value is the initial input value.
+	Value string
+	// ParseURL is the endpoint path for server-side parsing.
+	// The component appends "?id=<ID>" automatically.
+	ParseURL string
+	// DebounceMs is the debounce delay in milliseconds. Defaults to 500.
+	DebounceMs int
+}
+
+func (p *DecimalProps) defaults() {
+	if p.ID == "" {
+		p.ID = utils.RandomID()
+	}
+	if p.DebounceMs == 0 {
+		p.DebounceMs = 500
+	}
+}
+
+// DecimalInput renders a text input that parses numeric shorthand (5k, 1.5M, 1,234.56)
+// via server-side Datastar SSE. The parsed and formatted result is displayed inline.
+templ DecimalInput(props DecimalProps) {
+	{{ props.defaults() }}
+	{{
+		signals := utils.Signals(props.ID, decimalSignals{
+			Value:  props.Value,
+			Amount: "",
+			Error:  "",
+		})
+
+		parseURL := fmt.Sprintf("%s?id=%s", props.ParseURL, props.ID)
+
+		onInput := fmt.Sprintf(
+			"%s; %s",
+			signals.Set("value", "evt.target.value"),
+			ds.Get(parseURL),
+		)
+		debounce := fmt.Sprintf("__debounce.%dms", props.DebounceMs)
+	}}
+	<div
+		id={ props.ID + "-wrapper" }
+		data-signals={ signals.DataSignals }
+	>
+		<input
+			id={ props.ID }
+			type="text"
+			autocomplete="off"
+			if props.Name != "" {
+				name={ props.Name }
+			}
+			if props.Placeholder != "" {
+				placeholder={ props.Placeholder }
+			}
+			if props.Value != "" {
+				value={ props.Value }
+			}
+			class={ utils.TwMerge("input font-mono text-right", props.Class) }
+			{ ds.On("input"+debounce, onInput)... }
+			{ props.Attributes... }
+		/>
+		<div
+			id={ props.ID + "-hint" }
+			class="mt-2 text-xs text-error"
+			{ ds.Show(signals.Signal("error") + " !== ''")... }
+		>
+			<span { ds.Text(signals.Signal("error"))... }></span>
+		</div>
+		<div
+			id={ props.ID + "-amount" }
+			class="mt-2 text-xs text-success font-mono"
+			{ ds.Show(signals.Signal("amount") + " !== '' && " + signals.Signal("error") + " === ''")... }
+		>
+			<span { ds.Text(signals.Signal("amount"))... }></span>
+		</div>
+	</div>
+}
+
+// moneySignals holds the reactive state for a money input.
+type moneySignals struct {
+	Value    string `json:"value"`
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+	Error    string `json:"error"`
+}
+
+// MoneyProps configures a money input field with currency support.
+type MoneyProps struct {
+	// ID uniquely identifies this component instance. Required.
+	ID string
+	// Class adds additional CSS classes to the input element.
+	Class string
+	// Attributes adds arbitrary HTML attributes to the input element.
+	Attributes templ.Attributes
+	// Name is the form field name attribute.
+	Name string
+	// Placeholder is the input placeholder text.
+	Placeholder string
+	// Value is the initial input value.
+	Value string
+	// ParseURL is the endpoint path for server-side parsing.
+	// The component appends "?id=<ID>" automatically.
+	ParseURL string
+	// DebounceMs is the debounce delay in milliseconds. Defaults to 500.
+	DebounceMs int
+}
+
+func (p *MoneyProps) defaults() {
+	if p.ID == "" {
+		p.ID = utils.RandomID()
+	}
+	if p.DebounceMs == 0 {
+		p.DebounceMs = 500
+	}
+}
+
+// MoneyInput renders a text input that parses monetary values with optional
+// currency codes (e.g., "USD 5k", "100 EUR") via server-side Datastar SSE.
+// The parsed amount and detected currency are displayed inline.
+templ MoneyInput(props MoneyProps) {
+	{{ props.defaults() }}
+	{{
+		signals := utils.Signals(props.ID, moneySignals{
+			Value:    props.Value,
+			Amount:   "",
+			Currency: "",
+			Error:    "",
+		})
+
+		parseURL := fmt.Sprintf("%s?id=%s", props.ParseURL, props.ID)
+
+		onInput := fmt.Sprintf(
+			"%s; %s",
+			signals.Set("value", "evt.target.value"),
+			ds.Get(parseURL),
+		)
+		debounce := fmt.Sprintf("__debounce.%dms", props.DebounceMs)
+	}}
+	<div
+		id={ props.ID + "-wrapper" }
+		data-signals={ signals.DataSignals }
+	>
+		<input
+			id={ props.ID }
+			type="text"
+			autocomplete="off"
+			if props.Name != "" {
+				name={ props.Name }
+			}
+			if props.Placeholder != "" {
+				placeholder={ props.Placeholder }
+			}
+			if props.Value != "" {
+				value={ props.Value }
+			}
+			class={ utils.TwMerge("input font-mono text-right", props.Class) }
+			{ ds.On("input"+debounce, onInput)... }
+			{ props.Attributes... }
+		/>
+		<div
+			id={ props.ID + "-hint" }
+			class="mt-2 text-xs text-error"
+			{ ds.Show(signals.Signal("error") + " !== ''")... }
+		>
+			<span { ds.Text(signals.Signal("error"))... }></span>
+		</div>
+		<div
+			id={ props.ID + "-result" }
+			class="mt-2 text-xs text-success font-mono flex items-center gap-2"
+			{ ds.Show(signals.Signal("amount") + " !== '' && " + signals.Signal("error") + " === ''")... }
+		>
+			<span
+				class="badge badge-sm badge-outline"
+				{ ds.Show(signals.Signal("currency") + " !== ''")... }
+				{ ds.Text(signals.Signal("currency"))... }
+			></span>
+			<span { ds.Text(signals.Signal("amount"))... }></span>
+		</div>
+	</div>
+}

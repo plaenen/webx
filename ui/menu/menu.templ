@@ -2,26 +2,50 @@ package menu
 
 import "github.com/plaenen/webx/utils"
 
+type Size string
+
+const (
+	SizeDefault Size = ""
+	SizeXs      Size = "menu-xs"
+	SizeSm      Size = "menu-sm"
+	SizeMd      Size = "menu-md"
+	SizeLg      Size = "menu-lg"
+	SizeXl      Size = "menu-xl"
+)
+
+type Direction string
+
+const (
+	DirectionDefault    Direction = ""
+	DirectionVertical   Direction = "menu-vertical"
+	DirectionHorizontal Direction = "menu-horizontal"
+)
+
 // Props configures a DaisyUI menu.
 type Props struct {
 	ID         string
 	Class      string
 	Attributes templ.Attributes
+	Size       Size
+	Direction  Direction
 }
 
 // ItemProps configures a single menu item.
 type ItemProps struct {
-	Href   string
-	Active bool
-	Class  string
+	Href       string
+	Active     bool
+	Disabled   bool
+	Class      string
+	Attributes templ.Attributes
 }
 
 // TitleProps configures a menu section title.
 type TitleProps struct {
-	Class string
+	Class      string
+	Attributes templ.Attributes
 }
 
-// Menu renders a DaisyUI vertical menu.
+// Menu renders a DaisyUI menu container.
 templ Menu(props ...Props) {
 	{{ var p Props }}
 	if len(props) > 0 {
@@ -31,7 +55,7 @@ templ Menu(props ...Props) {
 		if p.ID != "" {
 			id={ p.ID }
 		}
-		class={ utils.TwMerge("menu", p.Class) }
+		class={ utils.TwMerge("menu", string(p.Size), string(p.Direction), p.Class) }
 		{ p.Attributes... }
 	>
 		{ children... }
@@ -39,22 +63,23 @@ templ Menu(props ...Props) {
 }
 
 // Item renders a menu item with an optional link.
-templ Item(props ItemProps) {
-	<li>
-		if props.Href != "" {
-			<a
-				href={ templ.SafeURL(props.Href) }
-				class={ utils.TwMerge(
-					utils.If(props.Active, "active"),
-					props.Class,
-				) }
-			>
+templ Item(props ...ItemProps) {
+	{{ var p ItemProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<li
+		class={ utils.TwMerge(utils.If(p.Active, "menu-active"), utils.If(p.Disabled, "menu-disabled"), p.Class) }
+		{ p.Attributes... }
+	>
+		if p.Href != "" {
+			<a href={ templ.SafeURL(p.Href) }>
 				{ children... }
 			</a>
 		} else {
-			<span class={ props.Class }>
+			<a>
 				{ children... }
-			</span>
+			</a>
 		}
 	</li>
 }
@@ -65,7 +90,10 @@ templ Title(props ...TitleProps) {
 	if len(props) > 0 {
 		{{ p = props[0] }}
 	}
-	<li class={ utils.TwMerge("menu-title", p.Class) }>
+	<li
+		class={ utils.TwMerge("menu-title", p.Class) }
+		{ p.Attributes... }
+	>
 		{ children... }
 	</li>
 }

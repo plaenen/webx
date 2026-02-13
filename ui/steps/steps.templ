@@ -1,0 +1,96 @@
+package steps
+
+import "github.com/plaenen/webx/utils"
+
+type Direction string
+
+const (
+	DirectionDefault    Direction = ""
+	DirectionHorizontal Direction = "steps-horizontal"
+	DirectionVertical   Direction = "steps-vertical"
+)
+
+type Variant string
+
+const (
+	VariantDefault   Variant = ""
+	VariantNeutral   Variant = "step-neutral"
+	VariantPrimary   Variant = "step-primary"
+	VariantSecondary Variant = "step-secondary"
+	VariantAccent    Variant = "step-accent"
+	VariantSuccess   Variant = "step-success"
+	VariantWarning   Variant = "step-warning"
+	VariantInfo      Variant = "step-info"
+	VariantError     Variant = "step-error"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Direction  Direction
+}
+
+// Steps renders the steps container as a <ul>.
+templ Steps(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<ul
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("steps", string(p.Direction), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</ul>
+}
+
+type StepProps struct {
+	ID          string
+	Class       string
+	Attributes  templ.Attributes
+	Variant     Variant
+	DataContent string
+}
+
+// Step renders a single step item as an <li>.
+templ Step(props ...StepProps) {
+	{{ var p StepProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<li
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("step", string(p.Variant), p.Class) }
+		if p.DataContent != "" {
+			data-content={ p.DataContent }
+		}
+		{ p.Attributes... }
+	>
+		{ children... }
+	</li>
+}
+
+type IconProps struct {
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Icon renders a step-icon wrapper for custom icons inside a step.
+templ Icon(props ...IconProps) {
+	{{ var p IconProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<span
+		class={ utils.TwMerge("step-icon", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</span>
+}

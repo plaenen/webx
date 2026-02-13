@@ -1,0 +1,136 @@
+package validator
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// InputType is the HTML input type attribute.
+type InputType string
+
+const (
+	TypeText     InputType = "text"
+	TypeEmail    InputType = "email"
+	TypePassword InputType = "password"
+	TypeTel      InputType = "tel"
+	TypeURL      InputType = "url"
+	TypeNumber   InputType = "number"
+	TypeSearch   InputType = "search"
+)
+
+// validatorSignals holds the reactive state for a validated input.
+type validatorSignals struct {
+	Value string `json:"value"`
+	Valid bool   `json:"valid"`
+	Error string `json:"error"`
+}
+
+// InputProps configures a validated input field.
+type InputProps struct {
+	// ID uniquely identifies this validator instance. Required.
+	ID string
+	// Class adds additional CSS classes to the input element.
+	Class string
+	// Attributes adds arbitrary HTML attributes to the input element.
+	Attributes templ.Attributes
+	// Type is the HTML input type. Defaults to TypeText.
+	Type InputType
+	// Name is the form field name attribute.
+	Name string
+	// Placeholder is the input placeholder text.
+	Placeholder string
+	// Value is the initial input value.
+	Value string
+	// ValidateURL is the endpoint path for server-side validation.
+	// The component appends "?id=<ID>" automatically.
+	// Example: "/api/validate/email"
+	ValidateURL string
+	// DebounceMs is the debounce delay in milliseconds. Defaults to 500.
+	DebounceMs int
+	// HintText is the error hint shown when validation fails.
+	// If empty, the backend error message is used.
+	HintText string
+}
+
+func (p *InputProps) defaults() {
+	if p.ID == "" {
+		p.ID = utils.RandomID()
+	}
+	if p.Type == "" {
+		p.Type = TypeText
+	}
+	if p.DebounceMs == 0 {
+		p.DebounceMs = 500
+	}
+}
+
+// Input renders a DaisyUI input with server-side validation via Datastar.
+// On input change (debounced), it calls the backend validator and shows/hides
+// a validation hint based on the result.
+templ Input(props InputProps) {
+	{{ props.defaults() }}
+	{{
+		signals := utils.Signals(props.ID, validatorSignals{
+			Value: props.Value,
+			Valid: true,
+			Error: "",
+		})
+
+		validateURL := fmt.Sprintf("%s?id=%s", props.ValidateURL, props.ID)
+
+		onInput := fmt.Sprintf(
+			"%s; %s",
+			signals.Set("value", "evt.target.value"),
+			ds.Get(validateURL),
+		)
+		debounce := fmt.Sprintf("__debounce.%dms", props.DebounceMs)
+	}}
+	<div
+		id={ props.ID + "-wrapper" }
+		data-signals={ signals.DataSignals }
+	>
+		<input
+			id={ props.ID }
+			type={ string(props.Type) }
+			if props.Name != "" {
+				name={ props.Name }
+			}
+			if props.Placeholder != "" {
+				placeholder={ props.Placeholder }
+			}
+			if props.Value != "" {
+				value={ props.Value }
+			}
+			class={ utils.TwMerge("input", props.Class) }
+			{ ds.On("input" + debounce, onInput)... }
+			{ props.Attributes... }
+		/>
+		<div
+			id={ props.ID + "-hint" }
+			class="mt-2 text-xs text-error"
+			{ ds.Show(signals.Signal("error") + " !== ''")... }
+		>
+			if props.HintText != "" {
+				{ props.HintText }
+			} else {
+				<span { ds.Text(signals.Signal("error"))... }></span>
+			}
+		</div>
+	</div>
+}
+
+// SuccessHint renders a hint that is visible only when validation succeeds
+// and the input has a non-empty value.
+templ SuccessHint(id string) {
+	{{
+		signals := utils.Signals(id, validatorSignals{})
+	}}
+	<div
+		class="mt-2 text-xs text-success"
+		{ ds.Show(signals.Signal("error") + " === '' && " + signals.Signal("value") + " !== ''")... }
+	>
+		{ children... }
+	</div>
+}

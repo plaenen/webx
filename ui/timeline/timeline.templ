@@ -1,0 +1,143 @@
+package timeline
+
+import "github.com/plaenen/webx/utils"
+
+// Direction controls horizontal vs vertical layout.
+type Direction string
+
+const (
+	DirectionDefault    Direction = ""
+	DirectionHorizontal Direction = "timeline-horizontal"
+	DirectionVertical   Direction = "timeline-vertical"
+)
+
+// Props configures the timeline container.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Direction  Direction
+	SnapIcon   bool
+	Compact    bool
+}
+
+templ Timeline(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<ul
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("timeline", string(p.Direction), utils.If(p.SnapIcon, "timeline-snap-icon"), utils.If(p.Compact, "timeline-compact"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</ul>
+}
+
+// ItemProps configures a timeline item.
+type ItemProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Item(props ...ItemProps) {
+	{{ var p ItemProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<li
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		if p.Class != "" {
+			class={ p.Class }
+		}
+		{ p.Attributes... }
+	>
+		{ children... }
+	</li>
+}
+
+// StartProps configures the start-side content.
+type StartProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Box        bool
+}
+
+templ Start(props ...StartProps) {
+	{{ var p StartProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("timeline-start", utils.If(p.Box, "timeline-box"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// MiddleProps configures the middle content (icon).
+type MiddleProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Middle(props ...MiddleProps) {
+	{{ var p MiddleProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("timeline-middle", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// EndProps configures the end-side content.
+type EndProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Box        bool
+}
+
+templ End(props ...EndProps) {
+	{{ var p EndProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("timeline-end", utils.If(p.Box, "timeline-box"), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// Hr renders the connecting line between timeline items.
+templ Hr(class ...string) {
+	if len(class) > 0 {
+		<hr class={ class[0] }/>
+	} else {
+		<hr/>
+	}
+}

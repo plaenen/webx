@@ -1,0 +1,51 @@
+package radialprogress
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/utils"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Value      int
+	Size       string
+	Thickness  string
+}
+
+func buildStyle(p Props) string {
+	s := fmt.Sprintf("--value:%d;", p.Value)
+	if p.Size != "" {
+		s += fmt.Sprintf(" --size:%s;", p.Size)
+	}
+	if p.Thickness != "" {
+		s += fmt.Sprintf(" --thickness:%s;", p.Thickness)
+	}
+	return s
+}
+
+func itoa(i int) string {
+	return fmt.Sprintf("%d", i)
+}
+
+// RadialProgress renders a circular progress indicator.
+templ RadialProgress(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("radial-progress", p.Class) }
+		style={ buildStyle(p) }
+		aria-valuenow={ itoa(p.Value) }
+		role="progressbar"
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}

@@ -1,0 +1,225 @@
+package calendar
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// Mode controls the selection behavior of a calendar.
+type Mode int
+
+const (
+	ModeSingle Mode = iota
+	ModeRange
+)
+
+// CalendarSignals holds the reactive state for a single-select calendar.
+type CalendarSignals struct {
+	Selected string `json:"selected"`
+}
+
+// RangeCalendarSignals holds the reactive state for a range-select calendar.
+type RangeCalendarSignals struct {
+	RangeStart string `json:"rangeStart"`
+	RangeEnd   string `json:"rangeEnd"`
+}
+
+// NavigableSignals holds the reactive state for a navigable calendar.
+// The SSE handler reads/writes these to navigate between months.
+type NavigableSignals struct {
+	Selected string `json:"selected"`
+	Year     int    `json:"year"`
+	Month    int    `json:"month"`
+}
+
+// Props configures a calendar. Year and Month default to the current
+// month when left at zero.
+type Props struct {
+	ID         string
+	Class      string
+	Year       int
+	Month      time.Month
+	Selected   string // initial selection in "2006-01-02" format
+	Mode       Mode
+	RangeStart string // initial range start in "2006-01-02" format
+	RangeEnd   string // initial range end in "2006-01-02" format
+}
+
+// Calendar renders a month grid with selectable days controlled by
+// Datastar signals. Week starts on Monday.
+templ Calendar(props Props) {
+	{{
+		id := props.ID
+		if id == "" {
+			id = utils.RandomID()
+		}
+		year := props.Year
+		month := props.Month
+		if year == 0 {
+			now := time.Now()
+			year = now.Year()
+			month = now.Month()
+		}
+		days := buildGrid(year, month)
+		monthLabel := fmt.Sprintf("%s %d", month.String(), year)
+	}}
+	if props.Mode == ModeRange {
+		{{
+			rangeSigs := utils.Signals(id, RangeCalendarSignals{
+				RangeStart: props.RangeStart,
+				RangeEnd:   props.RangeEnd,
+			})
+		}}
+		<div
+			id={ id }
+			data-signals={ rangeSigs.DataSignals }
+			class={ utils.TwMerge("w-fit bg-base-100 border border-base-300 rounded-box shadow-lg p-4", props.Class) }
+		>
+			<div class="text-center font-semibold text-sm mb-2">
+				{ monthLabel }
+			</div>
+			<div class="grid grid-cols-7 gap-0.5 text-center">
+				for _, wd := range weekdayLabels {
+					<span class="text-xs font-medium text-base-content/60 p-1.5">{ wd }</span>
+				}
+				for _, day := range days {
+					@rangeButton(rangeSigs, day)
+				}
+			</div>
+		</div>
+	} else {
+		{{
+			signals := utils.Signals(id, CalendarSignals{Selected: props.Selected})
+		}}
+		<div
+			id={ id }
+			data-signals={ signals.DataSignals }
+			class={ utils.TwMerge("w-fit bg-base-100 border border-base-300 rounded-box shadow-lg p-4", props.Class) }
+		>
+			<div class="text-center font-semibold text-sm mb-2">
+				{ monthLabel }
+			</div>
+			<div class="grid grid-cols-7 gap-0.5 text-center">
+				for _, wd := range weekdayLabels {
+					<span class="text-xs font-medium text-base-content/60 p-1.5">{ wd }</span>
+				}
+				for _, day := range days {
+					@dayButton(signals, day)
+				}
+			</div>
+		</div>
+	}
+}
+
+templ dayButton(signals *utils.SignalManager, day calendarDay) {
+	{{
+		dateStr := day.DateString()
+		isSelected := signals.Equals("selected", dateStr)
+		isNotSelected := signals.NotEquals("selected", dateStr)
+
+		dc := utils.NewDataClass().
+			Add("btn-primary", isSelected).
+			Add("btn-ghost", isNotSelected)
+		if !day.InMonth {
+			dc.Add("text-base-content/30", isNotSelected)
+		}
+
+		baseClass := "btn btn-xs btn-square btn-ghost"
+		if !day.InMonth {
+			baseClass += " text-base-content/30"
+		}
+		if day.IsToday {
+			baseClass += " font-bold underline"
+		}
+	}}
+	<button
+		type="button"
+		class={ baseClass }
+		data-class={ dc.Build() }
+		{ ds.OnClick(signals.SetString("selected", dateStr))... }
+	>
+		{ day.DayLabel() }
+	</button>
+}
+
+templ rangeButton(signals *utils.SignalManager, day calendarDay) {
+	{{
+		dateStr := day.DateString()
+
+		// Range click logic:
+		// If no rangeStart or rangeEnd exists, set rangeStart.
+		// If rangeStart is set but rangeEnd is empty, set rangeEnd (swap if needed).
+		// If both are set, start a new range.
+		clickExpr := utils.NewExpression().
+			Statement(fmt.Sprintf(
+				"(() => { const d = '%s'; const rs = %s; const re = %s; "+
+					"if (rs === '' || (rs !== '' && re !== '')) { %s; %s; } "+
+					"else if (d < rs) { %s; %s; } "+
+					"else { %s; } })()",
+				dateStr,
+				signals.Signal("rangeStart"),
+				signals.Signal("rangeEnd"),
+				signals.SetString("rangeStart", dateStr),
+				signals.Set("rangeEnd", "''"),
+				signals.SetString("rangeEnd", signals.Signal("rangeStart")[1:]),  // remove $ for value
+				signals.SetString("rangeStart", dateStr),
+				signals.SetString("rangeEnd", dateStr),
+			)).Build()
+
+		// Simpler click expression using ternaries
+		rs := signals.Signal("rangeStart")
+		re := signals.Signal("rangeEnd")
+		// On click: if no start or both set -> new selection; if start set but no end -> complete range
+		clickExpr = fmt.Sprintf(
+			"(() => { const d = '%s'; "+
+				"if (%s === '' || %s !== '') { %s; %s; } "+
+				"else if (d < %s) { %s; %s; } "+
+				"else { %s; } })()",
+			dateStr,
+			rs, re,
+			signals.SetString("rangeStart", dateStr), signals.Set("rangeEnd", "''"),
+			rs,
+			signals.Set("rangeEnd", rs), signals.SetString("rangeStart", dateStr),
+			signals.SetString("rangeEnd", dateStr),
+		)
+
+		// Highlighting conditions
+		isStart := signals.Equals("rangeStart", dateStr)
+		isEnd := signals.Equals("rangeEnd", dateStr)
+		isInRange := fmt.Sprintf(
+			"(%s !== '' && %s !== '' && '%s' > %s && '%s' < %s)",
+			rs, re, dateStr, rs, dateStr, re,
+		)
+		isNotHighlighted := fmt.Sprintf(
+			"!(%s) && !(%s) && !(%s)",
+			isStart, isEnd, isInRange,
+		)
+
+		dc := utils.NewDataClass().
+			Add("btn-primary", fmt.Sprintf("(%s) || (%s)", isStart, isEnd)).
+			Add("btn-accent btn-outline", isInRange).
+			Add("btn-ghost", isNotHighlighted)
+		if !day.InMonth {
+			dc.Add("text-base-content/30", isNotHighlighted)
+		}
+
+		baseClass := "btn btn-xs btn-square btn-ghost"
+		if !day.InMonth {
+			baseClass += " text-base-content/30"
+		}
+		if day.IsToday {
+			baseClass += " font-bold underline"
+		}
+	}}
+	<button
+		type="button"
+		class={ baseClass }
+		data-class={ dc.Build() }
+		{ ds.OnClick(clickExpr)... }
+	>
+		{ day.DayLabel() }
+	</button>
+}

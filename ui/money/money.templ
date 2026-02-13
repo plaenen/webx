@@ -1,0 +1,69 @@
+package money
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/utils"
+	"github.com/shopspring/decimal"
+)
+
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Amount     any
+	Currency   string
+	Precision  *int
+}
+
+// Money displays a monetary value with currency and precision.
+// If Precision is nil, it defaults to 2.
+templ Money(p Props) {
+	{{
+		precision := 2
+		if p.Precision != nil {
+			precision = *p.Precision
+		}
+	}}
+	<span
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={
+			utils.TwMerge(
+				"inline-flex items-center whitespace-nowrap",
+				p.Class,
+			),
+		}
+		{ p.Attributes... }
+	>
+		if p.Currency != "" {
+			<span class="mr-1 text-base-content/60">{ p.Currency }</span>
+		}
+		<span>{ formatAmount(p.Amount, precision) }</span>
+	</span>
+}
+
+func formatAmount(amount any, precision int) string {
+	var d decimal.Decimal
+	switch v := amount.(type) {
+	case string:
+		if v == "" {
+			return decimal.NewFromInt(0).StringFixed(int32(precision))
+		}
+		var err error
+		d, err = decimal.NewFromString(v)
+		if err != nil {
+			return v
+		}
+	case float64:
+		d = decimal.NewFromFloat(v)
+	case int:
+		d = decimal.NewFromInt(int64(v))
+	case decimal.Decimal:
+		d = v
+	default:
+		return fmt.Sprintf("%v", v)
+	}
+	return FormatDecimal(d, precision)
+}

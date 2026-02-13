@@ -1,0 +1,220 @@
+package form
+
+import (
+	"fmt"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/utils"
+)
+
+// FormSignals holds the reactive state for a form.
+type FormSignals struct {
+	Submitting bool   `json:"submitting"`
+	Error      string `json:"error"`
+}
+
+// Props configures a Datastar-powered form.
+type Props struct {
+	// ID uniquely identifies this form. Required for signal namespacing.
+	ID string
+	// Class adds CSS classes to the form element.
+	Class string
+	// Attributes adds arbitrary HTML attributes.
+	Attributes templ.Attributes
+	// Action is the backend endpoint for form submission.
+	// Uses ds.Post() with CSRF token automatically.
+	Action string
+	// Method overrides the HTTP method. Defaults to POST.
+	// Supported: "post", "put", "patch", "delete".
+	Method string
+	// Signals is the initial form signal state (your custom signals struct).
+	// The form merges FormSignals (submitting, error) with your struct.
+	Signals any
+}
+
+func (p *Props) defaults() {
+	if p.ID == "" {
+		p.ID = utils.RandomID()
+	}
+	if p.Method == "" {
+		p.Method = "post"
+	}
+}
+
+// Form renders a <form> that submits via Datastar SSE.
+// The backend responds with signal patches (validation errors, success state, etc.).
+//
+// Usage:
+//
+//	type LoginSignals struct {
+//	    Email    string `json:"email"`
+//	    Password string `json:"password"`
+//	}
+//
+//	@form.Form(form.Props{
+//	    ID:      "login",
+//	    Action:  "/api/auth/login",
+//	    Signals: LoginSignals{},
+//	}) {
+//	    @form.Field() {
+//	        @form.Label("login", "email") { Email }
+//	        <input class="input" { ds.Bind("$login.email")... } />
+//	        @form.Error("login", "email_error") { Invalid email }
+//	    }
+//	    @form.Submit("login") { Sign In }
+//	}
+templ Form(props Props) {
+	{{ props.defaults() }}
+	{{
+		signals := utils.Signals(props.ID, props.Signals)
+
+		// Build action URL with form ID for the handler.
+		actionURL := fmt.Sprintf("%s?id=%s", props.Action, props.ID)
+
+		// Build submit action based on method.
+		var submitAction string
+		switch props.Method {
+		case "put":
+			submitAction = ds.Put(actionURL)
+		case "patch":
+			submitAction = ds.Patch(actionURL)
+		case "delete":
+			submitAction = ds.Delete(actionURL)
+		default:
+			submitAction = ds.Post(actionURL)
+		}
+	}}
+	<form
+		id={ props.ID }
+		data-signals={ signals.DataSignals }
+		{ ds.On("submit__prevent", submitAction)... }
+		class={ utils.TwMerge("space-y-4", props.Class) }
+		novalidate
+		{ props.Attributes... }
+	>
+		{ children... }
+	</form>
+}
+
+// FieldProps configures a form field container.
+type FieldProps struct {
+	Class string
+}
+
+// Field wraps a label + input + error into a fieldset group.
+templ Field(props ...FieldProps) {
+	{{ var p FieldProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<fieldset class={ utils.TwMerge("fieldset", p.Class) }>
+		{ children... }
+	</fieldset>
+}
+
+// LabelProps configures a form label.
+type LabelProps struct {
+	Class string
+}
+
+// Label renders a <legend> label for a form field.
+templ Label(props ...LabelProps) {
+	{{ var p LabelProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<legend class={ utils.TwMerge("fieldset-legend", p.Class) }>
+		{ children... }
+	</legend>
+}
+
+// DescriptionProps configures a field description.
+type DescriptionProps struct {
+	Class string
+}
+
+// Description renders helper text below a form field.
+templ Description(props ...DescriptionProps) {
+	{{ var p DescriptionProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<p class={ utils.TwMerge("label text-xs", p.Class) }>
+		{ children... }
+	</p>
+}
+
+// Error renders an error message that shows when a signal is non-empty.
+// The signal parameter is the full Datastar signal reference (e.g. "$login.email_error").
+templ Error(signal string) {
+	<p
+		class="label text-xs text-error"
+		{ ds.Show(signal + " !== ''")... }
+	>
+		<span { ds.Text(signal)... }></span>
+	</p>
+}
+
+// ErrorStatic renders a static error message that shows when a signal is truthy.
+// Use this when the error text is known at render time, not from a signal.
+templ ErrorStatic(signal string) {
+	<p
+		class="label text-xs text-error"
+		{ ds.Show(signal + " !== ''")... }
+	>
+		{ children... }
+	</p>
+}
+
+// Success renders a success message that shows when a signal is non-empty.
+templ Success(signal string) {
+	<p
+		class="label text-xs text-success"
+		{ ds.Show(signal + " !== ''")... }
+	>
+		<span { ds.Text(signal)... }></span>
+	</p>
+}
+
+// SubmitProps configures the form submit button.
+type SubmitProps struct {
+	// FormID is the form's ID for accessing its signals.
+	FormID string
+	// Class adds CSS classes to the button.
+	Class string
+	// Attributes adds arbitrary HTML attributes.
+	Attributes templ.Attributes
+}
+
+// Submit renders a submit button that shows a loading state while submitting.
+templ Submit(props SubmitProps) {
+	{{
+		signals := utils.Signals(props.FormID, FormSignals{})
+	}}
+	<button
+		type="submit"
+		class={ utils.TwMerge("btn btn-primary", props.Class) }
+		{ ds.Attr("disabled", signals.Signal("submitting"))... }
+		{ props.Attributes... }
+	>
+		<span
+			class="loading loading-spinner loading-sm"
+			{ ds.Show(signals.Signal("submitting"))... }
+		></span>
+		{ children... }
+	</button>
+}
+
+// FormError renders a form-level error banner.
+// Shows when the form's "error" signal is non-empty.
+templ FormError(formID string) {
+	{{
+		signals := utils.Signals(formID, FormSignals{})
+	}}
+	<div
+		class="alert alert-error text-sm"
+		{ ds.Show(signals.Signal("error") + " !== ''")... }
+	>
+		<span { ds.Text(signals.Signal("error"))... }></span>
+	</div>
+}

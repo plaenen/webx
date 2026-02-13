@@ -1,0 +1,76 @@
+package list
+
+import "github.com/plaenen/webx/utils"
+
+// Props configures the list container.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+// Note: "list" and "list-row" are DaisyUI component classes that conflict
+// with Tailwind's list-style utilities, causing a panic in tailwind-merge.
+// We prepend them outside TwMerge and only merge Tailwind utility classes.
+
+templ List(props ...Props) {
+	{{ var p Props }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<ul
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ "list " + utils.TwMerge("bg-base-100 rounded-box shadow-md", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</ul>
+}
+
+// RowProps configures a list row.
+type RowProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Row(props ...RowProps) {
+	{{ var p RowProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<li
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ "list-row " + utils.TwMerge(p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</li>
+}
+
+// HeaderProps configures a list header row.
+type HeaderProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Header(props ...HeaderProps) {
+	{{ var p HeaderProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<li
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("p-4 pb-2 text-xs opacity-60 tracking-wide", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</li>
+}

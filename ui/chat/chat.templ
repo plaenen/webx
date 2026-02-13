@@ -1,0 +1,139 @@
+package chat
+
+import "github.com/plaenen/webx/utils"
+
+// Position controls whether the chat bubble aligns left or right.
+type Position string
+
+const (
+	PositionStart Position = "chat-start"
+	PositionEnd   Position = "chat-end"
+)
+
+// BubbleVariant controls the color of the chat bubble.
+type BubbleVariant string
+
+const (
+	BubbleVariantDefault   BubbleVariant = ""
+	BubbleVariantPrimary   BubbleVariant = "chat-bubble-primary"
+	BubbleVariantSecondary BubbleVariant = "chat-bubble-secondary"
+	BubbleVariantAccent    BubbleVariant = "chat-bubble-accent"
+	BubbleVariantNeutral   BubbleVariant = "chat-bubble-neutral"
+	BubbleVariantInfo      BubbleVariant = "chat-bubble-info"
+	BubbleVariantSuccess   BubbleVariant = "chat-bubble-success"
+	BubbleVariantWarning   BubbleVariant = "chat-bubble-warning"
+	BubbleVariantError     BubbleVariant = "chat-bubble-error"
+)
+
+// Props configures the chat container.
+type Props struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Position   Position
+}
+
+templ Chat(props Props) {
+	<div
+		if props.ID != "" {
+			id={ props.ID }
+		}
+		class={ utils.TwMerge("chat", string(props.Position), props.Class) }
+		{ props.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// BubbleProps configures the chat bubble.
+type BubbleProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+	Variant    BubbleVariant
+}
+
+templ Bubble(props ...BubbleProps) {
+	{{ var p BubbleProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("chat-bubble", string(p.Variant), p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// ImageProps configures the chat avatar image container.
+type ImageProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Image(props ...ImageProps) {
+	{{ var p ImageProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("chat-image avatar", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// HeaderProps configures the chat header text.
+type HeaderProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Header(props ...HeaderProps) {
+	{{ var p HeaderProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("chat-header", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
+
+// FooterProps configures the chat footer text.
+type FooterProps struct {
+	ID         string
+	Class      string
+	Attributes templ.Attributes
+}
+
+templ Footer(props ...FooterProps) {
+	{{ var p FooterProps }}
+	if len(props) > 0 {
+		{{ p = props[0] }}
+	}
+	<div
+		if p.ID != "" {
+			id={ p.ID }
+		}
+		class={ utils.TwMerge("chat-footer opacity-50", p.Class) }
+		{ p.Attributes... }
+	>
+		{ children... }
+	</div>
+}
