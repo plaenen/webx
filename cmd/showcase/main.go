@@ -7,23 +7,16 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	"github.com/plaenen/webx"
+	"github.com/plaenen/webx/cmd/showcase/internal/handlers"
 	"github.com/plaenen/webx/cmd/showcase/internal/pages"
 	"github.com/plaenen/webx/cmd/showcase/internal/static"
 	"github.com/plaenen/webx/session/memory"
 	"github.com/plaenen/webx/ui"
-	"github.com/plaenen/webx/ui/fileupload"
-	"github.com/plaenen/webx/ui/form"
-	"github.com/plaenen/webx/ui/markdown"
-	"github.com/plaenen/webx/ui/moneyinput"
-	"github.com/plaenen/webx/ui/validator"
-	"github.com/plaenen/webx/validators"
 	"github.com/spf13/cobra"
-	"github.com/starfederation/datastar-go/datastar"
 )
 
 func main() {
@@ -58,108 +51,6 @@ func serveCmd() *cobra.Command {
 
 	return cmd
 }
-
-var emailValidator = validator.Handler(func(value string) validator.Result {
-	res := validators.Email(value, false)
-	return validator.Result{Valid: res.Valid, Error: res.Error}
-})
-
-var emailMXValidator = validator.Handler(func(value string) validator.Result {
-	res := validators.Email(value, true)
-	return validator.Result{Valid: res.Valid, Error: res.Error}
-})
-
-var (
-	decimalParser         = moneyinput.DecimalHandler()
-	moneyParser           = moneyinput.MoneyHandler()
-	moneyRestrictedParser = moneyinput.MoneyHandler("USD", "EUR")
-	markdownPreview       = markdown.PreviewHandler()
-	fileStore             = fileupload.NewStore()
-	fileUploader          = fileupload.UploadHandler(fileStore)
-	fileRestrictedUpload  = fileupload.UploadHandler(fileStore,
-		fileupload.WithAllowedTypes("image/"),
-		fileupload.WithMaxFiles(3),
-	)
-	fileRemover = fileupload.RemoveHandler(fileStore)
-)
-
-type loginFormSignals struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-var loginFormHandler = form.Handler(
-	func(formID string, r *http.Request) []form.FieldError {
-		var signals loginFormSignals
-		if err := form.ReadSignals(formID, r, &signals); err != nil {
-			return []form.FieldError{{Field: "error", Message: "Failed to read form data"}}
-		}
-
-		var errs []form.FieldError
-		if signals.Email == "" {
-			errs = append(errs, form.FieldError{Field: "email_error", Message: "Email is required"})
-		} else {
-			res := validators.Email(signals.Email, false)
-			if !res.Valid {
-				errs = append(errs, form.FieldError{Field: "email_error", Message: res.Error})
-			}
-		}
-		if signals.Password == "" {
-			errs = append(errs, form.FieldError{Field: "password_error", Message: "Password is required"})
-		} else if len(signals.Password) < 8 {
-			errs = append(errs, form.FieldError{Field: "password_error", Message: "Password must be at least 8 characters"})
-		}
-		return errs
-	},
-	func(formID string, sse *datastar.ServerSentEventGenerator) {
-		sanitizedID := strings.ReplaceAll(formID, "-", "_")
-		sse.MarshalAndPatchSignals(map[string]any{
-			sanitizedID: map[string]any{
-				"success": "Login successful!",
-			},
-		})
-	},
-)
-
-type contactFormSignals struct {
-	Name    string `json:"name"`
-	Email   string `json:"email"`
-	Message string `json:"message"`
-}
-
-var contactFormHandler = form.Handler(
-	func(formID string, r *http.Request) []form.FieldError {
-		var signals contactFormSignals
-		if err := form.ReadSignals(formID, r, &signals); err != nil {
-			return []form.FieldError{{Field: "error", Message: "Failed to read form data"}}
-		}
-
-		var errs []form.FieldError
-		if signals.Name == "" {
-			errs = append(errs, form.FieldError{Field: "name_error", Message: "Name is required"})
-		}
-		if signals.Email == "" {
-			errs = append(errs, form.FieldError{Field: "email_error", Message: "Email is required"})
-		} else {
-			res := validators.Email(signals.Email, false)
-			if !res.Valid {
-				errs = append(errs, form.FieldError{Field: "email_error", Message: res.Error})
-			}
-		}
-		if signals.Message == "" {
-			errs = append(errs, form.FieldError{Field: "message_error", Message: "Message is required"})
-		}
-		return errs
-	},
-	func(formID string, sse *datastar.ServerSentEventGenerator) {
-		sanitizedID := strings.ReplaceAll(formID, "-", "_")
-		sse.MarshalAndPatchSignals(map[string]any{
-			sanitizedID: map[string]any{
-				"success": "Message sent successfully!",
-			},
-		})
-	},
-)
 
 func serve(port int, pro bool) error {
 	readmeBytes, err := os.ReadFile("README.md")
@@ -265,19 +156,10 @@ func serve(port int, pro bool) error {
 	r.Get("/components/file-upload", templ.Handler(pages.FileUploads()).ServeHTTP)
 
 	// SSE API endpoints
+	h := handlers.New()
 	r.Route(basePath, func(r chi.Router) {
 		ui.RegisterRoutes(r)
-		r.Get("/api/validate/email", emailValidator)
-		r.Get("/api/validate/email-mx", emailMXValidator)
-		r.Get("/api/parse/decimal", decimalParser)
-		r.Get("/api/parse/money", moneyParser)
-		r.Get("/api/parse/money-restricted", moneyRestrictedParser)
-		r.Post("/api/preview/markdown", markdownPreview)
-		r.Post("/api/form/login", loginFormHandler)
-		r.Post("/api/form/contact", contactFormHandler)
-		r.Post("/api/upload/files", fileUploader)
-		r.Post("/api/upload/files-restricted", fileRestrictedUpload)
-		r.Post("/api/upload/remove", fileRemover)
+		h.RegisterRoutes(r)
 	})
 
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
