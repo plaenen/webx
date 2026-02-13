@@ -67,3 +67,4 @@ Import utils as: `"github.com/plaenen/webx/utils"`
   - Read [Datastar HTML elements reference](./docs/html-datastar-elements-reference.md) before writing templ-side Datastar attributes
 - **Run `go tool templ generate`** after editing any `.templ` file
 - **Ask if backward compatibility is required** before making changes
+- **Showcase should be production grade** ensur we follow best practices for security, performance, and maintainability
