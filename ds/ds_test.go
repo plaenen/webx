@@ -1,6 +1,7 @@
 package ds_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/plaenen/webx/ds"
@@ -140,6 +141,104 @@ func TestNoHyphenInParameterizedAttrs(t *testing.T) {
 	}
 }
 
+// --- backend action expression tests ---
+
+func TestGet(t *testing.T) {
+	got := ds.Get("/api/data")
+	assertString(t, got, "@get('/api/data')")
+}
+
+func TestGetWithRetries(t *testing.T) {
+	got := ds.Get("/api/data", ds.WithRetries(3))
+	assertString(t, got, "@get('/api/data', {retryMaxCount: 3})")
+}
+
+func TestGetOnce(t *testing.T) {
+	got := ds.GetOnce("/api/data")
+	assertString(t, got, "@get('/api/data', {retryMaxCount: 0})")
+}
+
+func TestPost(t *testing.T) {
+	got := ds.Post("/api/submit")
+	assertContains(t, got, "@post(")
+	assertContains(t, got, "/api/submit")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestPostOnce(t *testing.T) {
+	got := ds.PostOnce("/api/submit")
+	assertContains(t, got, "@post(")
+	assertContains(t, got, "retryMaxCount: 0")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestPostWithRetries(t *testing.T) {
+	got := ds.Post("/api/submit", ds.WithRetries(5))
+	assertContains(t, got, "@post(")
+	assertContains(t, got, "retryMaxCount: 5")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestPut(t *testing.T) {
+	got := ds.Put("/api/update")
+	assertContains(t, got, "@put(")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestPutOnce(t *testing.T) {
+	got := ds.PutOnce("/api/update")
+	assertContains(t, got, "@put(")
+	assertContains(t, got, "retryMaxCount: 0")
+}
+
+func TestPatchAction(t *testing.T) {
+	got := ds.Patch("/api/update")
+	assertContains(t, got, "@patch(")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestDelete(t *testing.T) {
+	got := ds.Delete("/api/remove")
+	assertContains(t, got, "@delete(")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestDeleteOnce(t *testing.T) {
+	got := ds.DeleteOnce("/api/remove")
+	assertContains(t, got, "@delete(")
+	assertContains(t, got, "retryMaxCount: 0")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestPostWithContentType(t *testing.T) {
+	got := ds.Post("/upload", ds.WithContentType("form"))
+	assertContains(t, got, "@post(")
+	assertContains(t, got, "contentType: 'form'")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestPostWithContentTypeAndRetries(t *testing.T) {
+	got := ds.Post("/upload", ds.WithContentType("form"), ds.WithRetries(2))
+	assertContains(t, got, "@post(")
+	assertContains(t, got, "contentType: 'form'")
+	assertContains(t, got, "retryMaxCount: 2")
+	assertContains(t, got, "X-CSRF-Token")
+}
+
+func TestGetNoCSRF(t *testing.T) {
+	got := ds.Get("/api/data")
+	if strings.Contains(got, "X-CSRF-Token") {
+		t.Errorf("Get() should NOT include CSRF header, got %q", got)
+	}
+}
+
+func TestGetOnceNoCSRF(t *testing.T) {
+	got := ds.GetOnce("/api/data")
+	if strings.Contains(got, "X-CSRF-Token") {
+		t.Errorf("GetOnce() should NOT include CSRF header, got %q", got)
+	}
+}
+
 // --- helpers ---
 
 func assertAttr(t *testing.T, attrs map[string]any, key string, want any) {
@@ -157,5 +256,19 @@ func assertKey(t *testing.T, attrs map[string]any, key string) {
 	t.Helper()
 	if _, ok := attrs[key]; !ok {
 		t.Fatalf("key %q not found in attributes: %v", key, attrs)
+	}
+}
+
+func assertString(t *testing.T, got, want string) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func assertContains(t *testing.T, got, substr string) {
+	t.Helper()
+	if !strings.Contains(got, substr) {
+		t.Errorf("got %q, want to contain %q", got, substr)
 	}
 }
