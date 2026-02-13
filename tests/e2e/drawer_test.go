@@ -74,16 +74,16 @@ func TestDrawerPage_ToggleOpensPanel(t *testing.T) {
 		t.Fatalf("goto: %v", err)
 	}
 
-	// Click the "Toggle Drawer" button in the inline demo.
+	// Click the "Toggle Drawer" button in the left-side inline demo.
 	toggleBtn := page.Locator("button", pw.PageLocatorOptions{
 		HasText: "Toggle Drawer",
-	})
+	}).First()
 	if err := toggleBtn.Click(); err != nil {
 		t.Fatalf("click toggle: %v", err)
 	}
 
-	// The slide-in panel should become visible (translate-x-0 applied).
-	panel := page.Locator(".bg-base-200.absolute")
+	// The left slide-in panel should become visible.
+	panel := page.Locator(".border-r.absolute")
 	if err := panel.WaitFor(pw.LocatorWaitForOptions{
 		State: pw.WaitForSelectorStateVisible,
 	}); err != nil {
@@ -99,16 +99,16 @@ func TestDrawerPage_OverlayClosesPanel(t *testing.T) {
 		t.Fatalf("goto: %v", err)
 	}
 
-	// Open the drawer first.
+	// Open the left drawer first.
 	toggleBtn := page.Locator("button", pw.PageLocatorOptions{
 		HasText: "Toggle Drawer",
-	})
+	}).First()
 	if err := toggleBtn.Click(); err != nil {
 		t.Fatalf("click toggle: %v", err)
 	}
 
-	// Wait for overlay to appear.
-	overlay := page.Locator(".bg-black\\/30")
+	// Wait for overlay to appear (scope to the first demo container).
+	overlay := page.Locator(".bg-black\\/30").First()
 	if err := overlay.WaitFor(pw.LocatorWaitForOptions{
 		State: pw.WaitForSelectorStateVisible,
 	}); err != nil {
@@ -128,6 +128,29 @@ func TestDrawerPage_OverlayClosesPanel(t *testing.T) {
 	}
 }
 
+func TestDrawerPage_RightSideDrawerToggles(t *testing.T) {
+	page := newPage(t)
+	if _, err := page.Goto(baseURL+"/components/drawer", pw.PageGotoOptions{
+		WaitUntil: pw.WaitUntilStateNetworkidle,
+	}); err != nil {
+		t.Fatalf("goto: %v", err)
+	}
+
+	toggleBtn := page.Locator("button", pw.PageLocatorOptions{
+		HasText: "Toggle Right Drawer",
+	})
+	if err := toggleBtn.Click(); err != nil {
+		t.Fatalf("click toggle: %v", err)
+	}
+
+	panel := page.Locator(".border-l.absolute")
+	if err := panel.WaitFor(pw.LocatorWaitForOptions{
+		State: pw.WaitForSelectorStateVisible,
+	}); err != nil {
+		t.Fatalf("right panel did not become visible: %v", err)
+	}
+}
+
 func TestDrawerPage_StateIndicatorUpdates(t *testing.T) {
 	page := newPage(t)
 	if _, err := page.Goto(baseURL+"/components/drawer", pw.PageGotoOptions{
@@ -136,8 +159,8 @@ func TestDrawerPage_StateIndicatorUpdates(t *testing.T) {
 		t.Fatalf("goto: %v", err)
 	}
 
-	// The state badge should initially show "closed".
-	badge := page.Locator("code.badge")
+	// The first state badge should initially show "closed".
+	badge := page.Locator("code.badge").First()
 	text, err := badge.TextContent()
 	if err != nil {
 		t.Fatalf("badge text: %v", err)
@@ -149,13 +172,13 @@ func TestDrawerPage_StateIndicatorUpdates(t *testing.T) {
 	// Click toggle - badge should show "open".
 	toggleBtn := page.Locator("button", pw.PageLocatorOptions{
 		HasText: "Toggle Drawer",
-	})
+	}).First()
 	if err := toggleBtn.Click(); err != nil {
 		t.Fatalf("click toggle: %v", err)
 	}
 	if err := page.Locator("code.badge", pw.PageLocatorOptions{
 		HasText: "open",
-	}).WaitFor(pw.LocatorWaitForOptions{
+	}).First().WaitFor(pw.LocatorWaitForOptions{
 		State: pw.WaitForSelectorStateVisible,
 	}); err != nil {
 		t.Fatalf("badge did not change to 'open': %v", err)

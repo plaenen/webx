@@ -33,10 +33,8 @@ func TestMain(m *testing.M) {
 	defer os.Remove("../../showcase-test")
 
 	// Start the server (binary is in project root, Dir is project root).
-	serverCmd = exec.Command("./showcase-test")
+	serverCmd = exec.Command("./showcase-test", "serve", "--port", "0")
 	serverCmd.Dir = "../.."
-	// Set env so the server uses port 0
-	serverCmd.Env = append(os.Environ(), "PORT=0")
 	stderr, err := serverCmd.StderrPipe()
 	if err != nil {
 		log.Fatalf("stderr pipe: %v", err)
