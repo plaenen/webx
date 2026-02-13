@@ -1,24 +1,45 @@
-# Webx
+# webx
 
-**Webx** is an opinionated framework for building high-performance, maintainable Server-Side Rendered (SSR) web applications using Go.
+Go web framework built on Chi, Templ, Tailwind CSS, Datastar, and TemplUI.
 
-It combines the type-safe power of Go with modern frontend capabilities, leveraging a curated stack of tools designed for developer experience and application speed.
+## Prerequisites
 
-## Core Technology Stack
+- Go 1.24+
+- [Datastar Pro license](https://data-star.dev/)
 
-Webx integrates the following technologies to provide a seamless development workflow:
+## BYOL (Bring Your Own License)
 
-*   **[Go](https://go.dev/)**: The foundation of the framework, providing a robust, concurrent, and high-performance backend.
-*   **[Templ](https://templ.guide/)**: A language for writing HTML user interfaces in Go, offering type-safety and component-based architecture.
-*   **[TemplUI](https://templui.io/)** (Open Source): A collection of pre-built, accessible UI components designed specifically for Templ applications.
-*   **[DataStar](https://data-star.dev/)**: Examples of hypermedia-driven interactivity using the DataStar library (Open Source) or DataStar Pro (Bring Your Own License) for advanced features.
+Datastar Pro is a commercial product. You must purchase your own license and place the files in the `byol/` directory, which is gitignored.
 
-## Philosophy
+```
+byol/
+  datastar/
+    datastar-pro.js
+    datastar-inspector.js
+    datastar-pro-rocket.js    # optional, if included in your license
+```
 
-Webx aims to simplify the complexity of modern web development by focusing on:
--   **Simplicity**: Leveraging Go's simplicity and standard library.
--   **Performance**: Server-side rendering for fast initial loads and SEO.
--   **Type Safety**: Catching errors at compile time with Templ.
--   **Interactivity**: Using hypermedia controls via DataStar instead of heavy client-side JavaScript frameworks.
--   **Developer Experience**: Providing a seamless development workflow with hot-reload and live-preview capabilities.
--   **Opinionated**: Providing a opinionated way of building SSR websites solving common ui problems with pre-built components and patterns.
+After purchasing, download the JS files from your Datastar account and copy them into `byol/datastar/`. The build embeds this directory and serves the files at `/assets/js/datastar/`.
+
+Without these files, the project will not compile.
+
+## Getting started
+
+```bash
+# Install dependencies
+go tool task install:all
+
+# Place your Datastar Pro files
+mkdir -p byol/datastar
+cp /path/to/your/datastar-pro.js byol/datastar/
+cp /path/to/your/datastar-inspector.js byol/datastar/
+
+# Generate templ + build Tailwind
+go tool templ generate
+go tool gotailwind
+
+# Run the showcase
+go run ./cmd/showcase
+```
+
+The showcase starts at [http://localhost:3000](http://localhost:3000).
