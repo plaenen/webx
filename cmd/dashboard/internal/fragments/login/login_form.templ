@@ -1,0 +1,49 @@
+package login
+
+import (
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/form"
+	"github.com/plaenen/webx/ui/validator"
+)
+
+type loginSignals struct {
+	form.FormSignals
+	Success string `json:"success"`
+}
+
+const ContainerID = "login-container"
+
+templ LoginForm() {
+	<div id={ ContainerID } class="w-full max-w-sm">
+		@card.Card() {
+			@card.Body() {
+				@card.Title() {
+					Sign in
+				}
+				@form.Form(form.Props{
+					ID:      "login",
+					Action:  "/api/auth/login",
+					Signals: loginSignals{},
+				}) {
+					@form.FormError("login")
+					@form.Field() {
+						@form.Label() {
+							Email
+						}
+						@validator.Input(validator.InputProps{
+							ID:          "login-email",
+							Type:        validator.TypeEmail,
+							Placeholder: "email@example.com",
+							ValidateURL: "/api/validate/email",
+							Class:       "w-full",
+						})
+					}
+					@form.Submit(form.SubmitProps{FormID: "login"}) {
+						Sign In
+					}
+					@form.Success("$login.success")
+				}
+			}
+		}
+	</div>
+}
