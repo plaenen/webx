@@ -13,6 +13,7 @@ templ Base(props BaseProps) {
 	{{
 		wctx := webx.FromContext(ctx)
 		showInspector := wctx.ShowDatastarInspector
+		isPro := wctx.DatastarPro
 		csrfToken := wctx.CSRFToken
 	}}
 	<!DOCTYPE html>
@@ -24,9 +25,13 @@ templ Base(props BaseProps) {
 			<meta name="csrf-token" content={ csrfToken }/>
 			<title>{ props.Title }</title>
 			<link rel="stylesheet" href="/assets/css/output.css"/>
-			<script type="module" src="/assets/js/datastar/datastar-pro.js"></script>
-			if showInspector {
-				<script type="module" src="/assets/js/datastar/datastar-inspector.js"></script>
+			if isPro {
+				<script type="module" src="/assets/js/datastar/datastar-pro.js"></script>
+				if showInspector {
+					<script type="module" src="/assets/js/datastar/datastar-inspector.js"></script>
+				}
+			} else {
+				<script type="module" src="/assets/js/datastar.js"></script>
 			}
 		</head>
 		<body class="min-h-screen bg-base-100 text-base-content antialiased font-sans">

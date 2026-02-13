@@ -5,41 +5,41 @@ Go web framework built on Chi, Templ, Tailwind CSS, DaisyUI, and Datastar.
 ## Prerequisites
 
 - Go 1.24+
-- [Datastar Pro license](https://data-star.dev/)
 
-## BYOL (Bring Your Own License)
+## Getting started
 
-Datastar Pro is a commercial product. You must purchase your own license and place the files in the `byol/` directory, which is gitignored.
+```bash
+# Install dependencies (downloads DaisyUI, Datastar, tidies modules)
+go tool task install:all
+
+# Generate templ + build Tailwind
+go tool templ generate
+go tool gotailwind
+
+# Run the showcase (uses open-source Datastar)
+go run ./cmd/showcase serve
+```
+
+The showcase starts at [http://localhost:3000](http://localhost:3000).
+
+## Datastar Pro (optional)
+
+The showcase supports both open-source Datastar and Datastar Pro. Open-source is the default and requires no license.
+
+To use Datastar Pro, purchase a license from [data-star.dev](https://data-star.dev/) and place the files in the `byol/` directory (gitignored):
 
 ```
 byol/
   datastar/
     datastar-pro.js
     datastar-inspector.js
-    datastar-pro-rocket.js    # optional, if included in your license
+    datastar-pro-rocket.js    # optional
 ```
 
-After purchasing, download the JS files from your Datastar account and copy them into `byol/datastar/`. The build embeds this directory and serves the files at `/assets/js/datastar/`.
-
-Without these files, the project will not compile.
-
-## Getting started
+Then start the showcase with the `--pro` flag:
 
 ```bash
-# Install dependencies (downloads DaisyUI + tidies modules)
-go tool task install:all
-
-# Place your Datastar Pro files
-mkdir -p byol/datastar
-cp /path/to/your/datastar-pro.js byol/datastar/
-cp /path/to/your/datastar-inspector.js byol/datastar/
-
-# Generate templ + build Tailwind
-go tool templ generate
-go tool gotailwind
-
-# Run the showcase
-go run ./cmd/showcase
+go run ./cmd/showcase serve --pro
 ```
 
-The showcase starts at [http://localhost:3000](http://localhost:3000).
+Pro mode enables the Datastar inspector and loads from your local BYOL files.
