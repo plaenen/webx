@@ -36,18 +36,12 @@ func Handler(validate SubmitFunc, onSuccess func(formID string, sse *datastar.Se
 			return
 		}
 
+		// Validate BEFORE creating the SSE — ReadSignals reads the
+		// request body which is consumed once NewSSE flushes headers.
+		errors := validate(formID, r)
+
 		sanitizedID := strings.ReplaceAll(formID, "-", "_")
 		sse := datastar.NewSSE(w, r)
-
-		// Set submitting = true
-		sse.MarshalAndPatchSignals(map[string]any{
-			sanitizedID: map[string]any{
-				"submitting": true,
-				"error":      "",
-			},
-		})
-
-		errors := validate(formID, r)
 
 		if len(errors) > 0 {
 			// Patch field errors and clear submitting
