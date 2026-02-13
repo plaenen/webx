@@ -8,3 +8,4 @@ bin/
 /showcase-test
 /icongen
 .temp/
+tmp/build-errors.log
