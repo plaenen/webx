@@ -35,9 +35,8 @@ import (
 )
 
 const (
-	outputDir      = "./ui/icon/"
-	iconContentDir = "./ui/icon/content" // Directory for individual icon contents
-	lucideVersion  = "0.544.0"           // Current Lucide version - update as needed
+	outputDir     = "./ui/icon/"
+	lucideVersion = "0.563.1" // Current Lucide version - update as needed
 )
 
 type GitHubContent struct {
@@ -47,8 +46,17 @@ type GitHubContent struct {
 }
 
 func main() {
-	// Fetch the list of files from GitHub
-	files, err := fetchGitHubContents("")
+	tag := lucideVersion
+
+	// Fetch commit SHA for the version tag
+	commitSHA, err := fetchCommitSHA(tag)
+	if err != nil {
+		panic(fmt.Errorf("failed to fetch commit SHA for %s: %w", tag, err))
+	}
+	fmt.Printf("Lucide %s → commit %s\n", tag, commitSHA)
+
+	// Fetch the list of files from GitHub (pinned to tag)
+	files, err := fetchGitHubContents(tag)
 	if err != nil {
 		panic(fmt.Errorf("failed to fetch GitHub contents: %w", err))
 	}
@@ -57,7 +65,7 @@ func main() {
 	var iconDefs []string
 	iconDefs = append(iconDefs, "package icon\n")
 	iconDefs = append(iconDefs, "// This file is auto generated\n")
-	iconDefs = append(iconDefs, fmt.Sprintf("// Using Lucide icons version %s\n", lucideVersion))
+	iconDefs = append(iconDefs, fmt.Sprintf("// Using Lucide icons version %s (commit %s)\n", lucideVersion, commitSHA))
 
 	// Create the output directory if it doesn't exist
 	err = os.MkdirAll(outputDir, os.ModePerm)
@@ -159,13 +167,26 @@ func main() {
 	}
 	fmt.Printf("Generated %s successfully!\n", outputFileDefs)
 
+	// Download and write LICENSE file
+	licenseBytes, err := downloadFile(fmt.Sprintf("https://raw.githubusercontent.com/lucide-icons/lucide/%s/LICENSE", tag))
+	if err != nil {
+		panic(fmt.Errorf("failed to download Lucide LICENSE: %w", err))
+	}
+	licenseFile := filepath.Join(outputDir, "LICENSE")
+	err = os.WriteFile(licenseFile, licenseBytes, 0644)
+	if err != nil {
+		panic(fmt.Errorf("failed to write LICENSE: %w", err))
+	}
+	fmt.Printf("Downloaded %s\n", licenseFile)
+
 	// Write icon_data.go
 	outputFileData := filepath.Join(outputDir, "icon_data.go")
 	var iconDataContent strings.Builder
 	iconDataContent.WriteString("package icon\n\n")
 	iconDataContent.WriteString("// This file is auto generated\n")
-	iconDataContent.WriteString(fmt.Sprintf("// Using Lucide icons version %s\n\n", lucideVersion))
-	iconDataContent.WriteString(fmt.Sprintf("const LucideVersion = %q\n\n", lucideVersion))
+	iconDataContent.WriteString(fmt.Sprintf("// Using Lucide icons version %s (commit %s)\n\n", lucideVersion, commitSHA))
+	iconDataContent.WriteString(fmt.Sprintf("const LucideVersion = %q\n", lucideVersion))
+	iconDataContent.WriteString(fmt.Sprintf("const LucideCommitSHA = %q\n\n", commitSHA))
 	iconDataContent.WriteString("var internalSvgData = map[string]string{\n")
 	for name, data := range iconDataEntries {
 		// Escape backticks in SVG data for multi-line string literals
@@ -210,8 +231,35 @@ type Props struct {
 	Class       string
 }
 
-// Icon returns a function that generates a templ.Component for the specified icon name.
-func Icon(name string) func(...Props) templ.Component {
+// IconType is a typed icon reference for use in component Props.
+//
+// Usage:
+//
+//	type Props struct {
+//	    Icon icon.IconType
+//	}
+//
+// Pass an icon:    Props{Icon: icon.Bell}
+// Render in templ: @props.Icon() or @props.Icon(icon.Props{Size: 16})
+//
+// To also accept arbitrary templ.Component icons (e.g. custom SVGs), add a
+// second field to your Props and render whichever is set:
+//
+//	type Props struct {
+//	    Icon     icon.IconType   // typed Lucide icon
+//	    IconComp templ.Component // arbitrary component fallback
+//	}
+//
+//	// in templ:
+//	if props.Icon != nil {
+//	    @props.Icon()
+//	} else if props.IconComp != nil {
+//	    @props.IconComp
+//	}
+type IconType func(...Props) templ.Component
+
+// Icon returns an IconType for the specified icon name.
+func Icon(name string) IconType {
 	return func(props ...Props) templ.Component {
 		var p Props
 		if len(props) > 0 {
@@ -317,24 +365,49 @@ func toPascalCase(s string) string {
 	return strings.Join(words, "")
 }
 
-// fetchGitHubContents fetches the list of files from a GitHub repository directory
-func fetchGitHubContents(url string) ([]GitHubContent, error) {
-	fmt.Println("Fetching icons from GitHub repository...")
+// fetchCommitSHA returns the commit SHA for a given tag.
+func fetchCommitSHA(tag string) (string, error) {
+	refURL := fmt.Sprintf("https://api.github.com/repos/lucide-icons/lucide/git/ref/tags/%s", tag)
+	req, err := http.NewRequest("GET", refURL, nil)
+	if err != nil {
+		return "", fmt.Errorf("creating request: %w", err)
+	}
+	req.Header.Add("Accept", "application/vnd.github.v3+json")
 
-	// Instead of using the API, let's use a direct approach to get all icons
-	// The API has pagination limits, but we can get file listings from the tree endpoint
-	treeUrl := "https://api.github.com/repos/lucide-icons/lucide/git/trees/main?recursive=1"
+	resp, err := (&http.Client{}).Do(req)
+	if err != nil {
+		return "", fmt.Errorf("fetching ref: %w", err)
+	}
+	defer resp.Body.Close()
 
-	req, err := http.NewRequest("GET", treeUrl, nil)
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("GitHub API returned status %d for tag %s", resp.StatusCode, tag)
+	}
+
+	var result struct {
+		Object struct {
+			SHA string `json:"sha"`
+		} `json:"object"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", fmt.Errorf("decoding response: %w", err)
+	}
+	return result.Object.SHA, nil
+}
+
+// fetchGitHubContents fetches the list of icon files for a given git ref (tag or branch).
+func fetchGitHubContents(ref string) ([]GitHubContent, error) {
+	fmt.Printf("Fetching icon tree for %s...\n", ref)
+
+	treeURL := fmt.Sprintf("https://api.github.com/repos/lucide-icons/lucide/git/trees/%s?recursive=1", ref)
+
+	req, err := http.NewRequest("GET", treeURL, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	// Add GitHub API headers
 	req.Header.Add("Accept", "application/vnd.github.v3+json")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := (&http.Client{}).Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -349,13 +422,10 @@ func fetchGitHubContents(url string) ([]GitHubContent, error) {
 		return nil, err
 	}
 
-	// Parse the tree response
 	type TreeItem struct {
 		Path string `json:"path"`
 		Type string `json:"type"`
-		Url  string `json:"url"`
 	}
-
 	type TreeResponse struct {
 		Tree []TreeItem `json:"tree"`
 	}
@@ -365,20 +435,15 @@ func fetchGitHubContents(url string) ([]GitHubContent, error) {
 		return nil, err
 	}
 
-	// Filter for SVG files in the icons directory
 	var contents []GitHubContent
 	for _, item := range treeResp.Tree {
 		if strings.HasPrefix(item.Path, "icons/") && strings.HasSuffix(item.Path, ".svg") {
-			// Extract the filename from the path
 			filename := filepath.Base(item.Path)
-
-			// Create a GitHubContent entry
-			content := GitHubContent{
+			contents = append(contents, GitHubContent{
 				Name:        filename,
 				Path:        item.Path,
-				DownloadUrl: fmt.Sprintf("https://raw.githubusercontent.com/lucide-icons/lucide/main/%s", item.Path),
-			}
-			contents = append(contents, content)
+				DownloadUrl: fmt.Sprintf("https://raw.githubusercontent.com/lucide-icons/lucide/%s/%s", ref, item.Path),
+			})
 		}
 	}
 

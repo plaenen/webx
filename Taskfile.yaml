@@ -34,6 +34,11 @@ tasks:
       - test -f {{.STATIC_DIR}}/datastar.js
 
 
+  generate:icons:
+    desc: Generate Lucide icon components
+    cmds:
+      - go run ./cmd/icongen
+
   # The `build:` tasks below are used together for production builds of a project
   build:templ:
     cmds:

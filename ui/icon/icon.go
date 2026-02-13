@@ -26,8 +26,35 @@ type Props struct {
 	Class       string
 }
 
-// Icon returns a function that generates a templ.Component for the specified icon name.
-func Icon(name string) func(...Props) templ.Component {
+// IconType is a typed icon reference for use in component Props.
+//
+// Usage:
+//
+//	type Props struct {
+//	    Icon icon.IconType
+//	}
+//
+// Pass an icon:    Props{Icon: icon.Bell}
+// Render in templ: @props.Icon() or @props.Icon(icon.Props{Size: 16})
+//
+// To also accept arbitrary templ.Component icons (e.g. custom SVGs), add a
+// second field to your Props and render whichever is set:
+//
+//	type Props struct {
+//	    Icon     icon.IconType   // typed Lucide icon
+//	    IconComp templ.Component // arbitrary component fallback
+//	}
+//
+//	// in templ:
+//	if props.Icon != nil {
+//	    @props.Icon()
+//	} else if props.IconComp != nil {
+//	    @props.IconComp
+//	}
+type IconType func(...Props) templ.Component
+
+// Icon returns an IconType for the specified icon name.
+func Icon(name string) IconType {
 	return func(props ...Props) templ.Component {
 		var p Props
 		if len(props) > 0 {
