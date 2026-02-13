@@ -2,14 +2,18 @@ version: "3"
 
 vars:
   STATIC_DIR: "static/css"
+  STATIC_JS_DIR: "static/js"
   DAISYUI_VERSION: "v5.5.18"
 
 tasks:
+  # --- Install ---
+
   install:all:
     desc: Install all dependencies
     cmds:
       - go mod tidy
       - task: install:daisyui
+      - task: install:playwright
 
   install:daisyui:
     desc: Download DaisyUI plugin files
@@ -20,27 +24,30 @@ tasks:
       - test -f {{.STATIC_DIR}}/daisyui.mjs
       - test -f {{.STATIC_DIR}}/daisyui-theme.mjs
 
+  install:datastar:
+    desc: Install Datastar
+    cmds:
+      - curl -sL -o {{.STATIC_JS_DIR}}/datastar.js https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js
+    status:
+      - test -f {{.STATIC_JS_DIR}}/datastar.js
+
   install:playwright:
-    desc: Install Playwright
+    desc: Install Playwright browsers
     cmds:
       - npm install -g playwright
       - playwright install
 
-  install:datastar:
-    desc: Install Datastar
-    cmds:
-      - curl -sL -o {{.STATIC_DIR}}/datastar.js https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js
-    status:
-      - test -f {{.STATIC_DIR}}/datastar.js
-
+  # --- Generate ---
 
   generate:icons:
     desc: Generate Lucide icon components
     cmds:
       - go run ./cmd/icongen
 
-  # The `build:` tasks below are used together for production builds of a project
+  # --- Build (production) ---
+
   build:templ:
+    desc: Generate Go code from .templ files
     cmds:
       - go tool templ generate
     sources:
@@ -48,17 +55,83 @@ tasks:
     generates:
       - "**/*_templ.go"
 
-  build:web:styles:
+  build:styles:
+    desc: Build Tailwind CSS
     cmds:
       - go tool gotailwind -i {{.STATIC_DIR}}/input.css -o {{.STATIC_DIR}}/output.css
     sources:
-      - "./web/resources/**/*.{html,ts,templ,go,css}"
+      - "**/*.{templ,go,css}"
     generates:
-      - "{{.STATIC_DIR}}/index.css"
+      - "{{.STATIC_DIR}}/output.css"
 
   build:
+    desc: Production build
     cmds:
-      - go build -tags=prod -o bin/showcase ./cmd/showcase
+      - go build -o bin/showcase ./cmd/showcase
     deps:
       - build:templ
-      - build:web:styles
+      - build:styles
+
+  # --- Run (production) ---
+
+  run:
+    desc: Run production build
+    cmds:
+      - ./bin/showcase serve
+    deps:
+      - build
+
+  # --- Live reload (development) ---
+
+  live:templ:
+    desc: Watch and regenerate templ files
+    cmds:
+      - go tool templ generate -watch
+
+  live:styles:
+    desc: Watch and rebuild Tailwind CSS
+    cmds:
+      - go tool gotailwind -i {{.STATIC_DIR}}/input.css -o {{.STATIC_DIR}}/output.css -w
+
+  live:server:
+    desc: Watch Go files and restart server
+    cmds:
+      - |
+        go tool air \
+          -build.cmd "go build -o tmp/bin/showcase ./cmd/showcase" \
+          -build.bin "tmp/bin/showcase" \
+          -build.args_bin "serve" \
+          -build.exclude_dir "tmp,bin,node_modules,.git" \
+          -build.include_ext "go" \
+          -build.exclude_regex "_test\\.go$$" \
+          -misc.clean_on_exit "true"
+
+  live:
+    desc: Start all watchers for development
+    deps:
+      - live:templ
+      - live:styles
+      - live:server
+
+  # --- Test ---
+
+  test:
+    desc: Run all tests
+    cmds:
+      - go test ./...
+
+  test:e2e:
+    desc: Run Playwright E2E tests
+    cmds:
+      - go test ./tests/e2e/... -v
+
+  test:unit:
+    desc: Run unit tests (excludes E2E)
+    cmds:
+      - go test $(go list ./... | grep -v tests/e2e) -v
+
+  # --- Default ---
+
+  default:
+    cmds:
+      - task: live
