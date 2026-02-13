@@ -2,6 +2,7 @@ package webx
 
 import (
 	"crypto/rand"
+	"crypto/subtle"
 	"encoding/hex"
 	"fmt"
 	"net/http"
@@ -47,6 +48,15 @@ func SessionMiddleware(store SessionStore) func(http.Handler) http.Handler {
 				}
 			}
 
+			// Validate CSRF token on mutating requests.
+			if r.Method != http.MethodGet && r.Method != http.MethodHead && r.Method != http.MethodOptions {
+				headerToken := r.Header.Get("X-CSRF-Token")
+				if subtle.ConstantTimeCompare([]byte(headerToken), []byte(token)) != 1 {
+					http.Error(w, "invalid or missing CSRF token", http.StatusForbidden)
+					return
+				}
+			}
+
 			wctx := FromContext(r.Context())
 			wctx.SessionID = sessionID
 			wctx.CSRFToken = token
@@ -68,6 +78,18 @@ func sessionIDFromRequest(r *http.Request) (string, bool) {
 		return "0000000000000000", true
 	}
 	return id, true
+}
+
+// SecurityHeadersMiddleware sets common security response headers.
+func SecurityHeadersMiddleware() func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("X-Content-Type-Options", "nosniff")
+			w.Header().Set("X-Frame-Options", "DENY")
+			w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+			next.ServeHTTP(w, r)
+		})
+	}
 }
 
 func randomHex(n int) (string, error) {

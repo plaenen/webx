@@ -21,6 +21,7 @@ func main() {
 	// Session + CSRF middleware
 	store := memory.New()
 	r.Use(webx.SessionMiddleware(store))
+	r.Use(webx.SecurityHeadersMiddleware())
 
 	// Set dev-mode flag on every request
 	r.Use(func(next http.Handler) http.Handler {
@@ -33,11 +34,11 @@ func main() {
 
 	// Serve static files (css, js) at /assets/
 	staticFS, _ := fs.Sub(static.Static, "static")
-	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServerFS(staticFS)))
+	r.Handle("/assets/*", cacheControl(http.StripPrefix("/assets/", http.FileServerFS(staticFS))))
 
 	// Serve byol files (datastar) at /assets/js/datastar/
 	byolFS, _ := fs.Sub(static.Byol, "byol/datastar")
-	r.Handle("/assets/js/datastar/*", http.StripPrefix("/assets/js/datastar/", http.FileServerFS(byolFS)))
+	r.Handle("/assets/js/datastar/*", cacheControl(http.StripPrefix("/assets/js/datastar/", http.FileServerFS(byolFS))))
 
 	r.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
@@ -59,4 +60,13 @@ func main() {
 	if err := http.Serve(ln, r); err != nil {
 		slog.Error("server failed", "error", err)
 	}
+}
+
+// cacheControl wraps a handler to set Cache-Control: no-cache so browsers
+// revalidate via ETags on each request.
+func cacheControl(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-cache")
+		h.ServeHTTP(w, r)
+	})
 }

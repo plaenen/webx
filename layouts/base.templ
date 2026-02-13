@@ -1,8 +1,6 @@
 package layouts
 
 import (
-	"log/slog"
-
 	"github.com/plaenen/webx"
 	"github.com/plaenen/webx/components/toasts"
 )
@@ -17,9 +15,6 @@ templ Base(props BaseProps) {
 		wctx := webx.FromContext(ctx)
 		showInspector := wctx.ShowDatastarInspector
 		csrfToken := wctx.CSRFToken
-		if csrfToken == "" {
-			slog.Warn("CSRF token is empty")
-		}
 	}}
 	<!DOCTYPE html>
 	<html lang="en" class="h-full scroll-smooth">
@@ -39,6 +34,7 @@ templ Base(props BaseProps) {
 			<script defer="" src="/assets/js/carousel.min.js"></script>
 			<script defer="" src="/assets/js/collapsible.min.js"></script>
 			<script defer="" src="/assets/js/chart.min.js"></script>
+			<script defer="" src="/assets/js/checkbox.min.js"></script>
 			<script defer="" src="/assets/js/code.min.js"></script>
 			<script defer="" src="/assets/js/copybutton.min.js"></script>
 			<script defer="" src="/assets/js/datepicker.min.js"></script>
@@ -54,15 +50,17 @@ templ Base(props BaseProps) {
 			<script defer="" src="/assets/js/sidebar.min.js"></script>
 			<script defer="" src="/assets/js/slider.min.js"></script>
 			<script defer="" src="/assets/js/tabs.min.js"></script>
+			<script defer="" src="/assets/js/tagsinput.min.js"></script>
 			<script defer="" src="/assets/js/textarea.min.js"></script>
+			<script defer="" src="/assets/js/timepicker.min.js"></script>
 			<script defer="" src="/assets/js/toast.min.js"></script>
 		</head>
 		<body class="min-h-screen bg-background text-foreground antialiased font-sans">
 			{ children... }
 			@toasts.Container()
+			if showInspector {
+				<datastar-inspector></datastar-inspector>
+			}
 		</body>
-		if showInspector {
-			<datastar-inspector></datastar-inspector>
-		}
 	</html>
 }
