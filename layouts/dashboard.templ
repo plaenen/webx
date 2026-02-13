@@ -1,0 +1,273 @@
+package layouts
+
+import (
+	"strings"
+
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/ui/avatar"
+	"github.com/plaenen/webx/ui/drawer"
+	"github.com/plaenen/webx/ui/dropdown"
+	"github.com/plaenen/webx/ui/icon"
+	"github.com/plaenen/webx/ui/menu"
+	"github.com/plaenen/webx/ui/navbar"
+	"github.com/plaenen/webx/utils"
+)
+
+// UserInfo configures the user section in the sidebar footer.
+type UserInfo struct {
+	Name   string
+	Email  string
+	Avatar string
+}
+
+// UserMenuItem is a single item in the user dropdown menu.
+type UserMenuItem struct {
+	Label string
+	Href  string
+	Icon  icon.IconType
+}
+
+// NavItem is a single navigation item in the sidebar.
+type NavItem struct {
+	Label  string
+	Href   string
+	Icon   icon.IconType
+	Active bool
+}
+
+// NavGroup is a titled group of navigation items.
+type NavGroup struct {
+	Title string
+	Items []NavItem
+}
+
+// PanelSignals holds the reactive state for the right-side detail panel.
+type PanelSignals struct {
+	Open bool `json:"open"`
+}
+
+// DashboardProps configures the dashboard layout.
+type DashboardProps struct {
+	BaseProps
+
+	// App configures branding in sidebar header
+	App AppBranding
+
+	// User configures the user section in sidebar footer
+	User UserInfo
+
+	// UserMenu items shown in the user dropdown
+	UserMenu []UserMenuItem
+
+	// Nav is the sidebar navigation structure
+	Nav []NavGroup
+
+	// CurrentPath highlights the active nav item
+	CurrentPath string
+
+	// ShowDetailPanel enables the right-side detail panel (controlled by Datastar signals)
+	ShowDetailPanel bool
+
+	// HeaderActions is an optional slot for action buttons in the navbar
+	HeaderActions templ.Component
+}
+
+// DrawerID is the fixed ID for the dashboard's sidebar drawer.
+const DrawerID = "dashboard"
+
+templ Dashboard(props DashboardProps) {
+	@Base(props.BaseProps) {
+		{{
+			panelSignals := utils.Signals("detail_panel", PanelSignals{Open: false})
+		}}
+		<div
+			if props.ShowDetailPanel {
+				data-signals={ panelSignals.DataSignals }
+			}
+		>
+			@drawer.Drawer(drawer.Props{ID: DrawerID}) {
+				@drawer.Content() {
+					@navbar.Navbar() {
+						@navbar.Start() {
+							@drawer.ToggleButton(DrawerID)
+							<a href={ templ.SafeURL(props.App.DefaultHref()) } class="btn btn-ghost text-xl">
+								if props.App.LogoFullUrl != "" {
+									<img src={ props.App.DefaultLogoUrl() } alt={ props.App.DefaultName() } class="h-6"/>
+								}
+								{ props.App.DefaultName() }
+							</a>
+						}
+						@navbar.End() {
+							if props.HeaderActions != nil {
+								@props.HeaderActions
+							}
+						}
+					}
+					<main class="flex-1 overflow-auto p-6">
+						{ children... }
+					</main>
+				}
+				@drawer.Side(drawer.SideProps{ID: DrawerID}) {
+					@dashboardSidebarHeader(props.App)
+					@dashboardSidebarNav(props.Nav, props.CurrentPath)
+					<div class="flex-1"></div>
+					if props.User.Name != "" || props.User.Email != "" {
+						@dashboardSidebarFooter(props.User, props.UserMenu)
+					}
+				}
+			}
+			if props.ShowDetailPanel {
+				@dashboardDetailPanel(panelSignals)
+			}
+		</div>
+	}
+}
+
+templ dashboardSidebarHeader(app AppBranding) {
+	<div class="flex items-center gap-2 p-2 mb-2">
+		if app.LogoFullUrl != "" {
+			<img src={ app.DefaultLogoUrl() } alt={ app.DefaultName() } class="w-6 h-6"/>
+		}
+		<span class="font-bold text-lg">{ app.DefaultName() }</span>
+	</div>
+}
+
+templ dashboardSidebarNav(groups []NavGroup, currentPath string) {
+	@menu.Menu() {
+		for _, group := range groups {
+			if group.Title != "" {
+				@menu.Title() {
+					{ group.Title }
+				}
+			}
+			for _, item := range group.Items {
+				@menu.Item(menu.ItemProps{
+					Href:   item.Href,
+					Active: item.Active || item.Href == currentPath,
+				}) {
+					if item.Icon != nil {
+						@item.Icon(icon.Props{Size: 16})
+					}
+					{ item.Label }
+				}
+			}
+		}
+	}
+}
+
+templ dashboardSidebarFooter(user UserInfo, items []UserMenuItem) {
+	<div class="border-t border-base-300 pt-2">
+		if len(items) > 0 {
+			@dropdown.Dropdown(dropdown.Props{
+				ID:       "user-menu",
+				Position: dropdown.PositionTop,
+				Align:    dropdown.AlignEnd,
+				Class:    "w-full",
+			}) {
+				@dropdown.Trigger(dropdown.TriggerProps{
+					DropdownID: "user-menu",
+					Class:      "btn-ghost w-full justify-start gap-2",
+				}) {
+					@userAvatar(user)
+					<div class="flex-1 min-w-0 text-left">
+						if user.Name != "" {
+							<p class="text-sm font-medium truncate">{ user.Name }</p>
+						}
+						if user.Email != "" {
+							<p class="text-xs opacity-60 truncate">{ user.Email }</p>
+						}
+					</div>
+					@icon.ChevronsUpDown(icon.Props{Size: 16, Class: "opacity-50"})
+				}
+				@dropdown.Content(dropdown.ContentProps{
+					DropdownID: "user-menu",
+					Class:      "w-full mb-2",
+				}) {
+					for _, item := range items {
+						<li>
+							<a href={ templ.SafeURL(item.Href) }>
+								if item.Icon != nil {
+									@item.Icon(icon.Props{Size: 16})
+								}
+								{ item.Label }
+							</a>
+						</li>
+					}
+				}
+			}
+		} else {
+			<div class="flex items-center gap-2 p-2">
+				@userAvatar(user)
+				<div class="flex-1 min-w-0">
+					if user.Name != "" {
+						<p class="text-sm font-medium truncate">{ user.Name }</p>
+					}
+					if user.Email != "" {
+						<p class="text-xs opacity-60 truncate">{ user.Email }</p>
+					}
+				</div>
+			</div>
+		}
+	</div>
+}
+
+templ userAvatar(user UserInfo) {
+	@avatar.Avatar(avatar.Props{
+		Src:         user.Avatar,
+		Alt:         user.Name,
+		Size:        avatar.SizeXs,
+		Shape:       avatar.ShapeCircle,
+		Placeholder: user.Avatar == "",
+	}) {
+		if user.Avatar == "" {
+			<span class="text-xs">{ userInitials(user.Name) }</span>
+		}
+	}
+}
+
+templ dashboardDetailPanel(signals *utils.SignalManager) {
+	// Overlay
+	<div
+		class="fixed inset-0 bg-black/50 z-40"
+		style="display: none;"
+		{ ds.Show(signals.Signal("open"))... }
+		{ ds.OnClick(signals.Set("open", "false"))... }
+	></div>
+	// Panel
+	<aside
+		class="fixed right-0 top-0 h-full w-1/3 min-w-80 max-w-[calc(100vw-3rem)] bg-base-100 border-l border-base-300 shadow-lg z-50 transition-transform duration-200"
+		style="display: none;"
+		{ ds.Show(signals.Signal("open"))... }
+	>
+		<div class="flex items-center justify-between p-4 border-b border-base-300">
+			<h2 id="detail-panel-title" class="font-semibold">Details</h2>
+			<button
+				class="btn btn-ghost btn-sm btn-square"
+				{ ds.OnClick(signals.Set("open", "false"))... }
+			>
+				@icon.X(icon.Props{Size: 16})
+			</button>
+		</div>
+		<div id="detail-panel-content" class="p-4 overflow-auto h-[calc(100%-65px)]">
+			// Content injected via SSE or Datastar
+		</div>
+	</aside>
+}
+
+func userInitials(name string) string {
+	if name == "" {
+		return "?"
+	}
+	words := strings.Fields(name)
+	if len(words) == 0 {
+		return string([]rune(name)[0])
+	}
+	initials := ""
+	for i, word := range words {
+		if i >= 2 || len(word) == 0 {
+			break
+		}
+		initials += string([]rune(word)[0])
+	}
+	return strings.ToUpper(initials)
+}
