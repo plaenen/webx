@@ -2,49 +2,17 @@ package pages
 
 import (
 	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
-	"github.com/plaenen/webx/ui/button"
-	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/markdown"
 )
 
-templ Home() {
+templ Home(readmeContent string) {
 	@layouts.Showcase(layouts.ShowcaseProps{
 		Title:       "webx showcase",
 		Description: "Go web framework with DaisyUI and Datastar",
 		CurrentPath: "/",
 	}) {
-		<div class="space-y-8">
-			<div>
-				<h1 class="text-3xl font-bold">Welcome to WebX</h1>
-				<p class="text-base-content/70 mt-2">Go + Templ + Tailwind + DaisyUI + Datastar</p>
-			</div>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-				@card.Card() {
-					@card.Body() {
-						@card.Title() {
-							DaisyUI Components
-						}
-						<p>CSS-only component styling via DaisyUI's Tailwind plugin. No component JS needed.</p>
-						@card.Actions() {
-							@button.Button(button.Props{Variant: button.VariantPrimary}) {
-								<a href="/components/button">Explore</a>
-							}
-						}
-					}
-				}
-				@card.Card() {
-					@card.Body() {
-						@card.Title() {
-							Datastar Interactivity
-						}
-						<p>All frontend state and interactions handled by Datastar signals and SSE.</p>
-						@card.Actions() {
-							@button.Button(button.Props{Variant: button.VariantSecondary}) {
-								<a href="/components/drawer">See Drawer</a>
-							}
-						}
-					}
-				}
-			</div>
-		</div>
+		@markdown.Markdown(markdown.Props{
+			Content: readmeContent,
+		})
 	}
 }

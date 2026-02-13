@@ -162,6 +162,12 @@ var contactFormHandler = form.Handler(
 )
 
 func serve(port int, pro bool) error {
+	readmeBytes, err := os.ReadFile("README.md")
+	if err != nil {
+		slog.Warn("could not read README.md", "error", err)
+	}
+	readme := string(readmeBytes)
+
 	r := chi.NewRouter()
 
 	// Session + CSRF middleware
@@ -197,7 +203,7 @@ func serve(port int, pro bool) error {
 	})
 
 	// Pages
-	r.Get("/", templ.Handler(pages.Home()).ServeHTTP)
+	r.Get("/", templ.Handler(pages.Home(readme)).ServeHTTP)
 	r.Get("/components/button", templ.Handler(pages.Buttons()).ServeHTTP)
 	r.Get("/components/card", templ.Handler(pages.Cards()).ServeHTTP)
 	r.Get("/components/drawer", templ.Handler(pages.Drawers()).ServeHTTP)

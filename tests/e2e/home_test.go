@@ -39,7 +39,7 @@ func TestHomePage_NavigationLinksVisible(t *testing.T) {
 	}
 }
 
-func TestHomePage_CardsRender(t *testing.T) {
+func TestHomePage_ReadmeRendered(t *testing.T) {
 	page := newPage(t)
 	if _, err := page.Goto(baseURL, pw.PageGotoOptions{
 		WaitUntil: pw.WaitUntilStateDomcontentloaded,
@@ -47,12 +47,12 @@ func TestHomePage_CardsRender(t *testing.T) {
 		t.Fatalf("goto: %v", err)
 	}
 
-	cards := page.Locator(".card")
-	count, err := cards.Count()
+	prose := page.Locator(".prose")
+	count, err := prose.Count()
 	if err != nil {
-		t.Fatalf("count cards: %v", err)
+		t.Fatalf("count prose: %v", err)
 	}
 	if count == 0 {
-		t.Error("no card components found on home page")
+		t.Error("no rendered markdown (prose) found on home page")
 	}
 }
