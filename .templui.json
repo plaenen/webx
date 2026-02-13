@@ -1,0 +1,7 @@
+{
+  "componentsDir": "ui",
+  "utilsDir": "utils",
+  "moduleName": "github.com/plaenen/webx",
+  "jsDir": "assets/js",
+  "jsPublicPath": "/assets/js"
+}
