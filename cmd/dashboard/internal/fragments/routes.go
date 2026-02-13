@@ -6,7 +6,7 @@ import (
 	"github.com/plaenen/webx/cmd/dashboard/internal/fragments/login"
 )
 
-func RegisterRoutes(r chi.Router, tokens webx.TokenStore) {
-	loginHandler := login.NewHandler(tokens)
+func RegisterRoutes(r chi.Router, tokens webx.TokenStore, sendMagicLink login.SendMagicLinkFunc) {
+	loginHandler := login.NewHandler(tokens, sendMagicLink)
 	r.Post("/api/auth/login", loginHandler.SubmitHandler())
 }

@@ -33,7 +33,9 @@ func serveCmd() *cobra.Command {
 
 func serve(port int, pro bool) error {
 	r := chi.NewRouter()
-	internal.SetupRoutes(r, pro)
+	internal.SetupRoutes(r,
+		internal.WithPro(pro),
+	)
 
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {

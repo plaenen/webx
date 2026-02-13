@@ -1,6 +1,7 @@
 package login
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -10,14 +11,20 @@ import (
 	"github.com/starfederation/datastar-go/datastar"
 )
 
+// SendMagicLinkFunc sends a magic link to the given email.
+// In dev mode this can be a no-op since the link is shown on screen.
+type SendMagicLinkFunc func(ctx context.Context, email, link string) error
+
 // Handler handles login form submissions.
 type Handler struct {
-	tokens webx.TokenStore
+	tokens        webx.TokenStore
+	sendMagicLink SendMagicLinkFunc
 }
 
 // NewHandler creates a login handler backed by the given token store.
-func NewHandler(tokens webx.TokenStore) *Handler {
-	return &Handler{tokens: tokens}
+// The sendMagicLink function is called to deliver the link in non-dev mode.
+func NewHandler(tokens webx.TokenStore, sendMagicLink SendMagicLinkFunc) *Handler {
+	return &Handler{tokens: tokens, sendMagicLink: sendMagicLink}
 }
 
 // loginSubmitSignals matches the full signal payload from the login form.
@@ -30,7 +37,7 @@ type loginSubmitSignals struct {
 }
 
 // SubmitHandler returns an http.HandlerFunc for the login form SSE endpoint.
-// On valid email, it creates a token in the store and signals success.
+// On valid email, it creates a token in the store and sends the magic link.
 func (h *Handler) SubmitHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		formID := r.URL.Query().Get("id")
@@ -65,6 +72,16 @@ func (h *Handler) SubmitHandler() http.HandlerFunc {
 		}
 
 		link := fmt.Sprintf("/verify?token=%s", token.Value)
+
+		// Send the magic link (no-op in dev mode — the link is shown on screen).
+		wctx := webx.FromContext(r.Context())
+		if !wctx.DevMode && h.sendMagicLink != nil {
+			if err := h.sendMagicLink(r.Context(), email, link); err != nil {
+				writeFormError(w, r, formID, "Failed to send login email, please try again")
+				return
+			}
+		}
+
 		sse := datastar.NewSSE(w, r)
 		sse.PatchElementTempl(MagicLinkSent(link))
 	}
