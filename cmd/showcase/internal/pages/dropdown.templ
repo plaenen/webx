@@ -1,0 +1,164 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/dropdown"
+)
+
+templ Dropdowns() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Dropdown — WebX Showcase",
+		Description: "DaisyUI dropdown component",
+		CurrentPath: "/components/dropdown",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Dropdown</h1>
+				<p class="text-base-content/70 mt-2">
+					Dropdowns open a menu or content on click. Built on native
+					&lt;details&gt;/&lt;summary&gt; with Datastar state management.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-10">
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-basic"}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-basic"}) {
+								Click me
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-basic"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Positions
+					}
+					<div class="flex flex-wrap items-center justify-center gap-4 py-24">
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-bottom", Position: dropdown.PositionBottom}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-bottom"}) {
+								Bottom
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-bottom"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-top", Position: dropdown.PositionTop}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-top"}) {
+								Top
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-top"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-left", Position: dropdown.PositionLeft}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-left"}) {
+								Left
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-left"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-right", Position: dropdown.PositionRight}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-right"}) {
+								Right
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-right"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Alignment
+					}
+					<div class="flex flex-wrap items-start gap-4 py-10">
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-start"}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-start"}) {
+								Start (default)
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-start"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-center", Align: dropdown.AlignCenter}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-center"}) {
+								Center
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-center"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-end", Align: dropdown.AlignEnd}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-end"}) {
+								End
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-end"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Hover
+					}
+					<div class="py-10">
+						@dropdown.Dropdown(dropdown.Props{ID: "dd-hover", Hover: true}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "dd-hover"}) {
+								Hover me
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "dd-hover"}) {
+								<li><a>Item 1</a></li>
+								<li><a>Item 2</a></li>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Close on Item Click
+					}
+					<p class="text-sm mb-3">
+						Content automatically closes the dropdown when an item is clicked.
+					</p>
+					<div class="py-10">
+						@dropdown.Dropdown(dropdown.Props{ID: "actions"}) {
+							@dropdown.Trigger(dropdown.TriggerProps{DropdownID: "actions"}) {
+								Actions
+							}
+							@dropdown.Content(dropdown.ContentProps{DropdownID: "actions"}) {
+								<li><a>Edit</a></li>
+								<li><a>Duplicate</a></li>
+								<li><a>Delete</a></li>
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

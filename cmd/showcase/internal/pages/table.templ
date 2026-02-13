@@ -1,0 +1,238 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/table"
+)
+
+templ Tables() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Table — WebX Showcase",
+		Description: "DaisyUI table component",
+		CurrentPath: "/components/table",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Table</h1>
+				<p class="text-base-content/70 mt-2">
+					Tables display data in rows and columns with optional zebra striping, pinned headers, and size variants.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="overflow-x-auto py-4">
+						@table.Table() {
+							<thead>
+								<tr>
+									<th></th>
+									<th>Name</th>
+									<th>Job</th>
+									<th>Favorite Color</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>1</th>
+									<td>Cy Ganderton</td>
+									<td>Quality Control Specialist</td>
+									<td>Blue</td>
+								</tr>
+								<tr>
+									<th>2</th>
+									<td>Hart Hagerty</td>
+									<td>Desktop Support Technician</td>
+									<td>Purple</td>
+								</tr>
+								<tr>
+									<th>3</th>
+									<td>Brice Swyre</td>
+									<td>Tax Accountant</td>
+									<td>Red</td>
+								</tr>
+							</tbody>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Zebra
+					}
+					<div class="overflow-x-auto py-4">
+						@table.Table(table.Props{Zebra: true}) {
+							<thead>
+								<tr>
+									<th></th>
+									<th>Name</th>
+									<th>Job</th>
+									<th>Favorite Color</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th>1</th>
+									<td>Cy Ganderton</td>
+									<td>Quality Control Specialist</td>
+									<td>Blue</td>
+								</tr>
+								<tr>
+									<th>2</th>
+									<td>Hart Hagerty</td>
+									<td>Desktop Support Technician</td>
+									<td>Purple</td>
+								</tr>
+								<tr>
+									<th>3</th>
+									<td>Brice Swyre</td>
+									<td>Tax Accountant</td>
+									<td>Red</td>
+								</tr>
+								<tr>
+									<th>4</th>
+									<td>Marjy Ferencz</td>
+									<td>Office Assistant I</td>
+									<td>Crimson</td>
+								</tr>
+							</tbody>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="space-y-6 py-4">
+						<div>
+							<p class="text-sm font-semibold mb-2">Extra Small</p>
+							<div class="overflow-x-auto">
+								@table.Table(table.Props{Size: table.SizeXs}) {
+									@sampleTableContent()
+								}
+							</div>
+						</div>
+						<div>
+							<p class="text-sm font-semibold mb-2">Small</p>
+							<div class="overflow-x-auto">
+								@table.Table(table.Props{Size: table.SizeSm}) {
+									@sampleTableContent()
+								}
+							</div>
+						</div>
+						<div>
+							<p class="text-sm font-semibold mb-2">Large</p>
+							<div class="overflow-x-auto">
+								@table.Table(table.Props{Size: table.SizeLg}) {
+									@sampleTableContent()
+								}
+							</div>
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Pinned Rows
+					}
+					<div class="overflow-x-auto h-48 py-4">
+						@table.Table(table.Props{PinRows: true}) {
+							<thead>
+								<tr>
+									<th></th>
+									<th>Name</th>
+									<th>Job</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><th>1</th><td>Cy Ganderton</td><td>Quality Control Specialist</td></tr>
+								<tr><th>2</th><td>Hart Hagerty</td><td>Desktop Support Technician</td></tr>
+								<tr><th>3</th><td>Brice Swyre</td><td>Tax Accountant</td></tr>
+								<tr><th>4</th><td>Marjy Ferencz</td><td>Office Assistant I</td></tr>
+								<tr><th>5</th><td>Yancy Tear</td><td>Community Outreach Specialist</td></tr>
+								<tr><th>6</th><td>Irma Vadarlis</td><td>Editor</td></tr>
+								<tr><th>7</th><td>Meenda Celedon</td><td>Legal Assistant</td></tr>
+								<tr><th>8</th><td>Kdarko Pjandaric</td><td>Analyst</td></tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th></th>
+									<th>Name</th>
+									<th>Job</th>
+								</tr>
+							</tfoot>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Active & Hover Rows
+					}
+					<div class="overflow-x-auto py-4">
+						@table.Table() {
+							<thead>
+								<tr>
+									<th></th>
+									<th>Name</th>
+									<th>Job</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="bg-base-200">
+									<th>1</th>
+									<td>Cy Ganderton</td>
+									<td>Quality Control Specialist</td>
+								</tr>
+								<tr>
+									<th>2</th>
+									<td>Hart Hagerty</td>
+									<td>Desktop Support Technician</td>
+								</tr>
+								<tr class="hover:bg-base-300">
+									<th>3</th>
+									<td>Brice Swyre</td>
+									<td>Tax Accountant</td>
+								</tr>
+							</tbody>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}
+
+templ sampleTableContent() {
+	<thead>
+		<tr>
+			<th></th>
+			<th>Name</th>
+			<th>Job</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>1</th>
+			<td>Cy Ganderton</td>
+			<td>Quality Control Specialist</td>
+		</tr>
+		<tr>
+			<th>2</th>
+			<td>Hart Hagerty</td>
+			<td>Desktop Support Technician</td>
+		</tr>
+		<tr>
+			<th>3</th>
+			<td>Brice Swyre</td>
+			<td>Tax Accountant</td>
+		</tr>
+	</tbody>
+}

@@ -1,0 +1,99 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/moneyinput"
+)
+
+templ MoneyInputs() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Money Input — WebX Showcase",
+		Description: "Numeric and money input with server-side parsing via Datastar",
+		CurrentPath: "/components/money-input",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Money Input</h1>
+				<p class="text-base-content/70 mt-2">
+					Input fields that parse numeric shorthand (5k, 1.5M) and currency codes
+					via server-side Datastar SSE. The parsed result is displayed inline.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic Decimal
+					}
+					<p class="text-sm mb-4">
+						Type shorthand like 5k, 1.5M, 2.5B, or plain numbers with commas (1,234.56).
+					</p>
+					<div class="w-full max-w-sm">
+						@moneyinput.DecimalInput(moneyinput.DecimalProps{
+							ID:          "decimal-basic",
+							ParseURL:    "/showcase/api/parse/decimal",
+							Placeholder: "e.g. 5k, 1.5M, 1,234.56",
+							Class:       "input-bordered w-full",
+						})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Pre-filled Decimal
+					}
+					<p class="text-sm mb-4">
+						A decimal input with an initial value. Edit it to see the parsed result update.
+					</p>
+					<div class="w-full max-w-sm">
+						@moneyinput.DecimalInput(moneyinput.DecimalProps{
+							ID:          "decimal-prefilled",
+							ParseURL:    "/showcase/api/parse/decimal",
+							Placeholder: "e.g. 5k",
+							Value:       "2500",
+							Class:       "input-bordered w-full",
+						})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Money with Currency
+					}
+					<p class="text-sm mb-4">
+						Type a currency code and amount, e.g. "USD 100" or "100 EUR". Any
+						3-letter currency code is accepted.
+					</p>
+					<div class="w-full max-w-sm">
+						@moneyinput.MoneyInput(moneyinput.MoneyProps{
+							ID:          "money-any",
+							ParseURL:    "/showcase/api/parse/money",
+							Placeholder: "e.g. USD 5k, 100 EUR",
+							Class:       "input-bordered w-full",
+						})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Restricted Currencies
+					}
+					<p class="text-sm mb-4">
+						Only USD and EUR are accepted. Try typing "GBP 100" to see the error.
+					</p>
+					<div class="w-full max-w-sm">
+						@moneyinput.MoneyInput(moneyinput.MoneyProps{
+							ID:          "money-restricted",
+							ParseURL:    "/showcase/api/parse/money-restricted",
+							Placeholder: "e.g. USD 100, 50 EUR",
+							Class:       "input-bordered w-full",
+						})
+					</div>
+				}
+			}
+		</div>
+	}
+}

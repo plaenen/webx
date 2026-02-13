@@ -1,0 +1,105 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/validator"
+)
+
+templ Validators() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Validator — WebX Showcase",
+		Description: "Server-side input validation with Datastar",
+		CurrentPath: "/components/validator",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Validator</h1>
+				<p class="text-base-content/70 mt-2">
+					Input fields with server-side validation via Datastar SSE. On input change, the value is sent to the backend for validation and the result is displayed inline.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Email Validation
+					}
+					<p class="text-sm mb-4">
+						Validates email format on the server. Try typing an invalid email to see the error hint.
+					</p>
+					<div class="w-full max-w-sm">
+						@validator.Input(validator.InputProps{
+							ID:          "email-demo",
+							Type:        validator.TypeEmail,
+							ValidateURL: "/showcase/api/validate/email",
+							Placeholder: "email@example.com",
+							Class:       "input-bordered w-full",
+						})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Success Hint
+					}
+					<p class="text-sm mb-4">
+						Shows a success message when the email is valid.
+					</p>
+					<div class="w-full max-w-sm">
+						@validator.Input(validator.InputProps{
+							ID:          "email-success",
+							Type:        validator.TypeEmail,
+							ValidateURL: "/showcase/api/validate/email",
+							Placeholder: "email@example.com",
+							Class:       "input-bordered w-full",
+						})
+						@validator.SuccessHint("email-success") {
+							Valid email address
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Email with MX Check
+					}
+					<p class="text-sm mb-4">
+						Validates email format and verifies the domain has MX records.
+					</p>
+					<div class="w-full max-w-sm">
+						@validator.Input(validator.InputProps{
+							ID:          "email-mx",
+							Type:        validator.TypeEmail,
+							ValidateURL: "/showcase/api/validate/email-mx",
+							Placeholder: "email@example.com",
+							Class:       "input-bordered w-full",
+							HintText:    "Please enter a valid email with a real domain",
+						})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Custom Debounce
+					}
+					<p class="text-sm mb-4">
+						Same email validation with a shorter debounce (200ms).
+					</p>
+					<div class="w-full max-w-sm">
+						@validator.Input(validator.InputProps{
+							ID:          "email-fast",
+							Type:        validator.TypeEmail,
+							ValidateURL: "/showcase/api/validate/email",
+							Placeholder: "email@example.com",
+							Class:       "input-bordered w-full",
+							DebounceMs:  200,
+						})
+					</div>
+				}
+			}
+		</div>
+	}
+}

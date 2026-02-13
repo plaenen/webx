@@ -1,0 +1,99 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/textarea"
+)
+
+templ Textareas() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Textarea — WebX Showcase",
+		Description: "DaisyUI textarea component",
+		CurrentPath: "/components/textarea",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Textarea</h1>
+				<p class="text-base-content/70 mt-2">
+					Multi-line text input fields with DaisyUI styling.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4 max-w-md">
+						@textarea.Textarea(textarea.Props{Placeholder: "Type your message here..."})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 max-w-2xl">
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantPrimary, Placeholder: "Primary"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantSecondary, Placeholder: "Secondary"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantAccent, Placeholder: "Accent"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantNeutral, Placeholder: "Neutral"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantSuccess, Placeholder: "Success"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantWarning, Placeholder: "Warning"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantInfo, Placeholder: "Info"})
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantError, Placeholder: "Error"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Ghost
+					}
+					<div class="py-4 max-w-md">
+						@textarea.Textarea(textarea.Props{Variant: textarea.VariantGhost, Placeholder: "Ghost textarea..."})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="space-y-4 py-4 max-w-md">
+						@textarea.Textarea(textarea.Props{Size: textarea.SizeXs, Placeholder: "Extra small"})
+						@textarea.Textarea(textarea.Props{Size: textarea.SizeSm, Placeholder: "Small"})
+						@textarea.Textarea(textarea.Props{Size: textarea.SizeMd, Placeholder: "Medium"})
+						@textarea.Textarea(textarea.Props{Size: textarea.SizeLg, Placeholder: "Large"})
+						@textarea.Textarea(textarea.Props{Size: textarea.SizeXl, Placeholder: "Extra large"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Disabled
+					}
+					<div class="py-4 max-w-md">
+						@textarea.Textarea(textarea.Props{Disabled: true, Placeholder: "Cannot type here..."})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Label
+					}
+					<div class="py-4 max-w-md">
+						<fieldset class="fieldset">
+							<legend class="fieldset-legend">Your bio</legend>
+							@textarea.Textarea(textarea.Props{Placeholder: "Tell us about yourself...", Class: "h-24 w-full"})
+							<p class="fieldset-label">Max 500 characters</p>
+						</fieldset>
+					</div>
+				}
+			}
+		</div>
+	}
+}

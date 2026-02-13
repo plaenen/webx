@@ -1,0 +1,111 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/avatar"
+	"github.com/plaenen/webx/ui/card"
+)
+
+const sampleAvatarImg = "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+
+templ Avatars() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Avatar — WebX Showcase",
+		Description: "DaisyUI avatar component",
+		CurrentPath: "/components/avatar",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Avatar</h1>
+				<p class="text-base-content/70 mt-2">
+					Avatars display user profile images, initials, or placeholder content.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-wrap items-center gap-4">
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "User"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-wrap items-end gap-4">
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "XS", Size: avatar.SizeXs})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "SM", Size: avatar.SizeSm})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "MD", Size: avatar.SizeMd})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "LG", Size: avatar.SizeLg})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "XL", Size: avatar.SizeXl})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "2XL", Size: avatar.Size2xl})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Shapes
+					}
+					<div class="flex flex-wrap items-center gap-4">
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Circle", Shape: avatar.ShapeCircle})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Rounded", Shape: avatar.ShapeRounded})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Rounded XL", Shape: avatar.ShapeRoundedXl})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Squircle", Shape: avatar.ShapeSquircle})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Heart", Shape: avatar.ShapeHeart})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Hexagon", Shape: avatar.ShapeHexagon})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Status
+					}
+					<div class="flex flex-wrap items-center gap-4">
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Online", Status: avatar.StatusOnline})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "Offline", Status: avatar.StatusOffline})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Placeholder
+					}
+					<p class="text-sm mb-3">Text content is shown when no image source is provided.</p>
+					<div class="flex flex-wrap items-center gap-4">
+						@avatar.Avatar(avatar.Props{Placeholder: true, Size: avatar.SizeLg}) {
+							<span class="text-3xl">D</span>
+						}
+						@avatar.Avatar(avatar.Props{Placeholder: true, Size: avatar.SizeMd}) {
+							<span class="text-xl">JD</span>
+						}
+						@avatar.Avatar(avatar.Props{Placeholder: true, Size: avatar.SizeSm}) {
+							<span>AB</span>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Avatar Group
+					}
+					@avatar.Group() {
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "User 1"})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "User 2"})
+						@avatar.Avatar(avatar.Props{Src: sampleAvatarImg, Alt: "User 3"})
+						@avatar.Avatar(avatar.Props{Placeholder: true}) {
+							<span>+99</span>
+						}
+					}
+				}
+			}
+		</div>
+	}
+}

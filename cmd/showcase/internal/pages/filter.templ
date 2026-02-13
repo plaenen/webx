@@ -1,0 +1,71 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/filter"
+)
+
+templ Filters() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Filter — WebX Showcase",
+		Description: "DaisyUI filter component",
+		CurrentPath: "/components/filter",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Filter</h1>
+				<p class="text-base-content/70 mt-2">
+					Filter is a group of radio buttons. Choosing one of the options will hide the others and show a reset button.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@filter.Filter() {
+							@filter.Reset()
+							@filter.Radio(filter.RadioProps{Name: "basic", Label: "All"})
+							@filter.Radio(filter.RadioProps{Name: "basic", Label: "Action"})
+							@filter.Radio(filter.RadioProps{Name: "basic", Label: "Comedy"})
+							@filter.Radio(filter.RadioProps{Name: "basic", Label: "Drama"})
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With default checked
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@filter.Filter() {
+							@filter.Reset()
+							@filter.Radio(filter.RadioProps{Name: "checked", Label: "All", Checked: true})
+							@filter.Radio(filter.RadioProps{Name: "checked", Label: "Games"})
+							@filter.Radio(filter.RadioProps{Name: "checked", Label: "Movies"})
+							@filter.Radio(filter.RadioProps{Name: "checked", Label: "Music"})
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Custom styled
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@filter.Filter() {
+							@filter.Reset(filter.ResetProps{Class: "btn-primary"})
+							@filter.Radio(filter.RadioProps{Name: "styled", Label: "Electronics", Class: "btn-primary"})
+							@filter.Radio(filter.RadioProps{Name: "styled", Label: "Clothing", Class: "btn-primary"})
+							@filter.Radio(filter.RadioProps{Name: "styled", Label: "Books", Class: "btn-primary"})
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

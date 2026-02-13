@@ -1,0 +1,105 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/status"
+)
+
+templ Statuses() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Status — WebX Showcase",
+		Description: "DaisyUI status indicator component",
+		CurrentPath: "/components/status",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Status</h1>
+				<p class="text-base-content/70 mt-2">
+					A small indicator icon to visually show the current status of an element, like online, offline, error, etc.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Color Variants
+					}
+					<div class="flex flex-wrap items-center gap-4">
+						@status.Status()
+						@status.Status(status.Props{Variant: status.VariantNeutral})
+						@status.Status(status.Props{Variant: status.VariantPrimary})
+						@status.Status(status.Props{Variant: status.VariantSecondary})
+						@status.Status(status.Props{Variant: status.VariantAccent})
+						@status.Status(status.Props{Variant: status.VariantInfo})
+						@status.Status(status.Props{Variant: status.VariantSuccess})
+						@status.Status(status.Props{Variant: status.VariantWarning})
+						@status.Status(status.Props{Variant: status.VariantError})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-wrap items-center gap-4">
+						@status.Status(status.Props{Variant: status.VariantPrimary, Size: status.SizeXs})
+						@status.Status(status.Props{Variant: status.VariantPrimary, Size: status.SizeSm})
+						@status.Status(status.Props{Variant: status.VariantPrimary, Size: status.SizeMd})
+						@status.Status(status.Props{Variant: status.VariantPrimary, Size: status.SizeLg})
+						@status.Status(status.Props{Variant: status.VariantPrimary, Size: status.SizeXl})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Animations
+					}
+					<p class="text-sm mb-4">
+						Ping animation uses an overlapping grid to create a pulsing effect. Bounce adds a vertical bounce.
+					</p>
+					<div class="flex flex-wrap items-center gap-6">
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantError, Animation: status.AnimationPing})
+							<span class="text-sm">Ping</span>
+						</div>
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantInfo, Animation: status.AnimationBounce})
+							<span class="text-sm">Bounce</span>
+						</div>
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantSuccess})
+							<span class="text-sm">None</span>
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						In Context
+					}
+					<div class="space-y-3">
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantSuccess, Size: status.SizeSm})
+							<span>Server online</span>
+						</div>
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantError, Size: status.SizeSm, Animation: status.AnimationPing})
+							<span>Database unreachable</span>
+						</div>
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantWarning, Size: status.SizeSm})
+							<span>High latency detected</span>
+						</div>
+						<div class="flex items-center gap-2">
+							@status.Status(status.Props{Variant: status.VariantNeutral, Size: status.SizeSm})
+							<span>Service idle</span>
+						</div>
+					</div>
+				}
+			}
+		</div>
+	}
+}

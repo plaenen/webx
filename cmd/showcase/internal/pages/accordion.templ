@@ -1,0 +1,231 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/accordion"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/utils"
+)
+
+templ Accordions() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Accordion - WebX Showcase",
+		Description: "DaisyUI accordion with Datastar signals",
+		CurrentPath: "/components/accordion",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Accordion</h1>
+				<p class="text-base-content/70 mt-2">
+					DaisyUI collapse-based accordion controlled by Datastar signals.
+					Only one item can be open at a time. Click an open item to close it.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Arrow Accordion
+					}
+					<p class="mb-4 text-sm">Uses the arrow modifier for a rotating chevron indicator.</p>
+					@arrowDemo()
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Plus/Minus Accordion
+					}
+					<p class="mb-4 text-sm">Uses the plus modifier for a plus/minus indicator.</p>
+					@plusDemo()
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Default Open
+					}
+					<p class="mb-4 text-sm">The second item starts open via DefaultValue.</p>
+					@defaultOpenDemo()
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Joined Accordion
+					}
+					<p class="mb-4 text-sm">Items joined seamlessly using DaisyUI join classes.</p>
+					@joinedDemo()
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						State Indicator
+					}
+					<p class="mb-4 text-sm">Shows the active signal value in real time.</p>
+					@accordionStateDemo()
+				}
+			}
+		</div>
+	}
+}
+
+templ arrowDemo() {
+	@accordion.Accordion(accordion.Props{ID: "arrow-accordion"}) {
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "arrow-accordion",
+			Value:       "item1",
+			Title:       "What is WebX?",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>WebX is a Go web framework combining Chi, Templ, Tailwind CSS, DaisyUI, and Datastar.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "arrow-accordion",
+			Value:       "item2",
+			Title:       "How does Datastar work?",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>Datastar provides reactive signals and declarative HTML attributes for frontend interactivity without writing JavaScript.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "arrow-accordion",
+			Value:       "item3",
+			Title:       "Why DaisyUI?",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>DaisyUI provides semantic CSS component classes on top of Tailwind, reducing verbose utility class markup.</p>
+		}
+	}
+}
+
+templ plusDemo() {
+	@accordion.Accordion(accordion.Props{ID: "plus-accordion"}) {
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "plus-accordion",
+			Value:       "item1",
+			Title:       "Getting Started",
+			Modifier:    accordion.ModifierPlus,
+		}) {
+			<p>Install dependencies with <code>go tool task install:all</code> and run the showcase with <code>go run ./cmd/showcase</code>.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "plus-accordion",
+			Value:       "item2",
+			Title:       "Creating Components",
+			Modifier:    accordion.ModifierPlus,
+		}) {
+			<p>Components live in <code>ui/</code> with one directory per component. Follow the migration guide for the templ pattern.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "plus-accordion",
+			Value:       "item3",
+			Title:       "Writing Tests",
+			Modifier:    accordion.ModifierPlus,
+		}) {
+			<p>E2E tests use Playwright Go in <code>tests/e2e/</code>. They build and start the showcase server automatically.</p>
+		}
+	}
+}
+
+templ defaultOpenDemo() {
+	@accordion.Accordion(accordion.Props{ID: "default-accordion", DefaultValue: "item2"}) {
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "default-accordion",
+			Value:       "item1",
+			Title:       "First Item",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>This item starts closed.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "default-accordion",
+			Value:       "item2",
+			Title:       "Second Item (default open)",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>This item starts open because DefaultValue matches its Value.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "default-accordion",
+			Value:       "item3",
+			Title:       "Third Item",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>This item also starts closed.</p>
+		}
+	}
+}
+
+templ joinedDemo() {
+	@accordion.Accordion(accordion.Props{ID: "joined-accordion", Class: "join join-vertical"}) {
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "joined-accordion",
+			Value:       "item1",
+			Title:       "Joined Item One",
+			Modifier:    accordion.ModifierArrow,
+			Class:       "join-item",
+		}) {
+			<p>Items are visually connected using DaisyUI join classes.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "joined-accordion",
+			Value:       "item2",
+			Title:       "Joined Item Two",
+			Modifier:    accordion.ModifierArrow,
+			Class:       "join-item",
+		}) {
+			<p>The join container removes borders between items for a seamless look.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "joined-accordion",
+			Value:       "item3",
+			Title:       "Joined Item Three",
+			Modifier:    accordion.ModifierArrow,
+			Class:       "join-item",
+		}) {
+			<p>Each item adds the join-item class via the Class prop.</p>
+		}
+	}
+}
+
+templ accordionStateDemo() {
+	{{
+		signals := utils.Signals("state-accordion", accordion.AccordionSignals{})
+	}}
+	<div class="mb-4">
+		<span class="text-sm text-base-content/60">
+			Active item:
+			<code
+				class="badge badge-sm"
+				data-text={ signals.Conditional("active", signals.Signal("active"), "'none'") }
+			>none</code>
+		</span>
+	</div>
+	@accordion.Accordion(accordion.Props{ID: "state-accordion"}) {
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "state-accordion",
+			Value:       "alpha",
+			Title:       "Alpha",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>The state indicator above shows which item is currently open.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "state-accordion",
+			Value:       "beta",
+			Title:       "Beta",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>Click another item to see the indicator change.</p>
+		}
+		@accordion.Item(accordion.ItemProps{
+			AccordionID: "state-accordion",
+			Value:       "gamma",
+			Title:       "Gamma",
+			Modifier:    accordion.ModifierArrow,
+		}) {
+			<p>Click the open item again to close it and reset the indicator to "none".</p>
+		}
+	}
+}

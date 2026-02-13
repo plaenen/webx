@@ -1,0 +1,166 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/menu"
+)
+
+templ Menus() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Menu — WebX Showcase",
+		Description: "DaisyUI menu component",
+		CurrentPath: "/components/menu",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Menu</h1>
+				<p class="text-base-content/70 mt-2">
+					Menu is used to display a list of links vertically or horizontally.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic Vertical
+					}
+					<div class="py-4">
+						@menu.Menu(menu.Props{Class: "bg-base-200 rounded-box w-56"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 1
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 2
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Horizontal
+					}
+					<div class="py-4">
+						@menu.Menu(menu.Props{Direction: menu.DirectionHorizontal, Class: "bg-base-200 rounded-box"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 1
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 2
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Title and Active
+					}
+					<div class="py-4">
+						@menu.Menu(menu.Props{Class: "bg-base-200 rounded-box w-56"}) {
+							@menu.Title() {
+								Navigation
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Home
+							}
+							@menu.Item(menu.ItemProps{Href: "#", Active: true}) {
+								About
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Contact
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Disabled Item
+					}
+					<div class="py-4">
+						@menu.Menu(menu.Props{Class: "bg-base-200 rounded-box w-56"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Active item
+							}
+							@menu.Item(menu.ItemProps{Disabled: true}) {
+								Disabled item
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Another item
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-wrap gap-8 py-4">
+						@menu.Menu(menu.Props{Size: menu.SizeXs, Class: "bg-base-200 rounded-box w-48"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Extra Small
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 2
+							}
+						}
+						@menu.Menu(menu.Props{Size: menu.SizeSm, Class: "bg-base-200 rounded-box w-48"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Small
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 2
+							}
+						}
+						@menu.Menu(menu.Props{Size: menu.SizeLg, Class: "bg-base-200 rounded-box w-48"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Large
+							}
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 2
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Collapsible Submenu
+					}
+					<div class="py-4">
+						@menu.Menu(menu.Props{Class: "bg-base-200 rounded-box w-56"}) {
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 1
+							}
+							<li>
+								<details open>
+									<summary>Parent</summary>
+									<ul>
+										<li><a href="#">Submenu 1</a></li>
+										<li><a href="#">Submenu 2</a></li>
+									</ul>
+								</details>
+							</li>
+							@menu.Item(menu.ItemProps{Href: "#"}) {
+								Item 3
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

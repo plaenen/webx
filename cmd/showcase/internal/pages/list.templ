@@ -1,0 +1,179 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/list"
+)
+
+const sampleListImg = "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+
+templ Lists() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "List — WebX Showcase",
+		Description: "DaisyUI list component",
+		CurrentPath: "/components/list",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">List</h1>
+				<p class="text-base-content/70 mt-2">
+					Vertical list for displaying rows of information with flexible column layout.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@list.List() {
+							@list.Header() {
+								Most played songs this week
+							}
+							@list.Row() {
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Song"/>
+								</div>
+								<div>
+									<div>Bohemian Rhapsody</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Queen</div>
+								</div>
+								<button class="btn btn-square btn-ghost">
+									<svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+									</svg>
+								</button>
+							}
+							@list.Row() {
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Song"/>
+								</div>
+								<div>
+									<div>Stairway to Heaven</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Led Zeppelin</div>
+								</div>
+								<button class="btn btn-square btn-ghost">
+									<svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+									</svg>
+								</button>
+							}
+							@list.Row() {
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Song"/>
+								</div>
+								<div>
+									<div>Hotel California</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Eagles</div>
+								</div>
+								<button class="btn btn-square btn-ghost">
+									<svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+									</svg>
+								</button>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Numbered Rows
+					}
+					<div class="py-4">
+						@list.List() {
+							@list.Header() {
+								Top artists
+							}
+							@list.Row() {
+								<div class="text-4xl font-thin opacity-30 tabular-nums">01</div>
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Artist"/>
+								</div>
+								<div class="list-col-grow">
+									<div>Freddie Mercury</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Solo artist</div>
+								</div>
+								<button class="btn btn-square btn-ghost">
+									<svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+									</svg>
+								</button>
+							}
+							@list.Row() {
+								<div class="text-4xl font-thin opacity-30 tabular-nums">02</div>
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Artist"/>
+								</div>
+								<div class="list-col-grow">
+									<div>David Bowie</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Solo artist</div>
+								</div>
+								<button class="btn btn-square btn-ghost">
+									<svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+									</svg>
+								</button>
+							}
+							@list.Row() {
+								<div class="text-4xl font-thin opacity-30 tabular-nums">03</div>
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Artist"/>
+								</div>
+								<div class="list-col-grow">
+									<div>Elton John</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Solo artist</div>
+								</div>
+								<button class="btn btn-square btn-ghost">
+									<svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+									</svg>
+								</button>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Wrapped Content
+					}
+					<div class="py-4">
+						@list.List() {
+							@list.Header() {
+								Recent articles
+							}
+							@list.Row() {
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Article"/>
+								</div>
+								<div>
+									<div>Understanding Go Concurrency</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Tutorial</div>
+								</div>
+								<p class="list-col-wrap text-xs">
+									A deep dive into goroutines, channels, and common concurrency patterns in Go.
+								</p>
+							}
+							@list.Row() {
+								<div>
+									<img class="size-10 rounded-box" src={ sampleListImg } alt="Article"/>
+								</div>
+								<div>
+									<div>Building Web Apps with Templ</div>
+									<div class="text-xs uppercase font-semibold opacity-60">Guide</div>
+								</div>
+								<p class="list-col-wrap text-xs">
+									Learn how to build type-safe HTML templates in Go using the templ library.
+								</p>
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

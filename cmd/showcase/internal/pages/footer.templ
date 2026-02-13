@@ -1,0 +1,91 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/footer"
+)
+
+templ Footers() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Footer — WebX Showcase",
+		Description: "DaisyUI footer component",
+		CurrentPath: "/components/footer",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Footer</h1>
+				<p class="text-base-content/70 mt-2">
+					Footer is used to display content at the bottom of a page with navigation links and information.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic with columns
+					}
+					<div class="py-4">
+						@footer.Footer(footer.Props{Class: "bg-neutral text-neutral-content p-10"}) {
+							<nav>
+								@footer.Title() {
+									Services
+								}
+								<a class="link link-hover">Branding</a>
+								<a class="link link-hover">Design</a>
+								<a class="link link-hover">Marketing</a>
+							</nav>
+							<nav>
+								@footer.Title() {
+									Company
+								}
+								<a class="link link-hover">About us</a>
+								<a class="link link-hover">Contact</a>
+								<a class="link link-hover">Jobs</a>
+							</nav>
+							<nav>
+								@footer.Title() {
+									Legal
+								}
+								<a class="link link-hover">Terms of use</a>
+								<a class="link link-hover">Privacy policy</a>
+								<a class="link link-hover">Cookie policy</a>
+							</nav>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Horizontal
+					}
+					<div class="py-4">
+						@footer.Footer(footer.Props{Direction: footer.DirectionHorizontal, Class: "bg-neutral text-neutral-content items-center p-4"}) {
+							<aside class="grid-flow-col items-center">
+								<p>Copyright 2025 - All rights reserved</p>
+							</aside>
+							<nav class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+								<a class="link link-hover">About</a>
+								<a class="link link-hover">Contact</a>
+							</nav>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Centered
+					}
+					<div class="py-4">
+						@footer.Footer(footer.Props{Center: true, Class: "bg-base-200 text-base-content p-4"}) {
+							<aside>
+								<p>Copyright 2025 - All rights reserved by ACME Industries Ltd</p>
+							</aside>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

@@ -1,0 +1,93 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/money"
+)
+
+templ Moneys() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Money — WebX Showcase",
+		Description: "Formatted monetary value display",
+		CurrentPath: "/components/money",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Money</h1>
+				<p class="text-base-content/70 mt-2">
+					Money displays a formatted monetary value with optional currency symbol and configurable precision.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@money.Money(money.Props{Amount: 1234.56})
+						@money.Money(money.Props{Amount: 99.9})
+						@money.Money(money.Props{Amount: 1000000})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With currency
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@money.Money(money.Props{Amount: 1234.56, Currency: "$"})
+						@money.Money(money.Props{Amount: 9999.99, Currency: "EUR"})
+						@money.Money(money.Props{Amount: 42.0, Currency: "£"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Precision
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@money.Money(money.Props{Amount: 1234.5678, Currency: "$", Precision: money.P(0)})
+						@money.Money(money.Props{Amount: 1234.5678, Currency: "$", Precision: money.P(2)})
+						@money.Money(money.Props{Amount: 1234.5678, Currency: "$", Precision: money.P(4)})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						String input
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@money.Money(money.Props{Amount: "49999.99", Currency: "$"})
+						@money.Money(money.Props{Amount: "0.005", Currency: "BTC", Precision: money.P(8)})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Large values
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@money.Money(money.Props{Amount: 1234567.89, Currency: "$"})
+						@money.Money(money.Props{Amount: "9999999999.99", Currency: "¥"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Custom styling
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@money.Money(money.Props{Amount: 1234.56, Currency: "$", Class: "text-2xl font-bold text-success"})
+						@money.Money(money.Props{Amount: -500.00, Currency: "$", Class: "text-xl text-error"})
+					</div>
+				}
+			}
+		</div>
+	}
+}

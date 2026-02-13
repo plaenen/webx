@@ -1,0 +1,126 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/stack"
+)
+
+templ Stacks() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Stack — WebX Showcase",
+		Description: "DaisyUI stack component for layering elements",
+		CurrentPath: "/components/stack",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Stack</h1>
+				<p class="text-base-content/70 mt-2">
+					Stack visually layers child elements on top of each other with a slight offset.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic Stack
+					}
+					<p class="text-sm mb-4">Child elements are stacked on top of each other.</p>
+					<div class="flex justify-center">
+						@stack.Stack(stack.Props{ID: "stack-basic", Class: "w-60"}) {
+							<div class="bg-primary text-primary-content rounded-box grid h-20 w-60 place-items-center">1</div>
+							<div class="bg-accent text-accent-content rounded-box grid h-20 w-60 place-items-center">2</div>
+							<div class="bg-secondary text-secondary-content rounded-box grid h-20 w-60 place-items-center">3</div>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Stacked Images
+					}
+					<p class="text-sm mb-4">Images layered with a stack.</p>
+					<div class="flex justify-center">
+						@stack.Stack(stack.Props{ID: "stack-images", Class: "w-52"}) {
+							<img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" alt="Image 1" class="rounded-box w-52"/>
+							<img src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp" alt="Image 2" class="rounded-box w-52"/>
+							<img src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp" alt="Image 3" class="rounded-box w-52"/>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Stacked Cards
+					}
+					<p class="text-sm mb-4">Cards layered with the default bottom position.</p>
+					<div class="flex justify-center">
+						@stack.Stack(stack.Props{ID: "stack-cards"}) {
+							@card.Card(card.Props{Class: "bg-primary text-primary-content w-72 shadow-md"}) {
+								@card.Body() {
+									<h2 class="card-title">Notification 1</h2>
+									<p>You have 3 unread messages.</p>
+								}
+							}
+							@card.Card(card.Props{Class: "bg-accent text-accent-content w-72 shadow"}) {
+								@card.Body() {
+									<h2 class="card-title">Notification 2</h2>
+									<p>Your order has shipped.</p>
+								}
+							}
+							@card.Card(card.Props{Class: "bg-secondary text-secondary-content w-72 shadow-sm"}) {
+								@card.Body() {
+									<h2 class="card-title">Notification 3</h2>
+									<p>Welcome aboard!</p>
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Position Variants
+					}
+					<p class="text-sm mb-4">Control the alignment of stacked children with position modifiers.</p>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+						<div>
+							<p class="text-sm font-semibold mb-2">stack-top</p>
+							@stack.Stack(stack.Props{ID: "stack-top", Position: stack.PositionTop, Class: "w-48"}) {
+								<div class="bg-info text-info-content rounded-box grid h-16 w-48 place-items-center shadow-md">A</div>
+								<div class="bg-info text-info-content rounded-box grid h-16 w-48 place-items-center shadow">B</div>
+								<div class="bg-info text-info-content rounded-box grid h-16 w-48 place-items-center shadow-sm">C</div>
+							}
+						</div>
+						<div>
+							<p class="text-sm font-semibold mb-2">stack-bottom (default)</p>
+							@stack.Stack(stack.Props{ID: "stack-bottom", Position: stack.PositionBottom, Class: "w-48"}) {
+								<div class="bg-success text-success-content rounded-box grid h-16 w-48 place-items-center shadow-md">A</div>
+								<div class="bg-success text-success-content rounded-box grid h-16 w-48 place-items-center shadow">B</div>
+								<div class="bg-success text-success-content rounded-box grid h-16 w-48 place-items-center shadow-sm">C</div>
+							}
+						</div>
+						<div>
+							<p class="text-sm font-semibold mb-2">stack-start</p>
+							@stack.Stack(stack.Props{ID: "stack-start", Position: stack.PositionStart, Class: "w-48"}) {
+								<div class="bg-warning text-warning-content rounded-box grid h-16 w-48 place-items-center shadow-md">A</div>
+								<div class="bg-warning text-warning-content rounded-box grid h-16 w-48 place-items-center shadow">B</div>
+								<div class="bg-warning text-warning-content rounded-box grid h-16 w-48 place-items-center shadow-sm">C</div>
+							}
+						</div>
+						<div>
+							<p class="text-sm font-semibold mb-2">stack-end</p>
+							@stack.Stack(stack.Props{ID: "stack-end", Position: stack.PositionEnd, Class: "w-48"}) {
+								<div class="bg-error text-error-content rounded-box grid h-16 w-48 place-items-center shadow-md">A</div>
+								<div class="bg-error text-error-content rounded-box grid h-16 w-48 place-items-center shadow">B</div>
+								<div class="bg-error text-error-content rounded-box grid h-16 w-48 place-items-center shadow-sm">C</div>
+							}
+						</div>
+					</div>
+				}
+			}
+		</div>
+	}
+}

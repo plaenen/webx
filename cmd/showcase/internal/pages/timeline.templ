@@ -1,0 +1,283 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/timeline"
+)
+
+templ Timelines() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Timeline — WebX Showcase",
+		Description: "DaisyUI timeline component",
+		CurrentPath: "/components/timeline",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Timeline</h1>
+				<p class="text-base-content/70 mt-2">
+					Timelines display a sequence of events in chronological order.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Horizontal (default)
+					}
+					<div class="overflow-x-auto py-4">
+						@timeline.Timeline() {
+							@timeline.Item() {
+								@timeline.Start() {
+									1984
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									First Macintosh computer
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start() {
+									1998
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									iMac
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start() {
+									2001
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									iPod
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start() {
+									2007
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									iPhone
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Vertical
+					}
+					<div class="py-4">
+						@timeline.Timeline(timeline.Props{Direction: timeline.DirectionVertical}) {
+							@timeline.Item() {
+								@timeline.Start(timeline.StartProps{Box: true}) {
+									Planning
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start(timeline.StartProps{Box: true}) {
+									Design
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start(timeline.StartProps{Box: true}) {
+									Development
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start(timeline.StartProps{Box: true}) {
+									Launch
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Alternating Sides (Vertical)
+					}
+					<div class="py-4">
+						@timeline.Timeline(timeline.Props{Direction: timeline.DirectionVertical}) {
+							@timeline.Item() {
+								@timeline.Start(timeline.StartProps{Box: true}) {
+									Phase 1: Research
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Phase 2: Prototype
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Start(timeline.StartProps{Box: true}) {
+									Phase 3: Build
+								}
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Phase 4: Ship
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Compact
+					}
+					<div class="py-4">
+						@timeline.Timeline(timeline.Props{Direction: timeline.DirectionVertical, Compact: true}) {
+							@timeline.Item() {
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Sign up
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Verify email
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Complete profile
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colored Lines
+					}
+					<div class="overflow-x-auto py-4">
+						@timeline.Timeline() {
+							@timeline.Item() {
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Order placed
+								}
+								@timeline.Hr("bg-primary")
+							}
+							@timeline.Item() {
+								@timeline.Hr("bg-primary")
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Processing
+								}
+								@timeline.Hr("bg-primary")
+							}
+							@timeline.Item() {
+								@timeline.Hr("bg-primary")
+								@timeline.Middle() {
+									@timelineCheckIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Shipped
+								}
+								@timeline.Hr()
+							}
+							@timeline.Item() {
+								@timeline.Hr()
+								@timeline.Middle() {
+									@timelineCircleIcon()
+								}
+								@timeline.End(timeline.EndProps{Box: true}) {
+									Delivered
+								}
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}
+
+templ timelineCheckIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+		<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"></path>
+	</svg>
+}
+
+templ timelineCircleIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+		<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16z" clip-rule="evenodd"></path>
+	</svg>
+}

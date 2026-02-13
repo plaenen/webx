@@ -1,0 +1,142 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/carousel"
+)
+
+templ Carousels() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Carousel — WebX Showcase",
+		Description: "DaisyUI carousel component",
+		CurrentPath: "/components/carousel",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Carousel</h1>
+				<p class="text-base-content/70 mt-2">
+					Carousel shows a scrollable set of items with snap scrolling.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Snap to Start (default)
+					}
+					<div class="py-4">
+						@carousel.Carousel(carousel.Props{Snap: carousel.SnapStart, Class: "rounded-box w-full"}) {
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">1</div>
+							}
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">2</div>
+							}
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">3</div>
+							}
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">4</div>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Snap to Center
+					}
+					<div class="py-4">
+						@carousel.Carousel(carousel.Props{Snap: carousel.SnapCenter, Class: "rounded-box w-full space-x-4 p-4"}) {
+							@carousel.Item() {
+								<div class="bg-primary text-primary-content flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">1</div>
+							}
+							@carousel.Item() {
+								<div class="bg-secondary text-secondary-content flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">2</div>
+							}
+							@carousel.Item() {
+								<div class="bg-accent text-accent-content flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">3</div>
+							}
+							@carousel.Item() {
+								<div class="bg-neutral text-neutral-content flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">4</div>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Snap to End
+					}
+					<div class="py-4">
+						@carousel.Carousel(carousel.Props{Snap: carousel.SnapEnd, Class: "rounded-box w-full space-x-4 p-4"}) {
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">1</div>
+							}
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">2</div>
+							}
+							@carousel.Item() {
+								<div class="bg-base-300 flex h-40 w-64 items-center justify-center rounded-lg text-lg font-bold">3</div>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Vertical
+					}
+					<div class="py-4">
+						@carousel.Carousel(carousel.Props{Direction: carousel.DirectionVertical, Class: "rounded-box h-64 w-full"}) {
+							@carousel.Item(carousel.ItemProps{Class: "h-full"}) {
+								<div class="bg-base-300 flex h-full w-full items-center justify-center rounded-lg text-lg font-bold">1</div>
+							}
+							@carousel.Item(carousel.ItemProps{Class: "h-full"}) {
+								<div class="bg-base-300 flex h-full w-full items-center justify-center rounded-lg text-lg font-bold">2</div>
+							}
+							@carousel.Item(carousel.ItemProps{Class: "h-full"}) {
+								<div class="bg-base-300 flex h-full w-full items-center justify-center rounded-lg text-lg font-bold">3</div>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Full Width with Navigation
+					}
+					<div class="py-4">
+						@carousel.Carousel(carousel.Props{Class: "w-full"}) {
+							@carousel.Item(carousel.ItemProps{ID: "cslide1", Class: "relative w-full"}) {
+								<div class="bg-base-300 flex h-48 w-full items-center justify-center rounded-lg text-xl font-bold">Slide 1</div>
+								<div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
+									<a href="#cslide3" class="btn btn-circle btn-sm">&#10094;</a>
+									<a href="#cslide2" class="btn btn-circle btn-sm">&#10095;</a>
+								</div>
+							}
+							@carousel.Item(carousel.ItemProps{ID: "cslide2", Class: "relative w-full"}) {
+								<div class="bg-base-300 flex h-48 w-full items-center justify-center rounded-lg text-xl font-bold">Slide 2</div>
+								<div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
+									<a href="#cslide1" class="btn btn-circle btn-sm">&#10094;</a>
+									<a href="#cslide3" class="btn btn-circle btn-sm">&#10095;</a>
+								</div>
+							}
+							@carousel.Item(carousel.ItemProps{ID: "cslide3", Class: "relative w-full"}) {
+								<div class="bg-base-300 flex h-48 w-full items-center justify-center rounded-lg text-xl font-bold">Slide 3</div>
+								<div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
+									<a href="#cslide2" class="btn btn-circle btn-sm">&#10094;</a>
+									<a href="#cslide1" class="btn btn-circle btn-sm">&#10095;</a>
+								</div>
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

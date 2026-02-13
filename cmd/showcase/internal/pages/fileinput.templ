@@ -1,0 +1,84 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/fileinput"
+)
+
+templ FileInputs() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "File Input — WebX Showcase",
+		Description: "DaisyUI file input component",
+		CurrentPath: "/components/file-input",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">File Input</h1>
+				<p class="text-base-content/70 mt-2">
+					File input is a styled file upload element.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@fileinput.FileInput(fileinput.Props{Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantPrimary, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantSecondary, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantAccent, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantInfo, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantSuccess, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantWarning, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantError, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Ghost
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@fileinput.FileInput(fileinput.Props{Variant: fileinput.VariantGhost, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@fileinput.FileInput(fileinput.Props{Size: fileinput.SizeXs, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Size: fileinput.SizeSm, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Size: fileinput.SizeMd, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Size: fileinput.SizeLg, Class: "w-full max-w-xs"})
+						@fileinput.FileInput(fileinput.Props{Size: fileinput.SizeXl, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Disabled
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@fileinput.FileInput(fileinput.Props{Disabled: true, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+		</div>
+	}
+}

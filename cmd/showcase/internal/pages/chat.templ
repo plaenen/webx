@@ -1,0 +1,137 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/chat"
+)
+
+const sampleChatAvatarImg = "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+
+templ Chats() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Chat — WebX Showcase",
+		Description: "DaisyUI chat bubble component",
+		CurrentPath: "/components/chat",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Chat</h1>
+				<p class="text-base-content/70 mt-2">
+					Chat bubbles for displaying conversation messages.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble() {
+								It's over Anakin, I have the high ground.
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionEnd}) {
+							@chat.Bubble() {
+								You underestimate my power!
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Image, Header & Footer
+					}
+					<div class="py-4">
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Image() {
+								<div class="w-10 rounded-full">
+									<img alt="Avatar" src={ sampleChatAvatarImg }/>
+								</div>
+							}
+							@chat.Header() {
+								Obi-Wan Kenobi
+								<time class="text-xs opacity-50">12:45</time>
+							}
+							@chat.Bubble() {
+								You were the Chosen One!
+							}
+							@chat.Footer() {
+								Delivered
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionEnd}) {
+							@chat.Image() {
+								<div class="w-10 rounded-full">
+									<img alt="Avatar" src={ sampleChatAvatarImg }/>
+								</div>
+							}
+							@chat.Header() {
+								Anakin Skywalker
+								<time class="text-xs opacity-50">12:46</time>
+							}
+							@chat.Bubble() {
+								I hate you!
+							}
+							@chat.Footer() {
+								Seen at 12:46
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Bubble Colors
+					}
+					<div class="py-4">
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantPrimary}) {
+								Primary
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantSecondary}) {
+								Secondary
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantAccent}) {
+								Accent
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantNeutral}) {
+								Neutral
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantInfo}) {
+								Info
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantSuccess}) {
+								Success
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantWarning}) {
+								Warning
+							}
+						}
+						@chat.Chat(chat.Props{Position: chat.PositionStart}) {
+							@chat.Bubble(chat.BubbleProps{Variant: chat.BubbleVariantError}) {
+								Error
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

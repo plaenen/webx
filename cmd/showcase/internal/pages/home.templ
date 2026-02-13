@@ -1,14 +1,14 @@
 package pages
 
 import (
-	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
 	"github.com/plaenen/webx/ui/button"
 	"github.com/plaenen/webx/ui/card"
 )
 
 templ Home() {
 	@layouts.Showcase(layouts.ShowcaseProps{
-		Title:       "WebX Showcase",
+		Title:       "webx showcase",
 		Description: "Go web framework with DaisyUI and Datastar",
 		CurrentPath: "/",
 	}) {

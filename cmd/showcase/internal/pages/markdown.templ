@@ -1,0 +1,98 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/markdown"
+)
+
+var sampleMarkdown = `## Features
+
+This is a **bold** statement and this is *italic*.
+
+- First item
+- Second item with ` + "`inline code`" + `
+- Third item
+
+> Blockquotes work too!
+
+Visit [example.com](https://example.com) for more.
+
+| Column A | Column B |
+|----------|----------|
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |
+`
+
+var prefillMarkdown = `# Hello World
+
+Write your **markdown** here and click *Preview* to see it rendered.
+
+- Supports GFM tables
+- ~~Strikethrough~~ text
+- Task lists: [ ] todo, [x] done
+`
+
+templ Markdowns() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Markdown — WebX Showcase",
+		Description: "Markdown display and input components with live preview",
+		CurrentPath: "/components/markdown",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Markdown</h1>
+				<p class="text-base-content/70 mt-2">
+					Display rendered markdown and edit with live server-side preview.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Markdown Display
+					}
+					<p class="text-sm mb-4">
+						Static markdown rendered to HTML with GFM support (tables, strikethrough, autolinks).
+					</p>
+					@markdown.Markdown(markdown.Props{
+						ID:      "md-display",
+						Content: sampleMarkdown,
+					})
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Markdown Input
+					}
+					<p class="text-sm mb-4">
+						Write markdown in the editor, then click Preview to see server-rendered output.
+					</p>
+					<div class="w-full max-w-2xl">
+						@markdown.MarkdownInput(markdown.InputProps{
+							ID:         "md-editor",
+							PreviewURL: "/showcase/api/preview/markdown",
+						})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Pre-filled Input
+					}
+					<p class="text-sm mb-4">
+						A markdown input with initial content. Edit and preview to see changes.
+					</p>
+					<div class="w-full max-w-2xl">
+						@markdown.MarkdownInput(markdown.InputProps{
+							ID:         "md-prefilled",
+							PreviewURL: "/showcase/api/preview/markdown",
+							Value:      prefillMarkdown,
+						})
+					</div>
+				}
+			}
+		</div>
+	}
+}

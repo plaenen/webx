@@ -1,0 +1,232 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/stat"
+)
+
+templ Stats() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Stat — WebX Showcase",
+		Description: "DaisyUI stat component",
+		CurrentPath: "/components/stat",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Stat</h1>
+				<p class="text-base-content/70 mt-2">
+					Stats display numeric data with title and description.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@stat.Stats() {
+							@stat.Stat() {
+								@stat.Title() {
+									Total Page Views
+								}
+								@stat.Value() {
+									89,400
+								}
+								@stat.Desc() {
+									21% more than last month
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Multiple Stats
+					}
+					<div class="py-4">
+						@stat.Stats() {
+							@stat.Stat() {
+								@stat.Title() {
+									Downloads
+								}
+								@stat.Value() {
+									31K
+								}
+								@stat.Desc() {
+									Jan 1st - Feb 1st
+								}
+							}
+							@stat.Stat() {
+								@stat.Title() {
+									New Users
+								}
+								@stat.Value() {
+									4,200
+								}
+								@stat.Desc() {
+									↗︎ 400 (22%)
+								}
+							}
+							@stat.Stat() {
+								@stat.Title() {
+									New Registers
+								}
+								@stat.Value() {
+									1,200
+								}
+								@stat.Desc() {
+									↘︎ 90 (14%)
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Icons
+					}
+					<div class="py-4">
+						@stat.Stats() {
+							@stat.Stat() {
+								@stat.Figure(stat.FigureProps{Class: "text-primary"}) {
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-8 w-8 stroke-current">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+									</svg>
+								}
+								@stat.Title() {
+									Total Likes
+								}
+								@stat.Value(stat.ValueProps{Class: "text-primary"}) {
+									25.6K
+								}
+								@stat.Desc() {
+									21% more than last month
+								}
+							}
+							@stat.Stat() {
+								@stat.Figure(stat.FigureProps{Class: "text-secondary"}) {
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-8 w-8 stroke-current">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+									</svg>
+								}
+								@stat.Title() {
+									Page Views
+								}
+								@stat.Value(stat.ValueProps{Class: "text-secondary"}) {
+									2.6M
+								}
+								@stat.Desc() {
+									14% more than last month
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Centered
+					}
+					<div class="py-4">
+						@stat.Stats() {
+							@stat.Stat(stat.StatProps{Class: "place-items-center"}) {
+								@stat.Title() {
+									Downloads
+								}
+								@stat.Value() {
+									31K
+								}
+								@stat.Desc() {
+									From January 1st to February 1st
+								}
+							}
+							@stat.Stat(stat.StatProps{Class: "place-items-center"}) {
+								@stat.Title() {
+									Users
+								}
+								@stat.Value() {
+									4,200
+								}
+								@stat.Desc() {
+									↗︎ 40 (2%)
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Vertical
+					}
+					<div class="py-4">
+						@stat.Stats(stat.Props{Direction: stat.DirectionVertical}) {
+							@stat.Stat() {
+								@stat.Title() {
+									Downloads
+								}
+								@stat.Value() {
+									31K
+								}
+								@stat.Desc() {
+									Jan 1st - Feb 1st
+								}
+							}
+							@stat.Stat() {
+								@stat.Title() {
+									New Users
+								}
+								@stat.Value() {
+									4,200
+								}
+								@stat.Desc() {
+									↗︎ 400 (22%)
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Actions
+					}
+					<div class="py-4">
+						@stat.Stats(stat.Props{Class: "bg-base-100 border-base-300 border"}) {
+							@stat.Stat() {
+								@stat.Title() {
+									Account balance
+								}
+								@stat.Value() {
+									$89,400
+								}
+								@stat.Actions() {
+									<button class="btn btn-xs btn-success">Add funds</button>
+								}
+							}
+							@stat.Stat() {
+								@stat.Title() {
+									Current plan
+								}
+								@stat.Value() {
+									Pro
+								}
+								@stat.Actions() {
+									<button class="btn btn-xs">Upgrade</button>
+								}
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

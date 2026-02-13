@@ -1,0 +1,142 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/alert"
+	"github.com/plaenen/webx/ui/button"
+	"github.com/plaenen/webx/ui/card"
+)
+
+templ Alerts() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Alert — WebX Showcase",
+		Description: "DaisyUI alert component",
+		CurrentPath: "/components/alert",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Alert</h1>
+				<p class="text-base-content/70 mt-2">
+					Alerts inform users of the status of specific data. Purely CSS-driven, no JavaScript needed.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Color Variants
+					}
+					<div class="space-y-3">
+						@alert.Alert() {
+							<span>Default alert — no variant specified.</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantInfo}) {
+							@infoIcon()
+							<span>Info — new software update available.</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantSuccess}) {
+							@successIcon()
+							<span>Success — your purchase has been confirmed.</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantWarning}) {
+							@warningIcon()
+							<span>Warning — invalid email address.</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantError}) {
+							@errorIcon()
+							<span>Error — access denied.</span>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Styles
+					}
+					<div class="space-y-3">
+						@alert.Alert(alert.Props{Variant: alert.VariantInfo}) {
+							@infoIcon()
+							<span>Default style</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantInfo, Style: alert.StyleOutline}) {
+							@infoIcon()
+							<span>Outline style</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantInfo, Style: alert.StyleDash}) {
+							@infoIcon()
+							<span>Dash style</span>
+						}
+						@alert.Alert(alert.Props{Variant: alert.VariantInfo, Style: alert.StyleSoft}) {
+							@infoIcon()
+							<span>Soft style</span>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Actions
+					}
+					<div class="space-y-3">
+						@alert.Alert(alert.Props{Variant: alert.VariantWarning}) {
+							@warningIcon()
+							<span>We need your attention.</span>
+							<div>
+								@button.Button(button.Props{Size: button.SizeSm}) {
+									Deny
+								}
+								@button.Button(button.Props{Variant: button.VariantPrimary, Size: button.SizeSm}) {
+									Accept
+								}
+							</div>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Responsive Layout
+					}
+					<p class="text-sm mb-3">Vertical on mobile, horizontal on larger screens.</p>
+					<div class="space-y-3">
+						@alert.Alert(alert.Props{Variant: alert.VariantSuccess, Layout: alert.LayoutVertical, Class: "sm:alert-horizontal"}) {
+							@successIcon()
+							<span>Responsive alert — stacks on mobile, inline on desktop.</span>
+							<div>
+								@button.Button(button.Props{Variant: button.VariantSuccess, Size: button.SizeSm, Class: "btn-outline"}) {
+									Details
+								}
+							</div>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}
+
+templ infoIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+	</svg>
+}
+
+templ successIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+	</svg>
+}
+
+templ warningIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+	</svg>
+}
+
+templ errorIcon() {
+	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current">
+		<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+	</svg>
+}

@@ -9,7 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
 	"github.com/plaenen/webx/ui/button"
 )
 

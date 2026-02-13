@@ -1,0 +1,178 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/tab"
+)
+
+templ Tabs() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Tab — WebX Showcase",
+		Description: "DaisyUI tab component",
+		CurrentPath: "/components/tab",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Tab</h1>
+				<p class="text-base-content/70 mt-2">
+					Tabs are used to show content in different sections.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@tab.Tabs() {
+							@tab.Tab() {
+								Tab 1
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Tab 2
+							}
+							@tab.Tab() {
+								Tab 3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Border
+					}
+					<div class="py-4">
+						@tab.Tabs(tab.Props{Variant: tab.VariantBorder}) {
+							@tab.Tab() {
+								Tab 1
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Tab 2
+							}
+							@tab.Tab() {
+								Tab 3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Lifted
+					}
+					<div class="py-4">
+						@tab.Tabs(tab.Props{Variant: tab.VariantLift}) {
+							@tab.Tab() {
+								Tab 1
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Tab 2
+							}
+							@tab.Tab() {
+								Tab 3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Boxed
+					}
+					<div class="py-4">
+						@tab.Tabs(tab.Props{Variant: tab.VariantBox}) {
+							@tab.Tab() {
+								Tab 1
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Tab 2
+							}
+							@tab.Tab() {
+								Tab 3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@tab.Tabs(tab.Props{Size: tab.SizeXs, Variant: tab.VariantBorder}) {
+							@tab.Tab() {
+								XS
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Active
+							}
+							@tab.Tab() {
+								XS
+							}
+						}
+						@tab.Tabs(tab.Props{Size: tab.SizeLg, Variant: tab.VariantBorder}) {
+							@tab.Tab() {
+								LG
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Active
+							}
+							@tab.Tab() {
+								LG
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Disabled
+					}
+					<div class="py-4">
+						@tab.Tabs(tab.Props{Variant: tab.VariantBorder}) {
+							@tab.Tab() {
+								Tab 1
+							}
+							@tab.Tab(tab.TabProps{Active: true}) {
+								Tab 2
+							}
+							@tab.Tab(tab.TabProps{Disabled: true}) {
+								Disabled
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Radio Tabs with Content
+					}
+					<div class="py-4">
+						@tab.Tabs(tab.Props{Variant: tab.VariantBorder}) {
+							@tab.RadioTab(tab.RadioTabProps{Name: "demo-tabs", Label: "Tab 1", Checked: true})
+							@tab.Content(tab.ContentProps{Class: "border-base-300 bg-base-100 p-6"}) {
+								Content of tab 1
+							}
+							@tab.RadioTab(tab.RadioTabProps{Name: "demo-tabs", Label: "Tab 2"})
+							@tab.Content(tab.ContentProps{Class: "border-base-300 bg-base-100 p-6"}) {
+								Content of tab 2
+							}
+							@tab.RadioTab(tab.RadioTabProps{Name: "demo-tabs", Label: "Tab 3"})
+							@tab.Content(tab.ContentProps{Class: "border-base-300 bg-base-100 p-6"}) {
+								Content of tab 3
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

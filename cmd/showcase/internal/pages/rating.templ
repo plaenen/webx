@@ -1,0 +1,125 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/rating"
+)
+
+templ Ratings() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Rating — WebX Showcase",
+		Description: "DaisyUI rating component",
+		CurrentPath: "/components/rating",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Rating</h1>
+				<p class="text-base-content/70 mt-2">
+					Rating is a set of radio buttons styled as stars for user ratings.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic (mask-star)
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rating.Rating() {
+							@rating.Star(rating.StarProps{Name: "rating-1", Mask: rating.MaskStar, Label: "1 star"})
+							@rating.Star(rating.StarProps{Name: "rating-1", Mask: rating.MaskStar, Label: "2 stars", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-1", Mask: rating.MaskStar, Label: "3 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-1", Mask: rating.MaskStar, Label: "4 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-1", Mask: rating.MaskStar, Label: "5 stars"})
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Star 2 variant
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rating.Rating() {
+							@rating.Star(rating.StarProps{Name: "rating-2", Mask: rating.MaskStar2, Label: "1 star"})
+							@rating.Star(rating.StarProps{Name: "rating-2", Mask: rating.MaskStar2, Label: "2 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-2", Mask: rating.MaskStar2, Label: "3 stars", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-2", Mask: rating.MaskStar2, Label: "4 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-2", Mask: rating.MaskStar2, Label: "5 stars"})
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Heart mask
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rating.Rating() {
+							@rating.Star(rating.StarProps{Name: "rating-heart", Mask: rating.MaskHeart, Label: "1 heart", Class: "bg-red-400"})
+							@rating.Star(rating.StarProps{Name: "rating-heart", Mask: rating.MaskHeart, Label: "2 hearts", Class: "bg-red-400"})
+							@rating.Star(rating.StarProps{Name: "rating-heart", Mask: rating.MaskHeart, Label: "3 hearts", Class: "bg-red-400", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-heart", Mask: rating.MaskHeart, Label: "4 hearts", Class: "bg-red-400"})
+							@rating.Star(rating.StarProps{Name: "rating-heart", Mask: rating.MaskHeart, Label: "5 hearts", Class: "bg-red-400"})
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rating.Rating(rating.Props{Size: rating.SizeXs}) {
+							@rating.Star(rating.StarProps{Name: "rating-xs", Mask: rating.MaskStar2, Label: "1 star"})
+							@rating.Star(rating.StarProps{Name: "rating-xs", Mask: rating.MaskStar2, Label: "2 stars", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-xs", Mask: rating.MaskStar2, Label: "3 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-xs", Mask: rating.MaskStar2, Label: "4 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-xs", Mask: rating.MaskStar2, Label: "5 stars"})
+						}
+						@rating.Rating(rating.Props{Size: rating.SizeSm}) {
+							@rating.Star(rating.StarProps{Name: "rating-sm", Mask: rating.MaskStar2, Label: "1 star"})
+							@rating.Star(rating.StarProps{Name: "rating-sm", Mask: rating.MaskStar2, Label: "2 stars", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-sm", Mask: rating.MaskStar2, Label: "3 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-sm", Mask: rating.MaskStar2, Label: "4 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-sm", Mask: rating.MaskStar2, Label: "5 stars"})
+						}
+						@rating.Rating(rating.Props{Size: rating.SizeLg}) {
+							@rating.Star(rating.StarProps{Name: "rating-lg", Mask: rating.MaskStar2, Label: "1 star"})
+							@rating.Star(rating.StarProps{Name: "rating-lg", Mask: rating.MaskStar2, Label: "2 stars", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-lg", Mask: rating.MaskStar2, Label: "3 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-lg", Mask: rating.MaskStar2, Label: "4 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-lg", Mask: rating.MaskStar2, Label: "5 stars"})
+						}
+						@rating.Rating(rating.Props{Size: rating.SizeXl}) {
+							@rating.Star(rating.StarProps{Name: "rating-xl", Mask: rating.MaskStar2, Label: "1 star"})
+							@rating.Star(rating.StarProps{Name: "rating-xl", Mask: rating.MaskStar2, Label: "2 stars", Checked: true})
+							@rating.Star(rating.StarProps{Name: "rating-xl", Mask: rating.MaskStar2, Label: "3 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-xl", Mask: rating.MaskStar2, Label: "4 stars"})
+							@rating.Star(rating.StarProps{Name: "rating-xl", Mask: rating.MaskStar2, Label: "5 stars"})
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Half stars
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rating.Rating(rating.Props{Half: true}) {
+							@rating.HalfStar(rating.HalfStarProps{Name: "rating-half", Mask: rating.MaskStar2, Label1: "0.5 star", Label2: "1 star"})
+							@rating.HalfStar(rating.HalfStarProps{Name: "rating-half", Mask: rating.MaskStar2, Label1: "1.5 stars", Label2: "2 stars"})
+							@rating.HalfStar(rating.HalfStarProps{Name: "rating-half", Mask: rating.MaskStar2, Label1: "2.5 stars", Label2: "3 stars", Checked: 2})
+							@rating.HalfStar(rating.HalfStarProps{Name: "rating-half", Mask: rating.MaskStar2, Label1: "3.5 stars", Label2: "4 stars"})
+							@rating.HalfStar(rating.HalfStarProps{Name: "rating-half", Mask: rating.MaskStar2, Label1: "4.5 stars", Label2: "5 stars"})
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

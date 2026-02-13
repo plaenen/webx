@@ -1,0 +1,69 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/progress"
+)
+
+templ Progresses() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Progress — WebX Showcase",
+		Description: "DaisyUI progress component",
+		CurrentPath: "/components/progress",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Progress</h1>
+				<p class="text-base-content/70 mt-2">
+					Progress bar can be used to show the progress of a task or to indicate the passing of time.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@progress.Progress(progress.Props{Value: 0, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Value: 25, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Value: 50, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Value: 75, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Value: 100, Max: 100, Class: "w-56"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@progress.Progress(progress.Props{Variant: progress.VariantPrimary, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantSecondary, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantAccent, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantNeutral, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantInfo, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantSuccess, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantWarning, Value: 40, Max: 100, Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantError, Value: 40, Max: 100, Class: "w-56"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Indeterminate
+					}
+					<p class="text-base-content/70 text-sm mb-2">
+						Without a value attribute the progress bar becomes indeterminate.
+					</p>
+					<div class="flex flex-col gap-4 py-4">
+						@progress.Progress(progress.Props{Class: "w-56"})
+						@progress.Progress(progress.Props{Variant: progress.VariantPrimary, Class: "w-56"})
+					</div>
+				}
+			}
+		</div>
+	}
+}

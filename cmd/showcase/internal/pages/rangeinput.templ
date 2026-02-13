@@ -1,0 +1,83 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/rangeinput"
+)
+
+templ RangeInputs() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Range — WebX Showcase",
+		Description: "DaisyUI range slider component",
+		CurrentPath: "/components/range",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Range</h1>
+				<p class="text-base-content/70 mt-2">
+					Range is a styled range slider input element.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rangeinput.Range(rangeinput.Props{Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantPrimary, Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantSecondary, Min: 0, Max: 100, Value: 50, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantAccent, Min: 0, Max: 100, Value: 60, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantInfo, Min: 0, Max: 100, Value: 30, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantSuccess, Min: 0, Max: 100, Value: 70, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantWarning, Min: 0, Max: 100, Value: 80, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Variant: rangeinput.VariantError, Min: 0, Max: 100, Value: 20, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@rangeinput.Range(rangeinput.Props{Size: rangeinput.SizeXs, Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Size: rangeinput.SizeSm, Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Size: rangeinput.SizeMd, Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Size: rangeinput.SizeLg, Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+						@rangeinput.Range(rangeinput.Props{Size: rangeinput.SizeXl, Min: 0, Max: 100, Value: 40, Class: "w-full max-w-xs"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With steps
+					}
+					<div class="flex flex-col gap-4 py-4">
+						<div class="w-full max-w-xs">
+							@rangeinput.Range(rangeinput.Props{Min: 0, Max: 100, Value: 25, Step: 25})
+							<div class="flex justify-between px-2.5 mt-2 text-xs">
+								<span>|</span>
+								<span>|</span>
+								<span>|</span>
+								<span>|</span>
+								<span>|</span>
+							</div>
+						</div>
+					</div>
+				}
+			}
+		</div>
+	}
+}

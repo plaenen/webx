@@ -1,0 +1,132 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/pagination"
+)
+
+templ Paginations() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Pagination — WebX Showcase",
+		Description: "DaisyUI pagination component",
+		CurrentPath: "/components/pagination",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Pagination</h1>
+				<p class="text-base-content/70 mt-2">
+					Pagination is a group of buttons that allow the user to navigate between pages.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@pagination.Pagination() {
+							@pagination.Button() {
+								1
+							}
+							@pagination.Button(pagination.ButtonProps{Active: true}) {
+								2
+							}
+							@pagination.Button() {
+								3
+							}
+							@pagination.Button() {
+								4
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Disabled
+					}
+					<div class="py-4">
+						@pagination.Pagination() {
+							@pagination.Button() {
+								1
+							}
+							@pagination.Button(pagination.ButtonProps{Disabled: true}) {
+								...
+							}
+							@pagination.Button() {
+								50
+							}
+							@pagination.Button(pagination.ButtonProps{Disabled: true}) {
+								...
+							}
+							@pagination.Button() {
+								100
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@pagination.Pagination() {
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeXs}) {
+								1
+							}
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeXs, Active: true}) {
+								2
+							}
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeXs}) {
+								3
+							}
+						}
+						@pagination.Pagination() {
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeSm}) {
+								1
+							}
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeSm, Active: true}) {
+								2
+							}
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeSm}) {
+								3
+							}
+						}
+						@pagination.Pagination() {
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeLg}) {
+								1
+							}
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeLg, Active: true}) {
+								2
+							}
+							@pagination.Button(pagination.ButtonProps{Size: pagination.SizeLg}) {
+								3
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Previous / Next
+					}
+					<div class="py-4">
+						@pagination.Pagination(pagination.Props{Class: "grid grid-cols-2"}) {
+							@pagination.Button(pagination.ButtonProps{Class: "btn-outline"}) {
+								Previous
+							}
+							@pagination.Button(pagination.ButtonProps{Class: "btn-outline"}) {
+								Next
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

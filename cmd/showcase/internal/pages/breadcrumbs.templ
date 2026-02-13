@@ -1,0 +1,114 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/breadcrumbs"
+	"github.com/plaenen/webx/ui/card"
+)
+
+templ Breadcrumbs() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Breadcrumbs — WebX Showcase",
+		Description: "DaisyUI breadcrumbs navigation component",
+		CurrentPath: "/components/breadcrumbs",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Breadcrumbs</h1>
+				<p class="text-base-content/70 mt-2">
+					Breadcrumbs show the user's location in a site hierarchy. Links navigate to parent pages, and the last item shows the current page.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					@breadcrumbs.Breadcrumbs() {
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							Home
+						}
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/components/breadcrumbs"}) {
+							Components
+						}
+						@breadcrumbs.Item() {
+							Breadcrumbs
+						}
+					}
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Icons
+					}
+					@breadcrumbs.Breadcrumbs() {
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+							</svg>
+							Home
+						}
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/components/breadcrumbs"}) {
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+							</svg>
+							Components
+						}
+						@breadcrumbs.Item() {
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-4 w-4 stroke-current">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+							</svg>
+							Add Document
+						}
+					}
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Long Path
+					}
+					<p class="text-sm mb-4">
+						With max-width constraint, long text is truncated with ellipsis.
+					</p>
+					@breadcrumbs.Breadcrumbs(breadcrumbs.Props{Class: "max-w-xs"}) {
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							A very long page title
+						}
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							Another long section name
+						}
+						@breadcrumbs.Item() {
+							Current page with a very long name
+						}
+					}
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Deep Navigation
+					}
+					@breadcrumbs.Breadcrumbs() {
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							Home
+						}
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							Settings
+						}
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							Account
+						}
+						@breadcrumbs.Item(breadcrumbs.ItemProps{Href: "/"}) {
+							Security
+						}
+						@breadcrumbs.Item() {
+							Two-Factor Authentication
+						}
+					}
+				}
+			}
+		</div>
+	}
+}

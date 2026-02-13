@@ -1,0 +1,152 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/dock"
+	"github.com/plaenen/webx/ui/icon"
+)
+
+templ Docks() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Dock — WebX Showcase",
+		Description: "DaisyUI dock component",
+		CurrentPath: "/components/dock",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Dock</h1>
+				<p class="text-base-content/70 mt-2">
+					Dock is a navigation bar fixed to the bottom of the screen.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="relative py-4">
+						@dock.Dock() {
+							@dock.Item() {
+								@icon.House()
+								@dock.Label() {
+									Home
+								}
+							}
+							@dock.Item(dock.ItemProps{Active: true}) {
+								@icon.Info()
+								@dock.Label() {
+									About
+								}
+							}
+							@dock.Item() {
+								@icon.ChartColumn()
+								@dock.Label() {
+									Stats
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-col gap-8 py-4">
+						@dock.Dock(dock.Props{Size: dock.SizeXs}) {
+							@dock.Item() {
+								@icon.House()
+								@dock.Label() {
+									Home
+								}
+							}
+							@dock.Item(dock.ItemProps{Active: true}) {
+								@icon.Info()
+								@dock.Label() {
+									About
+								}
+							}
+							@dock.Item() {
+								@icon.ChartColumn()
+								@dock.Label() {
+									Stats
+								}
+							}
+						}
+						@dock.Dock(dock.Props{Size: dock.SizeMd}) {
+							@dock.Item() {
+								@icon.House()
+								@dock.Label() {
+									Home
+								}
+							}
+							@dock.Item(dock.ItemProps{Active: true}) {
+								@icon.Info()
+								@dock.Label() {
+									About
+								}
+							}
+							@dock.Item() {
+								@icon.ChartColumn()
+								@dock.Label() {
+									Stats
+								}
+							}
+						}
+						@dock.Dock(dock.Props{Size: dock.SizeLg}) {
+							@dock.Item() {
+								@icon.House()
+								@dock.Label() {
+									Home
+								}
+							}
+							@dock.Item(dock.ItemProps{Active: true}) {
+								@icon.Info()
+								@dock.Label() {
+									About
+								}
+							}
+							@dock.Item() {
+								@icon.ChartColumn()
+								@dock.Label() {
+									Stats
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Custom Colors
+					}
+					<div class="py-4">
+						@dock.Dock(dock.Props{Class: "bg-neutral text-neutral-content"}) {
+							@dock.Item() {
+								@icon.House()
+								@dock.Label() {
+									Home
+								}
+							}
+							@dock.Item(dock.ItemProps{Active: true}) {
+								@icon.Info()
+								@dock.Label() {
+									About
+								}
+							}
+							@dock.Item() {
+								@icon.ChartColumn()
+								@dock.Label() {
+									Stats
+								}
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

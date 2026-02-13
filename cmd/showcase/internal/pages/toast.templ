@@ -1,0 +1,126 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/alert"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/toast"
+)
+
+templ Toasts() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Toast — WebX Showcase",
+		Description: "DaisyUI toast component",
+		CurrentPath: "/components/toast",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Toast</h1>
+				<p class="text-base-content/70 mt-2">
+					Toast sticks alert messages to a corner of the page. Purely CSS positioning, no JavaScript needed.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Positions
+					}
+					<p class="text-sm mb-3">Toasts can be positioned in any corner or edge using horizontal and vertical modifiers. The demos below are contained within bordered boxes using relative positioning.</p>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+						@toastBox("Top Start") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalStart, Vertical: toast.VerticalTop, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantInfo, Class: "alert-soft"}) {
+									<span>top-start</span>
+								}
+							}
+						}
+						@toastBox("Top Center") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalCenter, Vertical: toast.VerticalTop, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantInfo, Class: "alert-soft"}) {
+									<span>top-center</span>
+								}
+							}
+						}
+						@toastBox("Top End") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalEnd, Vertical: toast.VerticalTop, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantInfo, Class: "alert-soft"}) {
+									<span>top-end</span>
+								}
+							}
+						}
+						@toastBox("Middle Start") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalStart, Vertical: toast.VerticalMiddle, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantSuccess, Class: "alert-soft"}) {
+									<span>middle-start</span>
+								}
+							}
+						}
+						@toastBox("Middle Center") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalCenter, Vertical: toast.VerticalMiddle, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantSuccess, Class: "alert-soft"}) {
+									<span>middle-center</span>
+								}
+							}
+						}
+						@toastBox("Middle End") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalEnd, Vertical: toast.VerticalMiddle, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantSuccess, Class: "alert-soft"}) {
+									<span>middle-end</span>
+								}
+							}
+						}
+						@toastBox("Bottom Start") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalStart, Vertical: toast.VerticalBottom, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantWarning, Class: "alert-soft"}) {
+									<span>bottom-start</span>
+								}
+							}
+						}
+						@toastBox("Bottom Center") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalCenter, Vertical: toast.VerticalBottom, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantWarning, Class: "alert-soft"}) {
+									<span>bottom-center</span>
+								}
+							}
+						}
+						@toastBox("Bottom End (default)") {
+							@toast.Toast(toast.Props{Horizontal: toast.HorizontalEnd, Vertical: toast.VerticalBottom, Class: "absolute"}) {
+								@alert.Alert(alert.Props{Variant: alert.VariantWarning, Class: "alert-soft"}) {
+									<span>bottom-end</span>
+								}
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Stacked Alerts
+					}
+					<p class="text-sm mb-3">A toast can hold multiple alerts that stack vertically.</p>
+					@toastBox("Stacked") {
+						@toast.Toast(toast.Props{Horizontal: toast.HorizontalEnd, Vertical: toast.VerticalTop, Class: "absolute"}) {
+							@alert.Alert(alert.Props{Variant: alert.VariantInfo, Class: "alert-soft"}) {
+								<span>New message received.</span>
+							}
+							@alert.Alert(alert.Props{Variant: alert.VariantSuccess, Class: "alert-soft"}) {
+								<span>File uploaded.</span>
+							}
+							@alert.Alert(alert.Props{Variant: alert.VariantError, Class: "alert-soft"}) {
+								<span>Connection lost.</span>
+							}
+						}
+					}
+				}
+			}
+		</div>
+	}
+}
+
+templ toastBox(label string) {
+	<div class="relative border border-base-300 rounded-lg h-40 overflow-hidden">
+		<span class="absolute top-2 left-2 text-xs text-base-content/50">{ label }</span>
+		{ children... }
+	</div>
+}

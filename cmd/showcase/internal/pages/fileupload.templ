@@ -1,0 +1,72 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/fileupload"
+)
+
+const (
+	fuUploadURL           = "/showcase/api/upload/files"
+	fuRemoveURL           = "/showcase/api/upload/remove"
+	fuRestrictedUploadURL = "/showcase/api/upload/files-restricted"
+)
+
+templ FileUploads() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "File Upload — WebX Showcase",
+		Description: "Multi-file upload with server-side rendering via SSE",
+		CurrentPath: "/components/file-upload",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">File Upload</h1>
+				<p class="text-base-content/70 mt-2">
+					Upload files with instant server-side feedback. Files are sent via multipart/form-data and the file list is rendered server-side via SSE.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic File Upload
+					}
+					<p class="text-sm mb-4">Single file upload with default settings.</p>
+					@fileupload.FileUpload(fileupload.Props{
+						ID:        "upload-basic",
+						UploadURL: fuUploadURL,
+						RemoveURL: fuRemoveURL,
+					})
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Multi-File Upload
+					}
+					<p class="text-sm mb-4">Select multiple files at once. The file list updates automatically.</p>
+					@fileupload.FileUpload(fileupload.Props{
+						ID:        "upload-multi",
+						Multiple:  true,
+						UploadURL: fuUploadURL,
+						RemoveURL: fuRemoveURL,
+					})
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Restricted Upload
+					}
+					<p class="text-sm mb-4">Only images allowed, maximum 3 files.</p>
+					@fileupload.FileUpload(fileupload.Props{
+						ID:        "upload-restricted",
+						Multiple:  true,
+						Accept:    "image/*",
+						UploadURL: fuRestrictedUploadURL,
+						RemoveURL: fuRemoveURL,
+					})
+				}
+			}
+		</div>
+	}
+}

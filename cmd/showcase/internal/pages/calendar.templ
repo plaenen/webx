@@ -1,0 +1,91 @@
+package pages
+
+import (
+	"time"
+
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/calendar"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/utils"
+)
+
+templ Calendars() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Calendar — WebX Showcase",
+		Description: "Server-rendered calendar grid with Datastar day selection",
+		CurrentPath: "/components/calendar",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Calendar</h1>
+				<p class="text-base-content/70 mt-2">
+					Server-rendered month grid using DaisyUI utility classes.
+					Day selection is powered by Datastar signals. Week starts on Monday.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Current Month
+					}
+					<p class="text-sm mb-4">Renders the current month with today underlined in bold.</p>
+					@calendar.Calendar(calendar.Props{ID: "basic-cal"})
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Pre-selected Date
+					}
+					<p class="text-sm mb-4">The 15th of the current month starts selected.</p>
+					@preselectedDemo()
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						State Indicator
+					}
+					<p class="text-sm mb-4">Click a day to see the selected date update in real time.</p>
+					@calendarStateDemo()
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Multiple Calendars
+					}
+					<p class="text-sm mb-4">Each calendar instance has independent selection state.</p>
+					<div class="flex flex-wrap gap-4">
+						@calendar.Calendar(calendar.Props{ID: "multi-a", Year: 2025, Month: time.May})
+						@calendar.Calendar(calendar.Props{ID: "multi-b", Year: 2025, Month: time.June})
+					</div>
+				}
+			}
+		</div>
+	}
+}
+
+templ preselectedDemo() {
+	{{
+		now := time.Now()
+		sel := time.Date(now.Year(), now.Month(), 15, 0, 0, 0, 0, time.UTC).Format("2006-01-02")
+	}}
+	@calendar.Calendar(calendar.Props{ID: "presel-cal", Selected: sel})
+}
+
+templ calendarStateDemo() {
+	{{
+		signals := utils.Signals("state-cal", calendar.CalendarSignals{})
+	}}
+	<div class="mb-4">
+		<span class="text-sm text-base-content/60">
+			Selected:
+			<code
+				class="badge badge-sm"
+				data-text={ signals.Conditional("selected", signals.Signal("selected"), "'none'") }
+			>none</code>
+		</span>
+	</div>
+	@calendar.Calendar(calendar.Props{ID: "state-cal"})
+}

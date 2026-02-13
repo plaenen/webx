@@ -1,0 +1,100 @@
+package layouts
+
+import (
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/icon"
+)
+
+type ShowcaseProps struct {
+	Title       string
+	Description string
+	CurrentPath string
+}
+
+var showcaseNav = []layouts.NavGroup{
+	{
+		Title: "Getting Started",
+		Items: []layouts.NavItem{
+			{Label: "Home", Href: "/", Icon: icon.House},
+		},
+	},
+	{
+		Title: "Components",
+		Items: []layouts.NavItem{
+			{Label: "Accordion", Href: "/components/accordion", Icon: icon.ChevronsUpDown},
+			{Label: "Alert", Href: "/components/alert", Icon: icon.TriangleAlert},
+			{Label: "Avatar", Href: "/components/avatar", Icon: icon.CircleUser},
+			{Label: "Badge", Href: "/components/badge", Icon: icon.Tag},
+			{Label: "Breadcrumbs", Href: "/components/breadcrumbs", Icon: icon.Ellipsis},
+			{Label: "Button", Href: "/components/button", Icon: icon.MousePointerClick},
+			{Label: "Calendar", Href: "/components/calendar", Icon: icon.Calendar},
+			{Label: "Calendar Advanced", Href: "/components/calendar-advanced", Icon: icon.CalendarRange},
+			{Label: "Card", Href: "/components/card", Icon: icon.SquareStack},
+			{Label: "Carousel", Href: "/components/carousel", Icon: icon.GalleryHorizontal},
+			{Label: "Chat", Href: "/components/chat", Icon: icon.MessageCircle},
+			{Label: "Dock", Href: "/components/dock", Icon: icon.Dock},
+			{Label: "Drawer", Href: "/components/drawer", Icon: icon.PanelLeft},
+			{Label: "Dropdown", Href: "/components/dropdown", Icon: icon.ChevronDown},
+			{Label: "FAB", Href: "/components/fab", Icon: icon.Rocket},
+			{Label: "Fieldset", Href: "/components/fieldset", Icon: icon.Form},
+			{Label: "File Input", Href: "/components/file-input", Icon: icon.FileUp},
+			{Label: "File Upload", Href: "/components/file-upload", Icon: icon.Upload},
+			{Label: "Footer", Href: "/components/footer", Icon: icon.PanelBottom},
+			{Label: "Filter", Href: "/components/filter", Icon: icon.ListFilter},
+			{Label: "Form", Href: "/components/form", Icon: icon.ClipboardList},
+			{Label: "Label", Href: "/components/label", Icon: icon.Tag},
+			{Label: "Hover Gallery", Href: "/components/hover-gallery", Icon: icon.Images},
+			{Label: "Indicator", Href: "/components/indicator", Icon: icon.MapPin},
+			{Label: "Join", Href: "/components/join", Icon: icon.Combine},
+			{Label: "Kbd", Href: "/components/kbd", Icon: icon.Command},
+			{Label: "Link", Href: "/components/link", Icon: icon.Link},
+			{Label: "List", Href: "/components/list", Icon: icon.List},
+			{Label: "Loading", Href: "/components/loading", Icon: icon.Loader},
+			{Label: "Markdown", Href: "/components/markdown", Icon: icon.FileText},
+			{Label: "Menu", Href: "/components/menu", Icon: icon.SquareMenu},
+			{Label: "Modal", Href: "/components/modal", Icon: icon.AppWindow},
+			{Label: "Mockup Code", Href: "/components/mockup-code", Icon: icon.Terminal},
+			{Label: "Money", Href: "/components/money", Icon: icon.Banknote},
+			{Label: "Money Input", Href: "/components/money-input", Icon: icon.CircleDollarSign},
+			{Label: "Navbar", Href: "/components/navbar", Icon: icon.Menu},
+			{Label: "Pagination", Href: "/components/pagination", Icon: icon.ChevronsLeftRight},
+			{Label: "Radio", Href: "/components/radio", Icon: icon.CircleDot},
+			{Label: "Range", Href: "/components/range", Icon: icon.SlidersHorizontal},
+			{Label: "Rating", Href: "/components/rating", Icon: icon.Star},
+			{Label: "Progress", Href: "/components/progress", Icon: icon.CircleGauge},
+			{Label: "Radial Progress", Href: "/components/radial-progress", Icon: icon.CirclePercent},
+			{Label: "Select", Href: "/components/select", Icon: icon.ListCollapse},
+			{Label: "Separator", Href: "/components/separator", Icon: icon.Minus},
+			{Label: "Skeleton", Href: "/components/skeleton", Icon: icon.Bone},
+			{Label: "Stack", Href: "/components/stack", Icon: icon.Layers},
+			{Label: "Stat", Href: "/components/stat", Icon: icon.ChartColumn},
+			{Label: "Status", Href: "/components/status", Icon: icon.Activity},
+			{Label: "Steps", Href: "/components/steps", Icon: icon.Footprints},
+			{Label: "Tab", Href: "/components/tab", Icon: icon.LayoutPanelTop},
+			{Label: "Textarea", Href: "/components/textarea", Icon: icon.TextCursorInput},
+			{Label: "Text Rotate", Href: "/components/text-rotate", Icon: icon.RotateCw},
+			{Label: "Theme Controller", Href: "/components/theme-controller", Icon: icon.Palette},
+			{Label: "Toast", Href: "/components/toast", Icon: icon.Bell},
+			{Label: "Toggle", Href: "/components/toggle", Icon: icon.ToggleLeft},
+			{Label: "Tooltip", Href: "/components/tooltip", Icon: icon.MessageCircleQuestionMark},
+			{Label: "Validator", Href: "/components/validator", Icon: icon.ShieldCheck},
+		},
+	},
+}
+
+templ Showcase(props ShowcaseProps) {
+	@layouts.Dashboard(layouts.DashboardProps{
+		BaseProps: layouts.BaseProps{
+			Title:       props.Title,
+			Description: props.Description,
+		},
+		App: layouts.AppBranding{
+			Name: "WebX",
+			Href: "/",
+		},
+		Nav:         showcaseNav,
+		CurrentPath: props.CurrentPath,
+	}) {
+		{ children... }
+	}
+}

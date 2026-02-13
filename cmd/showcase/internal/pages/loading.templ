@@ -1,0 +1,87 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/loading"
+)
+
+templ Loadings() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Loading — WebX Showcase",
+		Description: "DaisyUI loading component",
+		CurrentPath: "/components/loading",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Loading</h1>
+				<p class="text-base-content/70 mt-2">
+					Loading shows an animation to indicate that something is loading.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Types
+					}
+					<div class="flex flex-wrap items-center gap-8 py-4">
+						<div class="flex flex-col items-center gap-2">
+							@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg})
+							<span class="text-xs">Spinner</span>
+						</div>
+						<div class="flex flex-col items-center gap-2">
+							@loading.Loading(loading.Props{Type: loading.TypeDots, Size: loading.SizeLg})
+							<span class="text-xs">Dots</span>
+						</div>
+						<div class="flex flex-col items-center gap-2">
+							@loading.Loading(loading.Props{Type: loading.TypeRing, Size: loading.SizeLg})
+							<span class="text-xs">Ring</span>
+						</div>
+						<div class="flex flex-col items-center gap-2">
+							@loading.Loading(loading.Props{Type: loading.TypeBall, Size: loading.SizeLg})
+							<span class="text-xs">Ball</span>
+						</div>
+						<div class="flex flex-col items-center gap-2">
+							@loading.Loading(loading.Props{Type: loading.TypeBars, Size: loading.SizeLg})
+							<span class="text-xs">Bars</span>
+						</div>
+						<div class="flex flex-col items-center gap-2">
+							@loading.Loading(loading.Props{Type: loading.TypeInfinity, Size: loading.SizeLg})
+							<span class="text-xs">Infinity</span>
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-wrap items-center gap-8 py-4">
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeXs})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeSm})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeMd})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeXl})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-wrap items-center gap-8 py-4">
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-primary"})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-secondary"})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-accent"})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-info"})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-success"})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-warning"})
+						@loading.Loading(loading.Props{Type: loading.TypeSpinner, Size: loading.SizeLg, Class: "text-error"})
+					</div>
+				}
+			}
+		</div>
+	}
+}

@@ -1,0 +1,115 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/separator"
+)
+
+templ Separators() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Separator — WebX Showcase",
+		Description: "DaisyUI divider/separator component",
+		CurrentPath: "/components/separator",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Separator</h1>
+				<p class="text-base-content/70 mt-2">
+					Separators divide content vertically or horizontally, with an optional text label.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex w-full flex-col">
+						<div class="card bg-base-300 rounded-box grid h-16 place-items-center">Content above</div>
+						@separator.Separator()
+						<div class="card bg-base-300 rounded-box grid h-16 place-items-center">Content below</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Text
+					}
+					<div class="flex w-full flex-col">
+						<div class="card bg-base-300 rounded-box grid h-16 place-items-center">Content above</div>
+						@separator.Separator() {
+							OR
+						}
+						<div class="card bg-base-300 rounded-box grid h-16 place-items-center">Content below</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Horizontal
+					}
+					<div class="flex w-full">
+						<div class="card bg-base-300 rounded-box grid h-20 grow place-items-center">Left</div>
+						@separator.Separator(separator.Props{Direction: separator.DirectionHorizontal}) {
+							OR
+						}
+						<div class="card bg-base-300 rounded-box grid h-20 grow place-items-center">Right</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Color Variants
+					}
+					<div class="flex w-full flex-col">
+						@separator.Separator(separator.Props{Variant: separator.VariantNeutral}) {
+							neutral
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantPrimary}) {
+							primary
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantSecondary}) {
+							secondary
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantAccent}) {
+							accent
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantInfo}) {
+							info
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantSuccess}) {
+							success
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantWarning}) {
+							warning
+						}
+						@separator.Separator(separator.Props{Variant: separator.VariantError}) {
+							error
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Text Position
+					}
+					<div class="flex w-full flex-col">
+						@separator.Separator(separator.Props{Position: separator.PositionStart}) {
+							Start
+						}
+						@separator.Separator() {
+							Center (default)
+						}
+						@separator.Separator(separator.Props{Position: separator.PositionEnd}) {
+							End
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

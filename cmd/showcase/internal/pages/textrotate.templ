@@ -1,0 +1,93 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/textrotate"
+)
+
+templ TextRotates() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Text Rotate — WebX Showcase",
+		Description: "DaisyUI text rotate component",
+		CurrentPath: "/components/text-rotate",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Text Rotate</h1>
+				<p class="text-base-content/70 mt-2">
+					Text rotate cycles through multiple text items with a CSS animation.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4 text-2xl">
+						@textrotate.TextRotate() {
+							<span>
+								<span>Amazing</span>
+								<span>Beautiful</span>
+								<span>Creative</span>
+							</span>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						In a Sentence
+					}
+					<div class="py-4 text-2xl">
+						<span>WebX is </span>
+						@textrotate.TextRotate() {
+							<span>
+								<span>fast</span>
+								<span>flexible</span>
+								<span>powerful</span>
+								<span>modern</span>
+							</span>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Large with Colors
+					}
+					<div class="py-4 text-4xl font-bold">
+						<span>Build </span>
+						@textrotate.TextRotate() {
+							<span>
+								<span class="bg-primary text-primary-content px-2 rounded">websites</span>
+								<span class="bg-secondary text-secondary-content px-2 rounded">apps</span>
+								<span class="bg-accent text-accent-content px-2 rounded">tools</span>
+							</span>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Centered
+					}
+					<div class="py-4 text-3xl">
+						@textrotate.TextRotate(textrotate.Props{Class: "justify-items-center"}) {
+							<span>
+								<span>Hello</span>
+								<span>Bonjour</span>
+								<span>Hola</span>
+								<span>Ciao</span>
+								<span>Hallo</span>
+							</span>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

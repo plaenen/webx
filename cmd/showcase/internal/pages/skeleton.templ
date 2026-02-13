@@ -1,0 +1,82 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/skeleton"
+)
+
+templ Skeletons() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Skeleton — WebX Showcase",
+		Description: "DaisyUI skeleton component",
+		CurrentPath: "/components/skeleton",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Skeleton</h1>
+				<p class="text-base-content/70 mt-2">
+					Skeleton is used to show a placeholder while content is loading.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic Shapes
+					}
+					<div class="flex flex-wrap items-center gap-8 py-4">
+						@skeleton.Skeleton(skeleton.Props{Class: "h-32 w-32"})
+						@skeleton.Skeleton(skeleton.Props{Class: "h-32 w-32 rounded-full"})
+						@skeleton.Skeleton(skeleton.Props{Class: "h-4 w-56"})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Card with Circle
+					}
+					<div class="py-4">
+						<div class="flex w-52 flex-col gap-4">
+							<div class="flex items-center gap-4">
+								@skeleton.Skeleton(skeleton.Props{Class: "h-16 w-16 shrink-0 rounded-full"})
+								<div class="flex flex-col gap-4">
+									@skeleton.Skeleton(skeleton.Props{Class: "h-4 w-20"})
+									@skeleton.Skeleton(skeleton.Props{Class: "h-4 w-28"})
+								</div>
+							</div>
+							@skeleton.Skeleton(skeleton.Props{Class: "h-32 w-full"})
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Card with Rectangle
+					}
+					<div class="py-4">
+						<div class="flex w-52 flex-col gap-4">
+							@skeleton.Skeleton(skeleton.Props{Class: "h-32 w-full"})
+							@skeleton.Skeleton(skeleton.Props{Class: "h-4 w-28"})
+							@skeleton.Skeleton(skeleton.Props{Class: "h-4 w-full"})
+							@skeleton.Skeleton(skeleton.Props{Class: "h-4 w-full"})
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Skeleton Text
+					}
+					<div class="py-4">
+						@skeleton.Skeleton(skeleton.Props{Text: true}) {
+							AI is thinking harder...
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

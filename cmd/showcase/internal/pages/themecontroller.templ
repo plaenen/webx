@@ -1,0 +1,84 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/themecontroller"
+)
+
+templ ThemeControllers() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Theme Controller — WebX Showcase",
+		Description: "DaisyUI theme controller with Datastar-powered switching",
+		CurrentPath: "/components/theme-controller",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Theme Controller</h1>
+				<p class="text-base-content/70 mt-2">
+					Switch between DaisyUI themes using toggles, radio buttons, or button groups. Theme changes are applied instantly via Datastar signals.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Toggle
+					}
+					<p class="text-sm mb-4">
+						A simple toggle to switch between the default theme and a dark theme.
+					</p>
+					<label class="flex items-center gap-3 cursor-pointer">
+						<span class="label-text">Default</span>
+						@themecontroller.Toggle(themecontroller.ToggleProps{
+							ID:      "tc-toggle",
+							Theme:   "dark",
+							Default: "default",
+						})
+						<span class="label-text">Dark</span>
+					</label>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Radio Buttons
+					}
+					<p class="text-sm mb-4">
+						Select from multiple themes using radio buttons.
+					</p>
+					@themecontroller.RadioGroup(themecontroller.RadioGroupProps{
+						ID:      "tc-radio",
+						Default: "default",
+						Themes:  defaultThemes(),
+					})
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Button Group
+					}
+					<p class="text-sm mb-4">
+						Theme selection as a joined button strip.
+					</p>
+					@themecontroller.ButtonGroup(themecontroller.ButtonGroupProps{
+						ID:      "tc-buttons",
+						Default: "default",
+						Themes:  defaultThemes(),
+					})
+				}
+			}
+		</div>
+	}
+}
+
+func defaultThemes() []themecontroller.ThemeOption {
+	return []themecontroller.ThemeOption{
+		{Value: "default", Label: "Default"},
+		{Value: "dark", Label: "Dark"},
+		{Value: "retro", Label: "Retro"},
+		{Value: "cyberpunk", Label: "Cyberpunk"},
+		{Value: "synthwave", Label: "Synthwave"},
+		{Value: "valentine", Label: "Valentine"},
+	}
+}

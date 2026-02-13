@@ -2,7 +2,7 @@ package pages
 
 import (
 	"github.com/plaenen/webx/ds"
-	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
 	"github.com/plaenen/webx/ui/button"
 	"github.com/plaenen/webx/ui/card"
 	"github.com/plaenen/webx/ui/drawer"
@@ -48,8 +48,63 @@ templ Drawers() {
 					@inlineDrawerDemo()
 				}
 			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Right Side (drawer-end)
+					}
+					<p class="mb-4">Drawer positioned on the right side of the content.</p>
+					@inlineDrawerEndDemo()
+				}
+			}
 		</div>
 	}
+}
+
+templ inlineDrawerEndDemo() {
+	{{
+		signals := utils.Signals("demo_drawer_end", drawer.DrawerSignals{Open: false})
+	}}
+	<div
+		data-signals={ signals.DataSignals }
+		class="border border-base-300 rounded-lg overflow-hidden h-64 relative"
+	>
+		<div class="p-4">
+			@button.Button(button.Props{
+				Variant: button.VariantPrimary,
+				Size:    button.SizeSm,
+				OnClick: signals.Toggle("open"),
+			}) {
+				Toggle Right Drawer
+			}
+			<span class="ml-3 text-sm text-base-content/60">
+				State:
+				<code class="badge badge-sm" data-text={ signals.Conditional("open", "'open'", "'closed'") }>closed</code>
+			</span>
+		</div>
+		<div
+			class="absolute inset-y-0 right-0 w-52 bg-base-200 border-l border-base-300 p-4 transition-transform duration-200 z-10"
+			data-class={ utils.NewDataClass().Add("translate-x-full", "!"+signals.Signal("open")).Add("translate-x-0", signals.Signal("open")).Build() }
+		>
+			@menu.Menu(menu.Props{Class: "p-0"}) {
+				@menu.Title() {
+					Right Panel
+				}
+				@menu.Item(menu.ItemProps{Href: "#"}) {
+					Notifications
+				}
+				@menu.Item(menu.ItemProps{Href: "#"}) {
+					Messages
+				}
+			}
+		</div>
+		<div
+			class="absolute inset-0 bg-black/30 transition-opacity duration-200"
+			data-show={ signals.Signal("open") }
+			{ ds.OnClick(signals.Set("open", "false"))... }
+			style="display: none;"
+		></div>
+	</div>
 }
 
 templ inlineDrawerDemo() {

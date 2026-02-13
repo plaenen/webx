@@ -1,0 +1,115 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/tooltip"
+)
+
+templ Tooltips() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Tooltip — WebX Showcase",
+		Description: "DaisyUI tooltip component",
+		CurrentPath: "/components/tooltip",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Tooltip</h1>
+				<p class="text-base-content/70 mt-2">
+					Tooltip can be used to show a message when hovering over an element.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-wrap items-center gap-8 py-8">
+						@tooltip.Tooltip(tooltip.Props{Tip: "Hello!"}) {
+							<button class="btn">Hover me</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Force Open
+					}
+					<div class="flex flex-wrap items-center gap-8 py-8">
+						@tooltip.Tooltip(tooltip.Props{Tip: "Always visible", Open: true}) {
+							<button class="btn">Force open</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Positions
+					}
+					<div class="flex flex-wrap items-center gap-8 py-12">
+						@tooltip.Tooltip(tooltip.Props{Tip: "Top", Position: tooltip.PositionTop, Open: true}) {
+							<button class="btn">Top</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Bottom", Position: tooltip.PositionBottom, Open: true}) {
+							<button class="btn">Bottom</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Left", Position: tooltip.PositionLeft, Open: true}) {
+							<button class="btn">Left</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Right", Position: tooltip.PositionRight, Open: true}) {
+							<button class="btn">Right</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-wrap items-center gap-8 py-8">
+						@tooltip.Tooltip(tooltip.Props{Tip: "Primary", Variant: tooltip.VariantPrimary, Open: true}) {
+							<button class="btn">Primary</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Secondary", Variant: tooltip.VariantSecondary, Open: true}) {
+							<button class="btn">Secondary</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Accent", Variant: tooltip.VariantAccent, Open: true}) {
+							<button class="btn">Accent</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Info", Variant: tooltip.VariantInfo, Open: true}) {
+							<button class="btn">Info</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Success", Variant: tooltip.VariantSuccess, Open: true}) {
+							<button class="btn">Success</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Warning", Variant: tooltip.VariantWarning, Open: true}) {
+							<button class="btn">Warning</button>
+						}
+						@tooltip.Tooltip(tooltip.Props{Tip: "Error", Variant: tooltip.VariantError, Open: true}) {
+							<button class="btn">Error</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Custom Content
+					}
+					<div class="flex flex-wrap items-center gap-8 py-8">
+						@tooltip.Tooltip(tooltip.Props{Open: true}) {
+							@tooltip.Content() {
+								<div class="font-bold">Rich tooltip</div>
+								<div class="text-xs">With multiple lines</div>
+							}
+							<button class="btn">Custom</button>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

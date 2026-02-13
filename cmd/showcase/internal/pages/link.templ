@@ -1,0 +1,105 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/link"
+)
+
+templ Links() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Link — WebX Showcase",
+		Description: "DaisyUI link component",
+		CurrentPath: "/components/link",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Link</h1>
+				<p class="text-base-content/70 mt-2">
+					Styled hyperlinks with color variants and hover underline.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@link.Link(link.Props{Href: "#"}) {
+							This is a link
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-wrap items-center gap-4 py-4">
+						@link.Link(link.Props{Variant: link.VariantNeutral, Href: "#"}) {
+							Neutral
+						}
+						@link.Link(link.Props{Variant: link.VariantPrimary, Href: "#"}) {
+							Primary
+						}
+						@link.Link(link.Props{Variant: link.VariantSecondary, Href: "#"}) {
+							Secondary
+						}
+						@link.Link(link.Props{Variant: link.VariantAccent, Href: "#"}) {
+							Accent
+						}
+						@link.Link(link.Props{Variant: link.VariantSuccess, Href: "#"}) {
+							Success
+						}
+						@link.Link(link.Props{Variant: link.VariantInfo, Href: "#"}) {
+							Info
+						}
+						@link.Link(link.Props{Variant: link.VariantWarning, Href: "#"}) {
+							Warning
+						}
+						@link.Link(link.Props{Variant: link.VariantError, Href: "#"}) {
+							Error
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Hover Underline
+					}
+					<div class="flex items-center gap-4 py-4">
+						@link.Link(link.Props{Hover: true, Href: "#"}) {
+							Hover to see underline
+						}
+						@link.Link(link.Props{Hover: true, Variant: link.VariantPrimary, Href: "#"}) {
+							Primary hover
+						}
+						@link.Link(link.Props{Hover: true, Variant: link.VariantSecondary, Href: "#"}) {
+							Secondary hover
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						In Text
+					}
+					<p class="py-4">
+						Check the
+						@link.Link(link.Props{Variant: link.VariantPrimary, Href: "#"}) {
+							documentation
+						}
+						to learn more, or browse the
+						@link.Link(link.Props{Variant: link.VariantSecondary, Href: "#"}) {
+							source code
+						}
+						on GitHub.
+					</p>
+				}
+			}
+		</div>
+	}
+}

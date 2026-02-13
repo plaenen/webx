@@ -1,0 +1,152 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/badge"
+	"github.com/plaenen/webx/ui/card"
+)
+
+templ Badges() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Badge — WebX Showcase",
+		Description: "DaisyUI badge component",
+		CurrentPath: "/components/badge",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Badge</h1>
+				<p class="text-base-content/70 mt-2">
+					Badges inform the user of the status of specific data. Purely CSS-driven, no JavaScript needed.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Color Variants
+					}
+					<div class="flex flex-wrap gap-2">
+						@badge.Badge() {
+							default
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantNeutral}) {
+							neutral
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary}) {
+							primary
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantSecondary}) {
+							secondary
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantAccent}) {
+							accent
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantInfo}) {
+							info
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantSuccess}) {
+							success
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantWarning}) {
+							warning
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantError}) {
+							error
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Styles
+					}
+					<div class="flex flex-wrap gap-2">
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary}) {
+							default style
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary, Style: badge.StyleOutline}) {
+							outline
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary, Style: badge.StyleDash}) {
+							dash
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary, Style: badge.StyleSoft}) {
+							soft
+						}
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary, Style: badge.StyleGhost}) {
+							ghost
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex flex-wrap items-center gap-2">
+						@badge.Badge(badge.Props{Size: badge.SizeXl}) {
+							xl
+						}
+						@badge.Badge(badge.Props{Size: badge.SizeLg}) {
+							lg
+						}
+						@badge.Badge(badge.Props{Size: badge.SizeMd}) {
+							md
+						}
+						@badge.Badge(badge.Props{Size: badge.SizeSm}) {
+							sm
+						}
+						@badge.Badge(badge.Props{Size: badge.SizeXs}) {
+							xs
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Empty Badges (Dots)
+					}
+					<p class="text-sm mb-3">Badges without text content render as colored dots.</p>
+					<div class="flex flex-wrap items-center gap-2">
+						@badge.Badge(badge.Props{Variant: badge.VariantPrimary, Size: badge.SizeXs})
+						@badge.Badge(badge.Props{Variant: badge.VariantSecondary, Size: badge.SizeSm})
+						@badge.Badge(badge.Props{Variant: badge.VariantAccent, Size: badge.SizeMd})
+						@badge.Badge(badge.Props{Variant: badge.VariantInfo, Size: badge.SizeLg})
+						@badge.Badge(badge.Props{Variant: badge.VariantSuccess, Size: badge.SizeXl})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Badge in Text
+					}
+					<div class="space-y-3">
+						<h2 class="text-xl font-semibold">
+							Notifications
+							@badge.Badge(badge.Props{Variant: badge.VariantPrimary, Size: badge.SizeSm}) {
+								5
+							}
+						</h2>
+						<p>
+							This feature is
+							@badge.Badge(badge.Props{Variant: badge.VariantSuccess, Style: badge.StyleSoft}) {
+								stable
+							}
+							and ready for production use.
+						</p>
+						<p>
+							That endpoint is
+							@badge.Badge(badge.Props{Variant: badge.VariantWarning, Style: badge.StyleOutline}) {
+								deprecated
+							}
+							and will be removed in v3.
+						</p>
+					</div>
+				}
+			}
+		</div>
+	}
+}

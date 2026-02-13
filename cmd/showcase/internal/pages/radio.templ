@@ -1,0 +1,79 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/radio"
+)
+
+templ Radios() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Radio — WebX Showcase",
+		Description: "DaisyUI radio input component",
+		CurrentPath: "/components/radio",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Radio</h1>
+				<p class="text-base-content/70 mt-2">
+					Radio is a styled radio input element for single-choice selection.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex flex-col gap-4 py-4">
+						<div class="flex gap-2">
+							@radio.Radio(radio.Props{Name: "basic", Checked: true})
+							@radio.Radio(radio.Props{Name: "basic"})
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colors
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@radio.Radio(radio.Props{Name: "color-primary", Variant: radio.VariantPrimary, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-secondary", Variant: radio.VariantSecondary, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-accent", Variant: radio.VariantAccent, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-neutral", Variant: radio.VariantNeutral, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-info", Variant: radio.VariantInfo, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-success", Variant: radio.VariantSuccess, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-warning", Variant: radio.VariantWarning, Checked: true})
+						@radio.Radio(radio.Props{Name: "color-error", Variant: radio.VariantError, Checked: true})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex items-center gap-4 py-4">
+						@radio.Radio(radio.Props{Name: "size", Size: radio.SizeXs, Checked: true})
+						@radio.Radio(radio.Props{Name: "size-sm", Size: radio.SizeSm, Checked: true})
+						@radio.Radio(radio.Props{Name: "size-md", Size: radio.SizeMd, Checked: true})
+						@radio.Radio(radio.Props{Name: "size-lg", Size: radio.SizeLg, Checked: true})
+						@radio.Radio(radio.Props{Name: "size-xl", Size: radio.SizeXl, Checked: true})
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Disabled
+					}
+					<div class="flex gap-2 py-4">
+						@radio.Radio(radio.Props{Name: "disabled", Checked: true, Disabled: true})
+						@radio.Radio(radio.Props{Name: "disabled", Disabled: true})
+					</div>
+				}
+			}
+		</div>
+	}
+}

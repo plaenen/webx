@@ -1,0 +1,136 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/navbar"
+)
+
+templ Navbars() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Navbar — WebX Showcase",
+		Description: "DaisyUI navbar component",
+		CurrentPath: "/components/navbar",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Navbar</h1>
+				<p class="text-base-content/70 mt-2">
+					Navigation bar for the top of a page, with start, center, and end sections.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="py-4">
+						@navbar.Navbar(navbar.Props{Class: "bg-base-200 rounded-box shadow-sm"}) {
+							<a class="btn btn-ghost text-xl">WebX</a>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Sections
+					}
+					<div class="py-4">
+						@navbar.Navbar(navbar.Props{Class: "bg-base-200 rounded-box shadow-sm"}) {
+							@navbar.Start() {
+								<a class="btn btn-ghost text-xl">WebX</a>
+							}
+							@navbar.Center() {
+								<a class="btn btn-ghost">Home</a>
+								<a class="btn btn-ghost">About</a>
+								<a class="btn btn-ghost">Contact</a>
+							}
+							@navbar.End() {
+								<button class="btn btn-primary btn-sm">Login</button>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Search
+					}
+					<div class="py-4">
+						@navbar.Navbar(navbar.Props{Class: "bg-base-200 rounded-box shadow-sm"}) {
+							@navbar.Start() {
+								<a class="btn btn-ghost text-xl">WebX</a>
+							}
+							@navbar.End() {
+								<div class="flex gap-2">
+									<input type="text" placeholder="Search" class="input input-bordered input-sm w-24 md:w-auto"/>
+									<button class="btn btn-ghost btn-circle btn-sm">
+										<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+										</svg>
+									</button>
+								</div>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Colored
+					}
+					<div class="space-y-4 py-4">
+						@navbar.Navbar(navbar.Props{Class: "bg-neutral text-neutral-content rounded-box"}) {
+							@navbar.Start() {
+								<a class="btn btn-ghost text-xl">Neutral</a>
+							}
+							@navbar.End() {
+								<button class="btn btn-ghost btn-sm">Action</button>
+							}
+						}
+						@navbar.Navbar(navbar.Props{Class: "bg-primary text-primary-content rounded-box"}) {
+							@navbar.Start() {
+								<a class="btn btn-ghost text-xl">Primary</a>
+							}
+							@navbar.End() {
+								<button class="btn btn-ghost btn-sm">Action</button>
+							}
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						With Icons
+					}
+					<div class="py-4">
+						@navbar.Navbar(navbar.Props{Class: "bg-base-200 rounded-box shadow-sm"}) {
+							@navbar.Start() {
+								<a class="btn btn-ghost text-xl">WebX</a>
+							}
+							@navbar.End() {
+								<button class="btn btn-ghost btn-circle">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+									</svg>
+								</button>
+								<button class="btn btn-ghost btn-circle">
+									<div class="indicator">
+										<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+										</svg>
+										<span class="badge badge-xs badge-primary indicator-item"></span>
+									</div>
+								</button>
+							}
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

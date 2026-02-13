@@ -1,0 +1,115 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/join"
+)
+
+templ Joins() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Join — WebX Showcase",
+		Description: "DaisyUI join component",
+		CurrentPath: "/components/join",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Join</h1>
+				<p class="text-base-content/70 mt-2">
+					Join groups multiple items together with shared border radius.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Button Group
+					}
+					<div class="py-4">
+						@join.Join() {
+							<button class="btn join-item">Left</button>
+							<button class="btn join-item">Center</button>
+							<button class="btn join-item">Right</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Vertical
+					}
+					<div class="py-4">
+						@join.Join(join.Props{Direction: join.DirectionVertical}) {
+							<button class="btn join-item">Top</button>
+							<button class="btn join-item">Middle</button>
+							<button class="btn join-item">Bottom</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Input with Button
+					}
+					<div class="py-4">
+						@join.Join() {
+							<input type="text" placeholder="Search..." class="input input-bordered join-item"/>
+							<button class="btn btn-primary join-item">Search</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Radio Buttons
+					}
+					<div class="py-4">
+						@join.Join() {
+							<input type="radio" name="join-radio" class="btn join-item" aria-label="HTML"/>
+							<input type="radio" name="join-radio" class="btn join-item" aria-label="CSS" checked="checked"/>
+							<input type="radio" name="join-radio" class="btn join-item" aria-label="JS"/>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Responsive
+					}
+					<p class="text-base-content/70 text-sm mb-2">
+						Vertical on small screens, horizontal on large screens.
+					</p>
+					<div class="py-4">
+						@join.Join(join.Props{Class: "join-vertical lg:join-horizontal"}) {
+							<button class="btn join-item">Alpha</button>
+							<button class="btn join-item">Beta</button>
+							<button class="btn join-item">Gamma</button>
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Mixed Elements
+					}
+					<div class="py-4">
+						@join.Join() {
+							<select class="select select-bordered join-item">
+								<option disabled selected>Category</option>
+								<option>Science</option>
+								<option>Math</option>
+								<option>History</option>
+							</select>
+							<input type="text" placeholder="Search..." class="input input-bordered join-item"/>
+							<button class="btn btn-primary join-item">Go</button>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

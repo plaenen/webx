@@ -1,0 +1,104 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/label"
+)
+
+templ Labels() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Label — WebX Showcase",
+		Description: "DaisyUI label component",
+		CurrentPath: "/components/label",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Label</h1>
+				<p class="text-base-content/70 mt-2">
+					Label is used to show text next to an input or select element, or as a floating label above an input.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Label before input
+					}
+					<div class="flex flex-col gap-4 py-4">
+						<label class="input">
+							@label.Label() {
+								https://
+							}
+							<input type="text" placeholder="URL"/>
+						</label>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Label after input
+					}
+					<div class="flex flex-col gap-4 py-4">
+						<label class="input">
+							<input type="text" placeholder="domain name"/>
+							@label.Label() {
+								.com
+							}
+						</label>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Label with select
+					}
+					<div class="flex flex-col gap-4 py-4">
+						<label class="select">
+							@label.Label() {
+								Type
+							}
+							<select>
+								<option>Personal</option>
+								<option>Business</option>
+							</select>
+						</label>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Label with date input
+					}
+					<div class="flex flex-col gap-4 py-4">
+						<label class="input">
+							@label.Label() {
+								Publish date
+							}
+							<input type="date"/>
+						</label>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Floating label
+					}
+					<div class="flex flex-col gap-4 py-4">
+						@label.Floating() {
+							<span>Your Email</span>
+							<input type="text" placeholder="mail@site.com" class="input input-md"/>
+						}
+						@label.Floating() {
+							<span>Username</span>
+							<input type="text" placeholder="Choose a username" class="input input-lg"/>
+						}
+					</div>
+				}
+			}
+		</div>
+	}
+}

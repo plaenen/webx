@@ -1,0 +1,146 @@
+package pages
+
+import (
+	"github.com/plaenen/webx/cmd/showcase/internal/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/kbd"
+)
+
+templ Kbds() {
+	@layouts.Showcase(layouts.ShowcaseProps{
+		Title:       "Kbd — WebX Showcase",
+		Description: "DaisyUI keyboard key component",
+		CurrentPath: "/components/kbd",
+	}) {
+		<div class="space-y-8">
+			<div>
+				<h1 class="text-3xl font-bold">Kbd</h1>
+				<p class="text-base-content/70 mt-2">
+					Displays keyboard keys and shortcuts with styled key caps.
+				</p>
+			</div>
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Basic
+					}
+					<div class="flex items-center gap-2 py-4">
+						@kbd.Kbd() {
+							A
+						}
+						@kbd.Kbd() {
+							B
+						}
+						@kbd.Kbd() {
+							C
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Sizes
+					}
+					<div class="flex items-end gap-2 py-4">
+						@kbd.Kbd(kbd.Props{Size: kbd.SizeXs}) {
+							xs
+						}
+						@kbd.Kbd(kbd.Props{Size: kbd.SizeSm}) {
+							sm
+						}
+						@kbd.Kbd(kbd.Props{Size: kbd.SizeMd}) {
+							md
+						}
+						@kbd.Kbd(kbd.Props{Size: kbd.SizeLg}) {
+							lg
+						}
+						@kbd.Kbd(kbd.Props{Size: kbd.SizeXl}) {
+							xl
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Key Combination
+					}
+					<div class="flex items-center gap-1 py-4">
+						@kbd.Kbd() {
+							ctrl
+						}
+						<span>+</span>
+						@kbd.Kbd() {
+							shift
+						}
+						<span>+</span>
+						@kbd.Kbd() {
+							del
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Modifier Symbols
+					}
+					<div class="flex items-center gap-2 py-4">
+						@kbd.Kbd() {
+							⌘
+						}
+						@kbd.Kbd() {
+							⌥
+						}
+						@kbd.Kbd() {
+							⇧
+						}
+						@kbd.Kbd() {
+							⌃
+						}
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Arrow Keys
+					}
+					<div class="py-4">
+						<div class="flex justify-center">
+							@kbd.Kbd() {
+								▲
+							}
+						</div>
+						<div class="flex justify-center gap-12">
+							@kbd.Kbd() {
+								◀
+							}
+							@kbd.Kbd() {
+								▼
+							}
+							@kbd.Kbd() {
+								▶
+							}
+						</div>
+					</div>
+				}
+			}
+			@card.Card() {
+				@card.Body() {
+					@card.Title() {
+						Inline Text
+					}
+					<p class="py-4">
+						Press
+						@kbd.Kbd(kbd.Props{Size: kbd.SizeSm}) {
+							F
+						}
+						to pay respects.
+					</p>
+				}
+			}
+		</div>
+	}
+}
