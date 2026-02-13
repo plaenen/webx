@@ -1,5 +1,5 @@
 byol/
-.claude/
+.claude/settings.local.json
 .env
 .DS_Store
 bin/
