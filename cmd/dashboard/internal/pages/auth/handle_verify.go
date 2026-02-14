@@ -7,6 +7,7 @@ import (
 	"github.com/plaenen/webx"
 	"github.com/plaenen/webx/cmd/dashboard/internal/pages/auth/templates"
 	"github.com/plaenen/webx/cmd/dashboard/internal/session"
+	"github.com/plaenen/webx/idgen"
 )
 
 // VerifyHandler returns a handler that validates magic link tokens
@@ -31,6 +32,7 @@ func VerifyHandler(tokens webx.TokenStore, sessions session.SessionStore) http.H
 
 		// Create a user session for this email.
 		sessionID, err := sessions.Create(session.UserSession{
+			UserId:    idgen.Generate("user"),
 			Email:     tok.Email,
 			CreatedAt: time.Now(),
 		})

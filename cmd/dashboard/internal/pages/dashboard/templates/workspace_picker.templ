@@ -1,0 +1,60 @@
+package templates
+
+import (
+	"github.com/plaenen/webx"
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/button"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/icon"
+)
+
+templ WorkspacePicker(workspaces []webx.Workspace) {
+	@layouts.Base(layouts.BaseProps{Title: "Select Workspace"}) {
+		<div class="flex items-center justify-center min-h-screen p-6">
+			<div class="w-full max-w-md">
+				<h1 class="text-2xl font-bold mb-6 text-center">Select a workspace</h1>
+				if len(workspaces) == 0 {
+					@card.Card() {
+						@card.Body(card.Props{Class: "items-center gap-4"}) {
+							<p class="text-center text-base-content/60">
+								You don't have access to any workspaces yet.
+							</p>
+							<a href="/workspaces/new">
+								@button.Button(button.Props{Variant: button.VariantPrimary}) {
+									@icon.Plus(icon.Props{Size: 16})
+									Create workspace
+								}
+							</a>
+						}
+					}
+				} else {
+					<div class="flex flex-col gap-3">
+						for _, ws := range workspaces {
+							<a href={ templ.SafeURL("/ws/" + ws.ID + "/") } class="no-underline">
+								@card.Card(card.Props{Class: "hover:shadow-md transition-shadow cursor-pointer"}) {
+									@card.Body(card.Props{Class: "flex-row items-center gap-3"}) {
+										<div class="bg-primary/10 rounded-lg p-2">
+											@icon.Building2(icon.Props{Size: 20, Class: "text-primary"})
+										</div>
+										<div class="flex-1 min-w-0">
+											<p class="font-semibold truncate">{ ws.Name }</p>
+										</div>
+										@icon.ChevronRight(icon.Props{Size: 16, Class: "text-base-content/40"})
+									}
+								}
+							</a>
+						}
+					</div>
+					<div class="mt-4 text-center">
+						<a href="/workspaces/new">
+							@button.Button(button.Props{Variant: button.VariantGhost}) {
+								@icon.Plus(icon.Props{Size: 16})
+								Create workspace
+							}
+						</a>
+					</div>
+				}
+			</div>
+		</div>
+	}
+}

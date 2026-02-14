@@ -9,3 +9,4 @@ bin/
 /icongen
 .temp/
 tmp/build-errors.log
+/dashboard

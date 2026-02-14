@@ -14,7 +14,7 @@ import (
 	"github.com/plaenen/webx/cmd/showcase/internal/handlers"
 	"github.com/plaenen/webx/cmd/showcase/internal/pages"
 	"github.com/plaenen/webx/cmd/showcase/internal/static"
-	"github.com/plaenen/webx/session/memory"
+	"github.com/plaenen/webx/providers/session/memory"
 	"github.com/plaenen/webx/ui"
 	"github.com/spf13/cobra"
 )

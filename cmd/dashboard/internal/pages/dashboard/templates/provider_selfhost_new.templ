@@ -1,0 +1,83 @@
+package templates
+
+import (
+	"github.com/plaenen/webx/ds"
+	"github.com/plaenen/webx/layouts"
+	"github.com/plaenen/webx/ui/card"
+	"github.com/plaenen/webx/ui/form"
+	"github.com/plaenen/webx/ui/icon"
+)
+
+type selfHostSignals struct {
+	form.FormSignals
+	Name        string `json:"name"`
+	PairingCode string `json:"pairing_code"`
+	ProviderID  string `json:"provider_id"`
+}
+
+templ SelfHostNew() {
+	@layouts.Base(layouts.BaseProps{Title: "Add Self-Hosted Provider"}) {
+		<div class="flex items-center justify-center min-h-screen p-6">
+			<div class="w-full max-w-md">
+				<h1 class="text-2xl font-bold mb-6 text-center">Add self-hosted provider</h1>
+				@card.Card() {
+					@card.Body() {
+						<!-- Creation form (hidden after pairing code is generated) -->
+						<div { ds.Show("$self_host.pairing_code === ''")... }>
+							@form.Form(form.Props{
+								ID:      "self-host",
+								Action:  "/api/providers/selfhost",
+								Signals: selfHostSignals{},
+							}) {
+								@form.FormError("self-host")
+								@form.Field() {
+									@form.Label() {
+										Provider name
+									}
+									<input
+										type="text"
+										placeholder="e.g. My Home Server"
+										class="input w-full"
+										autofocus
+										{ ds.Bind("self_host.name")... }
+									/>
+									@form.Description() {
+										A friendly name for your self-hosted provider.
+									}
+								}
+								<div class="flex gap-3 mt-2">
+									@form.Submit(form.SubmitProps{FormID: "self-host"}) {
+										@icon.Plus(icon.Props{Size: 16})
+										Generate pairing code
+									}
+									<a href="/dashboard" class="btn btn-ghost">
+										Cancel
+									</a>
+								</div>
+							}
+						</div>
+						<!-- Pairing code display (shown after creation) -->
+						<div { ds.Show("$self_host.pairing_code !== ''")... }>
+							<div class="text-center space-y-4">
+								<p class="text-sm text-base-content/70">
+									Enter this code on your self-hosted instance to pair it:
+								</p>
+								<div class="text-4xl font-mono font-bold tracking-widest py-4">
+									<span { ds.Text("$self_host.pairing_code")... }></span>
+								</div>
+								<p class="text-xs text-base-content/50">
+									This code will expire after 15 minutes.
+								</p>
+								<div class="flex gap-3 justify-center mt-4">
+									<a href="/dashboard" class="btn btn-primary">
+										Done
+									</a>
+								</div>
+							</div>
+						</div>
+					}
+				}
+			</div>
+		</div>
+	}
+}

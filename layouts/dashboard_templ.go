@@ -11,6 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"strings"
 
+	"github.com/plaenen/webx/capability"
 	"github.com/plaenen/webx/ds"
 	"github.com/plaenen/webx/ui/avatar"
 	"github.com/plaenen/webx/ui/drawer"
@@ -37,10 +38,11 @@ type UserMenuItem struct {
 
 // NavItem is a single navigation item in the sidebar.
 type NavItem struct {
-	Label  string
-	Href   string
-	Icon   icon.IconType
-	Active bool
+	Label      string
+	Href       string
+	Icon       icon.IconType
+	Active     bool
+	Capability string // required capability to see this item (empty = always visible)
 }
 
 // NavGroup is a titled group of navigation items.
@@ -78,6 +80,10 @@ type DashboardProps struct {
 
 	// HeaderActions is an optional slot for action buttons in the navbar
 	HeaderActions templ.Component
+
+	// Capabilities is the current user's capability set, used to filter nav items.
+	// When nil, all nav items are shown (backward compatible).
+	Capabilities capability.Set
 }
 
 // DrawerID is the fixed ID for the dashboard's sidebar drawer.
@@ -129,7 +135,7 @@ func Dashboard(props DashboardProps) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(panelSignals.DataSignals)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 85, Col: 43}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 91, Col: 43}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -203,7 +209,7 @@ func Dashboard(props DashboardProps) templ.Component {
 							var templ_7745c5c3_Var8 templ.SafeURL
 							templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(props.App.DefaultHref()))
 							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 93, Col: 55}
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 99, Col: 55}
 							}
 							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 							if templ_7745c5c3_Err != nil {
@@ -221,7 +227,7 @@ func Dashboard(props DashboardProps) templ.Component {
 								var templ_7745c5c3_Var9 string
 								templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(props.App.DefaultLogoUrl())
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 95, Col: 46}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 101, Col: 46}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 								if templ_7745c5c3_Err != nil {
@@ -234,7 +240,7 @@ func Dashboard(props DashboardProps) templ.Component {
 								var templ_7745c5c3_Var10 string
 								templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.App.DefaultName())
 								if templ_7745c5c3_Err != nil {
-									return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 95, Col: 78}
+									return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 101, Col: 78}
 								}
 								_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 								if templ_7745c5c3_Err != nil {
@@ -248,7 +254,7 @@ func Dashboard(props DashboardProps) templ.Component {
 							var templ_7745c5c3_Var11 string
 							templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.App.DefaultName())
 							if templ_7745c5c3_Err != nil {
-								return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 97, Col: 33}
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 103, Col: 33}
 							}
 							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 							if templ_7745c5c3_Err != nil {
@@ -340,7 +346,7 @@ func Dashboard(props DashboardProps) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = dashboardSidebarNav(props.Nav, props.CurrentPath).Render(ctx, templ_7745c5c3_Buffer)
+					templ_7745c5c3_Err = dashboardSidebarNav(props.Nav, props.CurrentPath, props.Capabilities).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -419,7 +425,7 @@ func dashboardSidebarHeader(app AppBranding) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(app.DefaultLogoUrl())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 129, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 135, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -432,7 +438,7 @@ func dashboardSidebarHeader(app AppBranding) templ.Component {
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(app.DefaultName())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 129, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 135, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -450,7 +456,7 @@ func dashboardSidebarHeader(app AppBranding) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(app.DefaultName())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 131, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 137, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -464,7 +470,7 @@ func dashboardSidebarHeader(app AppBranding) templ.Component {
 	})
 }
 
-func dashboardSidebarNav(groups []NavGroup, currentPath string) templ.Component {
+func dashboardSidebarNav(groups []NavGroup, currentPath string, caps capability.Set) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -498,75 +504,78 @@ func dashboardSidebarNav(groups []NavGroup, currentPath string) templ.Component 
 			}
 			ctx = templ.InitializeContext(ctx)
 			for _, group := range groups {
-				if group.Title != "" {
-					templ_7745c5c3_Var20 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-						if !templ_7745c5c3_IsBuffer {
-							defer func() {
-								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-								if templ_7745c5c3_Err == nil {
-									templ_7745c5c3_Err = templ_7745c5c3_BufErr
-								}
-							}()
-						}
-						ctx = templ.InitializeContext(ctx)
-						var templ_7745c5c3_Var21 string
-						templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(group.Title)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 140, Col: 18}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-						if templ_7745c5c3_Err != nil {
-							return templ_7745c5c3_Err
-						}
-						return nil
-					})
-					templ_7745c5c3_Err = menu.Title().Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				for _, item := range group.Items {
-					templ_7745c5c3_Var22 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
-						templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
-						templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
-						if !templ_7745c5c3_IsBuffer {
-							defer func() {
-								templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
-								if templ_7745c5c3_Err == nil {
-									templ_7745c5c3_Err = templ_7745c5c3_BufErr
-								}
-							}()
-						}
-						ctx = templ.InitializeContext(ctx)
-						if item.Icon != nil {
-							templ_7745c5c3_Err = item.Icon(icon.Props{Size: 16}).Render(ctx, templ_7745c5c3_Buffer)
+				visibleItems := filterNavItems(group.Items, caps)
+				if len(visibleItems) > 0 {
+					if group.Title != "" {
+						templ_7745c5c3_Var20 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+							templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+							templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+							if !templ_7745c5c3_IsBuffer {
+								defer func() {
+									templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+									if templ_7745c5c3_Err == nil {
+										templ_7745c5c3_Err = templ_7745c5c3_BufErr
+									}
+								}()
+							}
+							ctx = templ.InitializeContext(ctx)
+							var templ_7745c5c3_Var21 string
+							templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(group.Title)
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 148, Col: 19}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 							if templ_7745c5c3_Err != nil {
 								return templ_7745c5c3_Err
 							}
-						}
-						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, " ")
+							return nil
+						})
+						templ_7745c5c3_Err = menu.Title().Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						var templ_7745c5c3_Var23 string
-						templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
-						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 151, Col: 17}
-						}
-						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+					}
+					for _, item := range visibleItems {
+						templ_7745c5c3_Var22 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+							templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+							templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+							if !templ_7745c5c3_IsBuffer {
+								defer func() {
+									templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+									if templ_7745c5c3_Err == nil {
+										templ_7745c5c3_Err = templ_7745c5c3_BufErr
+									}
+								}()
+							}
+							ctx = templ.InitializeContext(ctx)
+							if item.Icon != nil {
+								templ_7745c5c3_Err = item.Icon(icon.Props{Size: 16}).Render(ctx, templ_7745c5c3_Buffer)
+								if templ_7745c5c3_Err != nil {
+									return templ_7745c5c3_Err
+								}
+							}
+							templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, " ")
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							var templ_7745c5c3_Var23 string
+							templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
+							if templ_7745c5c3_Err != nil {
+								return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 159, Col: 18}
+							}
+							_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+							if templ_7745c5c3_Err != nil {
+								return templ_7745c5c3_Err
+							}
+							return nil
+						})
+						templ_7745c5c3_Err = menu.Item(menu.ItemProps{
+							Href:   item.Href,
+							Active: item.Active || item.Href == currentPath,
+						}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var22), templ_7745c5c3_Buffer)
 						if templ_7745c5c3_Err != nil {
 							return templ_7745c5c3_Err
 						}
-						return nil
-					})
-					templ_7745c5c3_Err = menu.Item(menu.ItemProps{
-						Href:   item.Href,
-						Active: item.Active || item.Href == currentPath,
-					}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var22), templ_7745c5c3_Buffer)
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
 					}
 				}
 			}
@@ -646,7 +655,7 @@ func dashboardSidebarFooter(user UserInfo, items []UserMenuItem) templ.Component
 						var templ_7745c5c3_Var27 string
 						templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(user.Name)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 174, Col: 58}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 183, Col: 58}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 						if templ_7745c5c3_Err != nil {
@@ -665,7 +674,7 @@ func dashboardSidebarFooter(user UserInfo, items []UserMenuItem) templ.Component
 						var templ_7745c5c3_Var28 string
 						templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 177, Col: 58}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 186, Col: 58}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 						if templ_7745c5c3_Err != nil {
@@ -717,7 +726,7 @@ func dashboardSidebarFooter(user UserInfo, items []UserMenuItem) templ.Component
 						var templ_7745c5c3_Var30 templ.SafeURL
 						templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(item.Href))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 188, Col: 41}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 197, Col: 41}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 						if templ_7745c5c3_Err != nil {
@@ -736,7 +745,7 @@ func dashboardSidebarFooter(user UserInfo, items []UserMenuItem) templ.Component
 						var templ_7745c5c3_Var31 string
 						templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(item.Label)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 192, Col: 20}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 201, Col: 20}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 						if templ_7745c5c3_Err != nil {
@@ -788,7 +797,7 @@ func dashboardSidebarFooter(user UserInfo, items []UserMenuItem) templ.Component
 				var templ_7745c5c3_Var32 string
 				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(user.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 203, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 212, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 				if templ_7745c5c3_Err != nil {
@@ -807,7 +816,7 @@ func dashboardSidebarFooter(user UserInfo, items []UserMenuItem) templ.Component
 				var templ_7745c5c3_Var33 string
 				templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 206, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 215, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
 				if templ_7745c5c3_Err != nil {
@@ -872,7 +881,7 @@ func userAvatar(user UserInfo) templ.Component {
 				var templ_7745c5c3_Var36 string
 				templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(userInitials(user.Name))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 223, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `layouts/dashboard.templ`, Line: 232, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
 				if templ_7745c5c3_Err != nil {
@@ -962,6 +971,19 @@ func dashboardDetailPanel(signals *utils.SignalManager) templ.Component {
 		}
 		return nil
 	})
+}
+
+func filterNavItems(items []NavItem, caps capability.Set) []NavItem {
+	if caps == nil {
+		return items
+	}
+	var filtered []NavItem
+	for _, item := range items {
+		if item.Capability == "" || caps.Can(item.Capability) {
+			filtered = append(filtered, item)
+		}
+	}
+	return filtered
 }
 
 func userInitials(name string) string {

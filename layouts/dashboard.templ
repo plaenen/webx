@@ -3,6 +3,7 @@ package layouts
 import (
 	"strings"
 
+	"github.com/plaenen/webx/capability"
 	"github.com/plaenen/webx/ds"
 	"github.com/plaenen/webx/ui/avatar"
 	"github.com/plaenen/webx/ui/drawer"
@@ -29,10 +30,11 @@ type UserMenuItem struct {
 
 // NavItem is a single navigation item in the sidebar.
 type NavItem struct {
-	Label  string
-	Href   string
-	Icon   icon.IconType
-	Active bool
+	Label      string
+	Href       string
+	Icon       icon.IconType
+	Active     bool
+	Capability string // required capability to see this item (empty = always visible)
 }
 
 // NavGroup is a titled group of navigation items.
@@ -70,6 +72,10 @@ type DashboardProps struct {
 
 	// HeaderActions is an optional slot for action buttons in the navbar
 	HeaderActions templ.Component
+
+	// Capabilities is the current user's capability set, used to filter nav items.
+	// When nil, all nav items are shown (backward compatible).
+	Capabilities capability.Set
 }
 
 // DrawerID is the fixed ID for the dashboard's sidebar drawer.
@@ -109,7 +115,7 @@ templ Dashboard(props DashboardProps) {
 				}
 				@drawer.Side(drawer.SideProps{ID: DrawerID}) {
 					@dashboardSidebarHeader(props.App)
-					@dashboardSidebarNav(props.Nav, props.CurrentPath)
+					@dashboardSidebarNav(props.Nav, props.CurrentPath, props.Capabilities)
 					<div class="flex-1"></div>
 					if props.User.Name != "" || props.User.Email != "" {
 						@dashboardSidebarFooter(props.User, props.UserMenu)
@@ -132,23 +138,26 @@ templ dashboardSidebarHeader(app AppBranding) {
 	</div>
 }
 
-templ dashboardSidebarNav(groups []NavGroup, currentPath string) {
+templ dashboardSidebarNav(groups []NavGroup, currentPath string, caps capability.Set) {
 	@menu.Menu() {
 		for _, group := range groups {
-			if group.Title != "" {
-				@menu.Title() {
-					{ group.Title }
-				}
-			}
-			for _, item := range group.Items {
-				@menu.Item(menu.ItemProps{
-					Href:   item.Href,
-					Active: item.Active || item.Href == currentPath,
-				}) {
-					if item.Icon != nil {
-						@item.Icon(icon.Props{Size: 16})
+			{{ visibleItems := filterNavItems(group.Items, caps) }}
+			if len(visibleItems) > 0 {
+				if group.Title != "" {
+					@menu.Title() {
+						{ group.Title }
 					}
-					{ item.Label }
+				}
+				for _, item := range visibleItems {
+					@menu.Item(menu.ItemProps{
+						Href:   item.Href,
+						Active: item.Active || item.Href == currentPath,
+					}) {
+						if item.Icon != nil {
+							@item.Icon(icon.Props{Size: 16})
+						}
+						{ item.Label }
+					}
 				}
 			}
 		}
@@ -252,6 +261,19 @@ templ dashboardDetailPanel(signals *utils.SignalManager) {
 			// Content injected via SSE or Datastar
 		</div>
 	</aside>
+}
+
+func filterNavItems(items []NavItem, caps capability.Set) []NavItem {
+	if caps == nil {
+		return items
+	}
+	var filtered []NavItem
+	for _, item := range items {
+		if item.Capability == "" || caps.Can(item.Capability) {
+			filtered = append(filtered, item)
+		}
+	}
+	return filtered
 }
 
 func userInitials(name string) string {
