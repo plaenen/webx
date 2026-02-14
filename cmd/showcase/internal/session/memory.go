@@ -1,4 +1,4 @@
-package memory
+package session
 
 import (
 	"fmt"
@@ -7,28 +7,28 @@ import (
 	"github.com/plaenen/webx"
 )
 
-// Store is an in-memory SessionStore backed by a sync.RWMutex-protected map.
+// MemStore is an in-memory SessionStore backed by a sync.RWMutex-protected map.
 // Suitable for development and single-instance deployments.
-type Store struct {
+type MemStore struct {
 	mu   sync.RWMutex
 	data map[string]string
 }
 
 // New returns a ready-to-use in-memory session store.
-func New() *Store {
-	return &Store{
+func NewMemStore() *MemStore {
+	return &MemStore{
 		data: make(map[string]string),
 	}
 }
 
-// Compile-time check that Store implements webx.SessionStore.
-var _ webx.SessionStore = (*Store)(nil)
+// Compile-time check that MemStore implements webx.SessionStore.
+var _ webx.SessionStore = (*MemStore)(nil)
 
 func sessionKey(sessionID, key string) string {
 	return fmt.Sprintf("%s:%s", sessionID, key)
 }
 
-func (s *Store) Get(sessionID string, key string) (string, error) {
+func (s *MemStore) Get(sessionID string, key string) (string, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	v, ok := s.data[sessionKey(sessionID, key)]
@@ -38,14 +38,14 @@ func (s *Store) Get(sessionID string, key string) (string, error) {
 	return v, nil
 }
 
-func (s *Store) Set(sessionID string, key string, value string) error {
+func (s *MemStore) Set(sessionID string, key string, value string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.data[sessionKey(sessionID, key)] = value
 	return nil
 }
 
-func (s *Store) Delete(sessionID string) error {
+func (s *MemStore) Delete(sessionID string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	prefix := sessionID + ":"

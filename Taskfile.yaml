@@ -106,19 +106,6 @@ tasks:
           -build.exclude_regex "_test\\.go$$" \
           -misc.clean_on_exit "true"
 
-  live:dashboard:
-    desc: Watch and restart dashboard server
-    cmds:
-      - |
-        go tool air \
-          -build.cmd "go build -o tmp/bin/dashboard ./cmd/dashboard" \
-          -build.bin "tmp/bin/dashboard" \
-          -build.args_bin "serve --pro" \
-          -build.exclude_dir "tmp,bin,node_modules,.git" \
-          -build.include_ext "go" \
-          -build.exclude_regex "_test\\.go$$" \
-          -misc.clean_on_exit "true"
-
   live:
     desc: Start all watchers for development
     deps:

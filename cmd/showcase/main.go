@@ -13,8 +13,8 @@ import (
 	"github.com/plaenen/webx"
 	"github.com/plaenen/webx/cmd/showcase/internal/handlers"
 	"github.com/plaenen/webx/cmd/showcase/internal/pages"
+	memstore "github.com/plaenen/webx/cmd/showcase/internal/session"
 	"github.com/plaenen/webx/cmd/showcase/internal/static"
-	"github.com/plaenen/webx/providers/session/memory"
 	"github.com/plaenen/webx/ui"
 	"github.com/spf13/cobra"
 )
@@ -47,7 +47,6 @@ func serveCmd() *cobra.Command {
 	}
 
 	cmd.Flags().IntVarP(&port, "port", "p", 3000, "port to listen on (0 for random)")
-	cmd.Flags().BoolVar(&pro, "pro", false, "use Datastar Pro (requires BYOL files in byol/datastar/)")
 
 	return cmd
 }
@@ -62,7 +61,7 @@ func serve(port int, pro bool) error {
 	r := chi.NewRouter()
 
 	// Session + CSRF middleware
-	store := memory.New()
+	store := memstore.NewMemStore()
 	r.Use(webx.SessionMiddleware(store))
 	r.Use(webx.SecurityHeadersMiddleware())
 
@@ -82,12 +81,6 @@ func serve(port int, pro bool) error {
 	// Serve static files (css, js) at /assets/
 	staticFS, _ := fs.Sub(static.Static, "static")
 	r.Handle("/assets/*", cacheControl(http.StripPrefix("/assets/", http.FileServerFS(staticFS))))
-
-	// Serve byol files (datastar pro) at /assets/js/datastar/
-	if pro {
-		byolFS, _ := fs.Sub(static.Byol, "byol/datastar")
-		r.Handle("/assets/js/datastar/*", cacheControl(http.StripPrefix("/assets/js/datastar/", http.FileServerFS(byolFS))))
-	}
 
 	r.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
