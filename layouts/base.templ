@@ -5,15 +5,13 @@ import (
 )
 
 type BaseProps struct {
-	Title                 string
-	Description           string
+	Title       string
+	Description string
 }
 
 templ Base(props BaseProps) {
 	{{
 		wctx := webx.FromContext(ctx)
-		showInspector := wctx.ShowDatastarInspector
-		isPro := wctx.DatastarPro
 		csrfToken := wctx.CSRFToken
 	}}
 	<!DOCTYPE html>
@@ -24,20 +22,21 @@ templ Base(props BaseProps) {
 			<meta name="description" content={ props.Description }/>
 			<meta name="csrf-token" content={ csrfToken }/>
 			<title>{ props.Title }</title>
-			<link rel="stylesheet" href="/assets/css/output.css"/>
-			if isPro {
-				<script type="module" src="/assets/js/datastar/datastar-pro.js"></script>
-				if showInspector {
-					<script type="module" src="/assets/js/datastar/datastar-inspector.js"></script>
+			for _, ss := range wctx.Stylesheets {
+				<link rel="stylesheet" href={ ss.Href }/>
+			}
+			for _, s := range wctx.Scripts {
+				if s.Type != "" {
+					<script type={ s.Type } src={ s.Src }></script>
+				} else {
+					<script type="module" src={ s.Src }></script>
 				}
-			} else {
-				<script type="module" src="/assets/js/datastar.js"></script>
 			}
 		</head>
 		<body class="min-h-screen bg-base-100 text-base-content antialiased font-sans">
 			{ children... }
-			if showInspector {
-				<datastar-inspector></datastar-inspector>
+			for _, bt := range wctx.BodyTags {
+				@templ.Raw(bt.Tag)
 			}
 		</body>
 	</html>

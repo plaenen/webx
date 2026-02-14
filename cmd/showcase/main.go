@@ -65,15 +65,19 @@ func serve(port int, pro bool) error {
 	r.Use(webx.SessionMiddleware(store))
 	r.Use(webx.SecurityHeadersMiddleware())
 
-	// Set dev-mode flag and base path on every request
+	// Set dev-mode flag, base path, and dependencies on every request
 	const basePath = "/showcase"
+	stylesheets := []webx.Stylesheet{{Href: "/assets/css/output.css"}}
+	scripts := []webx.Script{{Src: "/assets/js/datastar.js"}}
+	var bodyTags []webx.BodyTag
 	r.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			wctx := webx.FromContext(r.Context())
 			wctx.DevMode = true
-			wctx.DatastarPro = pro
-			wctx.ShowDatastarInspector = pro
 			wctx.BasePath = basePath
+			wctx.Stylesheets = stylesheets
+			wctx.Scripts = scripts
+			wctx.BodyTags = bodyTags
 			next.ServeHTTP(w, r.WithContext(wctx.WithContext(r.Context())))
 		})
 	})

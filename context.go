@@ -6,19 +6,34 @@ import (
 	"fmt"
 )
 
+// Stylesheet represents a <link rel="stylesheet"> tag to inject in <head>.
+type Stylesheet struct {
+	Href string
+}
+
+// Script represents a <script> tag to inject in <head>.
+type Script struct {
+	Src  string // script src attribute
+	Type string // script type attribute (defaults to "module")
+}
+
+// BodyTag represents a custom element to inject at the end of <body>.
+type BodyTag struct {
+	Tag string // e.g. "<datastar-inspector></datastar-inspector>"
+}
+
 type WebXContext struct {
-	ShowDatastarInspector bool
-	DatastarPro           bool
-	CSRFToken             string
-	DevMode               bool
-	SessionID             string
-	BasePath              string // prefix for all SSE handler routes (e.g. "/showcase")
+	CSRFToken   string
+	DevMode     bool
+	SessionID   string
+	BasePath    string // prefix for all SSE handler routes (e.g. "/showcase")
+	Stylesheets []Stylesheet
+	Scripts     []Script
+	BodyTags    []BodyTag
 }
 
 func NewContext(ctx context.Context) *WebXContext {
-	return &WebXContext{
-		ShowDatastarInspector: false,
-	}
+	return &WebXContext{}
 }
 
 type ctxKey struct{}
